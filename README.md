@@ -4,9 +4,10 @@ A brand-neutral library of React components, with a workbench to review them.
 Components are **distributed by copy**: an app takes the files it needs into
 its own source tree and owns them from then on. There is no npm package.
 
-> **Status:** repository skeleton, design tokens and the blocklist guard.
-> Components, the workbench with its approval flow, and the layout ruler
-> arrive in the next steps.
+> **Status:** design tokens, the blocklist guard and the first component
+> group (foundation: Button, TextLink, Badge, Avatar, Separator, Tabs,
+> Tooltip). The remaining groups, the workbench approval flow and the layout
+> ruler arrive in the next steps.
 
 ## Stack
 
@@ -27,7 +28,7 @@ npm run dev
 | `npm run build` | Type-check and production build (`dist/`) |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint |
-| `npm test` | Vitest: token contrast and guard tests |
+| `npm test` | Vitest: token contrast, component, convention and guard tests |
 | `npm run guard` | Scan the whole working tree against the blocklist |
 | `npm run check` | All of the above except the build |
 
@@ -39,6 +40,8 @@ is not part of CI on purpose — see below.
 
 ```
 src/
+  components/ui/    the components, one file each
+  lib/cn.ts         class-name merging shared by every component
   styles/
     tokens.css      scales and roles, light and dark
     theme.css       roles → Tailwind utilities; default palette removed
@@ -87,11 +90,16 @@ Copy what you need and keep the paths:
    `theme.css`, `base.css` and `utilities.css` right after
    `@import "tailwindcss"` in your own entry stylesheet. Requires
    **Tailwind CSS v4**.
-2. The components you want, plus `src/messages/`.
+2. The components you want from `src/components/ui/`, plus `src/lib/cn.ts`
+   and `src/messages/`. Runtime dependencies: `radix-ui`, `lucide-react`,
+   `class-variance-authority`, `clsx`, `tailwind-merge`.
 3. Map the `@/` alias to your source folder (Vite `resolve.alias` and
    `tsconfig` `paths`).
+4. Mount `TooltipProvider` once at the root of the app.
 
-No component imports a router: links are passed in from outside.
+No component imports a router: links are passed in from outside, through
+`asChild` — `<TextLink asChild><RouterLink to="/about">About</RouterLink></TextLink>`.
+`src/components/ui/conventions.test.ts` fails if a component ever imports one.
 
 ## The blocklist guard
 
