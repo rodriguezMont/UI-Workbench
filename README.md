@@ -4,13 +4,10 @@ A brand-neutral library of React components, with a workbench to review them.
 Components are **distributed by copy**: an app takes the files it needs into
 its own source tree and owns them from then on. There is no npm package.
 
-> **Status:** design tokens, the blocklist guard, the workbench (shell, map,
-> section pages and approval flow) and the first component groups —
-> primitives (rating included), states, overlays, the form basics (field,
-> fieldset, password, masked fields for US formats, phone with country,
-> select) and the choice controls (checkbox, checkbox card, checkbox list,
-> radio group, switch, segmented control, slider, rating input). The rest of
-> forms, data, content and navigation are on the map as "to build".
+> **Status:** every piece on the map is built — 67 of 67, across foundation,
+> primitives, forms, data, states, navigation, content and overlay — and is
+> waiting for review in the workbench; none is approved yet. Still to come:
+> the Playwright layout ruler, live contrast measurement and the brand guide.
 > Details, next steps and the working rules: [docs/PROGRESS.md](docs/PROGRESS.md).
 
 ## Stack
@@ -45,9 +42,12 @@ is not part of CI on purpose — see below.
 ```
 src/
   components/ui/    the components, one file each
+  components/chart/ parts the charts share: legend, reading, "See the numbers"
   components/brand/ the provisional logo — the one file a rebrand replaces
-  lib/              shared helpers: cn (class-name merging), overlay breakpoints,
-                    masks, number formats (format.ts), the slider's step
+  lib/              pure helpers, each with its tests: cn (class-name merging),
+                    overlay breakpoints, masks and phones, number formats,
+                    dates (iso-date, date-time, report-period), tables,
+                    charts, files, images, cards, the slider's step
   styles/
     tokens.css      scales and roles, light and dark
     theme.css       roles → Tailwind utilities; default palette removed
@@ -123,11 +123,20 @@ Copy what you need and keep the paths:
    **Tailwind CSS v4**.
 2. The components you want from `src/components/ui/`, plus `src/lib/`,
    `src/components/brand/` and `src/messages/` (drop `en-US/workbench.ts` and
-   its line in `en-US/index.ts` — that copy is the workbench's). Runtime dependencies: `radix-ui`, `lucide-react`,
-   `class-variance-authority`, `clsx`, `tailwind-merge`; the sheet and the
-   side menu also need `vaul`, `@radix-ui/react-focus-scope` and
-   `aria-hidden`; the phone field with a country picker needs
-   `libphonenumber-js`.
+   its line in `en-US/index.ts` — that copy is the workbench's). The charts
+   also need `src/components/chart/`. Runtime dependencies: `radix-ui`,
+   `lucide-react`, `class-variance-authority`, `clsx`, `tailwind-merge`, and
+   per component:
+
+   | Component | Also needs |
+   | --- | --- |
+   | sheet, side menu | `vaul`, `@radix-ui/react-focus-scope`, `aria-hidden` |
+   | phone field with a country picker | `libphonenumber-js` |
+   | date picker, date-time picker | `react-day-picker` (brings `date-fns`) |
+   | image cropper, profile cover | `react-easy-crop` (the cropper imports its stylesheet) |
+   | photo gallery | `react-easy-crop`, `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities` |
+
+   The charts are hand-drawn SVG and HTML and need no chart library.
 3. Map the `@/` alias to your source folder (Vite `resolve.alias` and
    `tsconfig` `paths`).
 4. Mount `TooltipProvider` and `Toaster` once at the root of the app. On
