@@ -12,6 +12,7 @@ export const PAGES: Partial<Record<SectionId, React.LazyExoticComponent<() => Re
   foundation: lazy(() => import("./FoundationPage").then((m) => ({ default: m.FoundationPage }))),
   primitives: lazy(() => import("./PrimitivesPage").then((m) => ({ default: m.PrimitivesPage }))),
   forms: lazy(() => import("./FormsPage").then((m) => ({ default: m.FormsPage }))),
+  data: lazy(() => import("./DataPage").then((m) => ({ default: m.DataPage }))),
   states: lazy(() => import("./StatesPage").then((m) => ({ default: m.StatesPage }))),
   navigation: lazy(() => import("./NavigationPage").then((m) => ({ default: m.NavigationPage }))),
   content: lazy(() => import("./ContentPage").then((m) => ({ default: m.ContentPage }))),

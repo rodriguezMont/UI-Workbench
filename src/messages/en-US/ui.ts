@@ -351,4 +351,93 @@ export const ui = {
     account: "Your account",
     signOut: "Sign out",
   },
+  dataTable: {
+    search: "Search",
+    searchPlaceholder: "Search the table",
+    /** A column filter with nothing checked. */
+    all: "All",
+    perPage: "Rows per page",
+    perPageOption: (n: number) => `${n} per page`,
+    /** The sort control that replaces the header while the table is cards. */
+    sortBy: "Sort by",
+    defaultOrder: "Default order",
+    sortAscending: "Sort from smallest to largest",
+    sortDescending: "Sort from largest to smallest",
+    nothingFor: (term: string) => `Nothing found for “${term}”`,
+    nothingFiltered: "Nothing matches these filters",
+    nothingHint: "Remove a filter, or search for another word.",
+    clear: "Clear search and filters",
+    noRows: "No rows",
+    /** Gets the formatted numbers: "Showing 1–10 of 42". */
+    showing: (first: string, last: string, total: string) => `Showing ${first}–${last} of ${total}`,
+    /** Added while a search or filter hides rows: " (of 120)". */
+    ofAll: (all: string) => ` (of ${all})`,
+    previous: "Previous page",
+    next: "Next page",
+    page: (index: number, pages: number) => `Page ${index} of ${pages}`,
+  },
+  chart: {
+    /** Read instead of "group" for the plot a keyboard can step through. */
+    roleDescription: "chart",
+    readByDay: (title: string) => `${title}. Use the arrow keys to read day by day.`,
+    readByColumn: (title: string) => `${title}. Use the arrow keys to read column by column.`,
+    readByItem: (title: string) => `${title}. Use the up and down arrow keys to read item by item.`,
+    /** Added to the reading of the highlighted bar. */
+    highlighted: ", highlighted",
+    seeNumbers: "See the numbers",
+    dateHeader: "Date",
+    monthHeader: "Month",
+    categoryHeader: "Category",
+    /** One series in a two-series reading, value first: "52 visitors (North)". */
+    seriesValue: (value: string, series: string) => `${value} (${series})`,
+    /** "September 16: 45 visitors". */
+    reading: (when: string, values: string) => `${when}: ${values}`,
+    /** A share that has a value but rounds to zero. */
+    belowOnePercent: "< 1%",
+    /** "96 of 120 signups". Gets the formatted value and the target with its unit. */
+    ofTarget: (value: string, target: string) => `${value} of ${target}`,
+    remark: {
+      goalShort: (gap: string) => `${gap} short of the goal`,
+      goalMet: "goal reached",
+      goalAbove: (gap: string) => `${gap} above the goal`,
+      limitLeft: (gap: string) => `${gap} left`,
+      limitAt: "at the limit",
+      limitOver: (gap: string) => `${gap} over the limit`,
+    },
+    /** What a listener hears from a meter: "96 of 120 signups, 80%; 24 short of the goal". */
+    meterText: (ofTarget: string, percent: string, remark: string) => `${ofTarget}, ${percent}; ${remark}`,
+  },
+  stat: {
+    /** A value never measured — never shown as zero. */
+    noData: "No data yet",
+    /**
+     * The comparison phrases get `to` with its preposition, as the caller
+     * wrote it: "in October", "in the previous 30 days".
+     */
+    noBase: (to: string) => `none recorded ${to}`,
+    flat: (to: string) => `the same as ${to}`,
+    up: (percent: string, to: string) => `${percent} higher than ${to}`,
+    down: (percent: string, to: string) => `${percent} lower than ${to}`,
+  },
+  ranking: {
+    /** The row that folds the tail: "3 more". */
+    others: (n: number) => `${n} more`,
+    /** Read before a ranked name, for people who do not see the number column. */
+    rank: (n: number) => `Rank ${n}: `,
+  },
+  period: {
+    legend: "Period",
+    options: { "7d": "7 days", "30d": "30 days", "12m": "12 months" },
+    comparedWith: (range: string) => `compared with ${range}`,
+    /** Two days of the same month: "September 24–30", with the year when needed. */
+    sameMonth: (month: string, from: number, to: number) => `${month} ${from}–${to}`,
+    /** Any two labels joined as a range: "August 2 – September 1". */
+    range: (from: string, to: string) => `${from} – ${to}`,
+    /** The year added to a range that leaves the current one: "December 20–26, 2025". */
+    withYear: (range: string, year: number) => `${range}, ${year}`,
+  },
+  chartState: {
+    loading: (title: string) => `Loading ${title}`,
+    errorTitle: "Couldn't load this chart",
+  },
 } as const;
