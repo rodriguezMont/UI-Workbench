@@ -31,6 +31,9 @@ npm run dev
 | `npm run guard` | Scan the whole working tree against the blocklist |
 | `npm run check` | All of the above except the build |
 
+**CI** (`.github/workflows/ci.yml`) runs type-check, lint, tests, the guard
+and the build on every pull request and on every push to `main`.
+
 ## Layout
 
 ```
@@ -102,6 +105,10 @@ message or a branch name. The list of those terms is itself never committed.
   content, paths and branch name; `.githooks/commit-msg` checks the message),
   and on demand with `npm run guard`. `npm install` sets
   `core.hooksPath` to `.githooks`.
+- **In CI:** the workflow reads the list from the `BLOCKLIST` repository
+  secret (Settings → Secrets and variables → Actions), holding the same terms
+  as the local `.blocklist`. Pull requests from forks get no secrets, so they
+  skip the guard and need a manual review.
 - **Matching:** case- and accent-insensitive, inside longer words too; a space
   in a term also matches `-`, `_`, `.` or nothing.
 - **Fails closed:** with no list, or with `.blocklist` tracked or not ignored,
