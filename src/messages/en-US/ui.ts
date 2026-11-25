@@ -119,4 +119,28 @@ export const ui = {
     notInUS: "This number doesn't exist in the US. Check the area code.",
     notInCountry: (callingCode: string) => `This number doesn't exist with the code +${callingCode}. Check the digits.`,
   },
+  carousel: {
+    /** The region's name when the caller gives none. */
+    label: "Images",
+    /** What a screen reader calls the region and each slide. */
+    roleDescription: "carousel",
+    slideRoleDescription: "slide",
+    /** A slide's position, and the visible counter past the dots: "3 of 12". */
+    position: (n: number, total: number) => `${n} of ${total}`,
+    /** A dot's name, and the announcement after every change: "Image 3 of 5". */
+    image: (n: number, total: number) => `Image ${n} of ${total}`,
+    /** Read when focus lands on the strip of images. */
+    keyboardHint: (label: string) => `${label}: use the arrow keys to change images`,
+    previous: "Previous image",
+    next: "Next image",
+    choose: "Choose an image",
+    /** The text alternative of an image that came without one: "Images, image 2". */
+    fallbackAlt: (label: string, n: number) => `${label}, image ${n}`,
+  },
+  mapPlaceholder: {
+    /** The drawing's accessible name: it says it is not a real map. */
+    label: "Illustrative map. A map with the real location will appear here.",
+    /** The label always visible on the drawing. */
+    caption: "Illustrative map",
+  },
 } as const;
