@@ -3,6 +3,7 @@ import { useState } from "react";
 import { messages } from "@/messages";
 
 import { FoundationSection } from "./FoundationPreview";
+import { OverlaySection } from "./OverlayPreview";
 import { StatesSection } from "./StatesPreview";
 import { TokenSection } from "./TokenPreview";
 
@@ -60,6 +61,7 @@ export function Workbench() {
       </header>
       <FoundationSection />
       <StatesSection />
+      <OverlaySection />
       <TokenSection />
     </main>
   );

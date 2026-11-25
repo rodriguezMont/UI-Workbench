@@ -4,11 +4,12 @@ A brand-neutral library of React components, with a workbench to review them.
 Components are **distributed by copy**: an app takes the files it needs into
 its own source tree and owns them from then on. There is no npm package.
 
-> **Status:** design tokens, the blocklist guard and two component groups —
-> foundation (Button, TextLink, Badge, Avatar, Separator, Tabs, Tooltip) and
+> **Status:** design tokens, the blocklist guard and three component groups —
+> foundation (Button, TextLink, Badge, Avatar, Separator, Tabs, Tooltip),
 > states (Skeleton, Empty, ErrorState, Toast, ProgressBar, Spinner,
-> PageSpinner, RouteProgress). The remaining groups, the workbench approval
-> flow and the layout ruler arrive in the next steps.
+> PageSpinner, RouteProgress) and overlay (Dialog, AlertDialog, Sheet,
+> Overlay, FullScreenPanel, SideMenu, ActionMenu). Next: the workbench shell
+> with sections and the approval flow, then the remaining groups.
 
 ## Stack
 
@@ -93,7 +94,9 @@ Copy what you need and keep the paths:
    **Tailwind CSS v4**.
 2. The components you want from `src/components/ui/`, plus `src/lib/` and
    `src/messages/`. Runtime dependencies: `radix-ui`, `lucide-react`,
-   `class-variance-authority`, `clsx`, `tailwind-merge`.
+   `class-variance-authority`, `clsx`, `tailwind-merge`; the sheet and the
+   side menu also need `vaul`, `@radix-ui/react-focus-scope` and
+   `aria-hidden`.
 3. Map the `@/` alias to your source folder (Vite `resolve.alias` and
    `tsconfig` `paths`).
 4. Mount `TooltipProvider` and `Toaster` once at the root of the app. On

@@ -27,6 +27,17 @@ export const enUS = {
     toast: {
       dismiss: "Dismiss notification",
     },
+    dialog: {
+      close: "Close",
+    },
+    fullScreenPanel: {
+      back: "Back",
+    },
+    sideMenu: {
+      close: "Close the menu",
+      /** The invisible backdrop button; never focusable, but still named. */
+      closeOutside: "Close the menu by tapping outside it",
+    },
     progress: {
       /** Announced while the route bar is running. */
       loadingPage: "Loading the page",
@@ -110,6 +121,74 @@ export const enUS = {
         pageSmall: "Preparing the export",
         route: "Route bar",
         simulate: "Simulate a navigation",
+      },
+    },
+
+    overlay: {
+      heading: "Overlay",
+      intro: "What opens on top of the page — and how it closes, traps focus and gives it back.",
+      responsive: {
+        title: "Overlay (responsive)",
+        note: "The frame is picked by width when it opens: a dialog from 768px, a sheet below. Narrow the window and open it again.",
+        open: "Filter results",
+        heading: "Filter results",
+        description: "Pick what to show. The actions stay pinned while the list scrolls.",
+        options: ["Open", "In review", "Approved", "Archived", "Shared with me", "Created by me", "Starred", "Overdue"],
+        apply: "Show 9 results",
+        clear: "Clear filters",
+        applied: "Filters applied",
+      },
+      alert: {
+        title: "Overlay (alert)",
+        note: "Not dismissable: no outside click, no drag, no handle. Focus starts on Cancel.",
+        open: "Delete project",
+        heading: "Delete this project?",
+        description: "Its 12 files and history will be removed. This cannot be undone.",
+        confirm: "Delete project",
+        cancel: "Cancel",
+        done: "Project deleted",
+      },
+      dialog: {
+        title: "Dialog",
+        open: "Rename",
+        heading: "Rename project",
+        description: "The new name shows up for everyone with access.",
+        celebrate: "Celebration layout",
+        celebrateHeading: "Request sent!",
+        celebrateText: "We'll review it and reply by email as soon as possible.",
+        celebrateDone: "Got it",
+        save: "Save",
+      },
+      sheet: {
+        title: "Sheet",
+        open: "Open sheet",
+        heading: "Share",
+        description: "Drag the handle down or press Escape to close.",
+        body: "A sheet rises from the bottom and closes with a drag. From 768px it stays 512px wide and centered.",
+      },
+      fullScreen: {
+        title: "Full-screen panel",
+        open: "Open full screen",
+        heading: "Choose a city",
+        body: "On a phone, this is where people type to pick from a long list: the panel follows the part of the screen the keyboard leaves free.",
+      },
+      sideMenu: {
+        title: "Side menu",
+        note: "Mobile only: narrow the window below 768px to open it. Widening the window closes it.",
+        open: "Open menu",
+        label: "Sections",
+        items: ["Overview", "Projects", "Members", "Settings"],
+      },
+      actionMenu: {
+        title: "Action menu",
+        trigger: "Project actions",
+        group: "Quarterly report",
+        rename: "Rename",
+        share: "Share",
+        move: "Move to folder",
+        moveDisabled: "Only owners can move it.",
+        delete: "Delete",
+        ran: "Ran",
       },
     },
 
