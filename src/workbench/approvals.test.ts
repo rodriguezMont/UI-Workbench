@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import { approvedOn, parseLedger, sortLedger, stateOf, tally, tallyOfSection } from "./approvals";
-import { COMPONENTS, findComponent } from "./registry";
+import { COMPONENTS, SECTIONS, componentsOf, findComponent } from "./registry";
 
 const built = findComponent("button")!;
-const toBuild = findComponent("rating")!;
+// Any piece still without a shape: read from the registry, so the tests do
+// not break each time a group gets built.
+const toBuild = COMPONENTS.find((c) => c.built === false)!;
 
 describe("parseLedger", () => {
   it("keeps only well-formed entries and never throws", () => {
@@ -30,8 +32,9 @@ describe("stateOf", () => {
   });
 
   it("never treats a piece without a shape as approved", () => {
-    expect(stateOf(toBuild, { rating: { on: "2026-11-25" } })).toBe("to-build");
-    expect(approvedOn(toBuild, { rating: { on: "2026-11-25" } })).toBeUndefined();
+    const ledger = { [toBuild.id]: { on: "2026-11-25" } };
+    expect(stateOf(toBuild, ledger)).toBe("to-build");
+    expect(approvedOn(toBuild, ledger)).toBeUndefined();
   });
 });
 
@@ -47,9 +50,16 @@ describe("tally", () => {
   });
 
   it("counts per section", () => {
-    const counts = tallyOfSection("primitives", { button: { on: "2026-11-25" } });
+    // A section with pieces of both kinds, whichever it is today.
+    const mixed = SECTIONS.find((s) => {
+      const pieces = componentsOf(s.id);
+      return pieces.some((c) => c.built === false) && pieces.some((c) => c.built !== false);
+    })!;
+    const pieces = componentsOf(mixed.id);
+    const done = pieces.find((c) => c.built !== false)!;
+    const counts = tallyOfSection(mixed.id, { [done.id]: { on: "2026-11-25" } });
     expect(counts.approved).toBe(1);
-    expect(counts.toBuild).toBe(1); // rating
+    expect(counts.toBuild).toBe(pieces.filter((c) => c.built === false).length);
   });
 });
 
