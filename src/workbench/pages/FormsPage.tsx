@@ -4,6 +4,8 @@ import { DatabaseBackup, Globe, Headset, LayoutGrid, List, ZoomIn, ZoomOut } fro
 import { Checkbox } from "@/components/ui/checkbox";
 import { CheckboxCard } from "@/components/ui/checkbox-card";
 import { CheckboxList } from "@/components/ui/checkbox-list";
+import { DatePicker } from "@/components/ui/date-picker";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
 import { Field } from "@/components/ui/field";
 import { Fieldset } from "@/components/ui/fieldset";
 import { TextLink } from "@/components/ui/link";
@@ -16,6 +18,8 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Select } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch, useSwitchSave } from "@/components/ui/switch";
+import { TimePicker } from "@/components/ui/time-picker";
+import { dateToIso } from "@/lib/date-time";
 import { formatInteger } from "@/lib/format";
 import { messages } from "@/messages";
 
@@ -27,10 +31,10 @@ const t = messages.workbench.demos;
 const toOptions = (labels: readonly string[]) => labels.map((label) => ({ value: label.toLowerCase().replace(/\s+/g, "-"), label }));
 
 /** The value that would be submitted, written under the piece. */
-function Submitted({ value }: { value: string }) {
+function Submitted({ value, empty = t.masked.nothing }: { value: string; empty?: string }) {
   return (
     <p className="w-full text-xs text-secondary">
-      {t.masked.submitted}: <code className="font-mono text-primary">{value || t.masked.nothing}</code>
+      {t.masked.submitted}: <code className="font-mono text-primary">{value || empty}</code>
     </p>
   );
 }
@@ -79,6 +83,47 @@ const pretendSave = (fails: boolean) => () =>
 function SavingSwitchDemo({ fails }: { fails?: boolean }) {
   const state = useSwitchSave(!fails, pretendSave(Boolean(fails)));
   return fails ? <Switch label={t.switch.digest} hint={t.switch.digestHint} {...state} /> : <Switch label={t.switch.replies} {...state} />;
+}
+
+/** A date picker with what it would submit under it. */
+function DateDemo() {
+  const [value, setValue] = useState("");
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <DatePicker label={t.datePicker.start} hint={t.datePicker.startHint} onValueChange={setValue} />
+      <Submitted value={value} empty={t.datePicker.nothing} />
+    </div>
+  );
+}
+
+/** Bounds relative to today, so the demo never goes stale. */
+function BoundedDateDemo() {
+  const [bounds] = useState(() => {
+    const today = new Date();
+    const last = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 60);
+    return { min: dateToIso(today), max: dateToIso(last) };
+  });
+  return <DatePicker label={t.datePicker.delivery} hint={t.datePicker.deliveryHint} {...bounds} />;
+}
+
+function TimeDemo() {
+  const [value, setValue] = useState("");
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <TimePicker label={t.timePicker.pickup} onValueChange={setValue} />
+      <Submitted value={value} empty={t.timePicker.nothing} />
+    </div>
+  );
+}
+
+function DateTimeDemo() {
+  const [value, setValue] = useState("");
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <DateTimePicker label={t.dateTimePicker.starts} hint={t.dateTimePicker.startsHint} onValueChange={setValue} />
+      <Submitted value={value} empty={t.dateTimePicker.nothing} />
+    </div>
+  );
 }
 
 export function FormsPage() {
@@ -379,6 +424,48 @@ export function FormsPage() {
         </State>
         <State label={t.slider.error} note={t.slider.errorNote}>
           <Slider label={t.slider.budget} min={0} max={5000} step={100} defaultValue={300} formatValue={(v) => `$${formatInteger(v)}`} error={t.slider.budgetError} />
+        </State>
+      </Piece>
+
+      <Piece id="date-picker">
+        <State label={t.datePicker.typeOrPick} note={t.datePicker.typeOrPickNote}>
+          <DateDemo />
+        </State>
+        <State label={t.datePicker.bounds} note={t.datePicker.boundsNote}>
+          <BoundedDateDemo />
+        </State>
+        <State label={t.datePicker.error} note={t.datePicker.errorNote}>
+          <DatePicker label={t.datePicker.end} defaultValue="2026-09-10" error={t.datePicker.endError} />
+        </State>
+        <State label={t.datePicker.disabled} note={t.datePicker.disabledNote}>
+          <DatePicker label={t.datePicker.renewal} hint={t.datePicker.renewalHint} defaultValue="2027-01-01" disabled />
+        </State>
+      </Piece>
+
+      <Piece id="time-picker">
+        <State label={t.timePicker.steps} note={t.timePicker.stepsNote}>
+          <TimeDemo />
+        </State>
+        <State label={t.timePicker.range} note={t.timePicker.rangeNote}>
+          <TimePicker label={t.timePicker.appointment} hint={t.timePicker.appointmentHint} step={15} min="09:00" max="17:00" defaultValue="10:30" />
+        </State>
+        <State label={t.timePicker.kept} note={t.timePicker.keptNote}>
+          <TimePicker label={t.timePicker.reminder} defaultValue="10:10" />
+        </State>
+        <State label={t.timePicker.error} note={t.timePicker.errorNote}>
+          <TimePicker label={t.timePicker.call} error={t.timePicker.callError} />
+        </State>
+      </Piece>
+
+      <Piece id="date-time-picker">
+        <State label={t.dateTimePicker.together} note={t.dateTimePicker.togetherNote} wide>
+          <DateTimeDemo />
+        </State>
+        <State label={t.dateTimePicker.error} note={t.dateTimePicker.errorNote} wide>
+          <DateTimePicker label={t.dateTimePicker.ends} defaultValue="2026-12-03T09:00" error={t.dateTimePicker.endsError} />
+        </State>
+        <State label={t.dateTimePicker.disabled} note={t.dateTimePicker.disabledNote} wide>
+          <DateTimePicker label={t.dateTimePicker.locked} hint={t.dateTimePicker.lockedHint} defaultValue="2026-12-15T08:00" disabled />
         </State>
       </Piece>
     </SectionPage>
