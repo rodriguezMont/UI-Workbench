@@ -7,9 +7,9 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { ApprovalError, checkRequest, readLedgerForDisplay, setApproval } from "./approvals-store";
 import { COMPONENTS } from "./registry";
 
-// Any piece still without a shape: read from the registry, so the test does
-// not break each time a group gets built.
-const toBuild = COMPONENTS.find((c) => c.built === false)!.id;
+// A piece still without a shape, if the registry has one left: the store looks
+// pieces up in the registry, so it cannot be made up here.
+const toBuild = COMPONENTS.find((c) => c.built === false)?.id;
 
 // Every test writes to its own temporary file — never to the real ledger.
 let dir = "";
@@ -70,9 +70,12 @@ describe("setApproval", () => {
     expect(setApproval(file, "tabs", false, "2026-11-25")).toEqual({});
   });
 
-  it("refuses ids outside the registry and pieces without a shape", () => {
+  it("refuses ids outside the registry", () => {
     expect(statusOf(() => setApproval(file, "no-such-piece", true, "2026-11-25"))).toBe(400);
-    expect(statusOf(() => setApproval(file, toBuild, true, "2026-11-25"))).toBe(400);
+  });
+
+  it.runIf(toBuild)("refuses pieces without a shape", () => {
+    expect(statusOf(() => setApproval(file, toBuild!, true, "2026-11-25"))).toBe(400);
   });
 
   it("refuses to write over a ledger it cannot read, and keeps it intact", () => {
