@@ -150,7 +150,10 @@ export function ProfileCover({
           // The cover is the profile's ornament: listeners get the name right below.
           <img src={cover} alt="" className="size-full object-cover" />
         ) : editable ? (
-          <div className="flex size-full flex-col items-center justify-center gap-1 px-4 text-center">
+          // The logo rises over the cover's lower left corner, so the left
+          // side is kept clear of it: on a short cover (a narrow column) a
+          // centered button and hint ran under the logo.
+          <div className="flex size-full flex-col items-center justify-center gap-1 pl-24 pr-4 text-center sm:pl-36">
             <Button ref={addCover} variant="secondary" onClick={pickCover}>
               <ImagePlus size={18} aria-hidden />
               {m.addCover}
