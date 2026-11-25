@@ -2,6 +2,7 @@ import { Suspense, useEffect } from "react";
 import { BrowserRouter, Link, Route, Routes, useLocation } from "react-router";
 
 import { Loading, Skeleton } from "@/components/ui/loading";
+import { RouteProgress } from "@/components/ui/progress";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { messages } from "@/messages";
 
@@ -25,14 +26,20 @@ function ScrollToTop() {
   return null;
 }
 
-/** While a section's code arrives: the shape of a section page. */
+/**
+ * While a section's code arrives: the shape of a section page, and the route
+ * bar at the top of the window — the one the Progress piece shows embedded.
+ */
 function SectionLoading() {
   return (
-    <Loading label={messages.workbench.loadingSection}>
-      <Skeleton className="h-9 w-48" />
-      <Skeleton className="h-5 w-80 max-w-full" />
-      <Skeleton className="mt-6 h-40 w-full" />
-    </Loading>
+    <>
+      <RouteProgress active />
+      <Loading label={messages.workbench.loadingSection}>
+        <Skeleton className="h-9 w-48" />
+        <Skeleton className="h-5 w-80 max-w-full" />
+        <Skeleton className="mt-6 h-40 w-full" />
+      </Loading>
+    </>
   );
 }
 

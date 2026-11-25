@@ -158,7 +158,9 @@ export function FormsPage() {
           </div>
         </State>
         <State label={t.field.status} note={t.field.statusNote}>
-          <div className="grid w-full gap-3 sm:grid-cols-2">
+          {/* Stacked, not paired: the status sits at the field's end, and a
+              quarter-width field cut the address off under the spinner. */}
+          <div className="grid w-full gap-3">
             <Field
               label={t.field.address}
               icon="address"
@@ -242,7 +244,7 @@ export function FormsPage() {
         <State label={t.masked.integer} note={t.masked.integerNote}>
           <MaskedField mask="integer" label={t.masked.seatsLabel} suffix={t.masked.seatsSuffix} placeholder={t.masked.seatsPlaceholder} defaultValue="1500" />
         </State>
-        <State label={t.masked.international} note={t.masked.internationalNote}>
+        <State label={t.masked.international} note={t.masked.internationalNote} wide>
           <PhoneDemo />
         </State>
       </Piece>
@@ -484,7 +486,7 @@ export function FormsPage() {
         <State label={t.fileUpload.single} note={t.fileUpload.singleNote}>
           <FileUploadDemo maxFiles={1} single />
         </State>
-        <State label={t.fileUpload.rows} note={t.fileUpload.rowsNote}>
+        <State label={t.fileUpload.rows} note={t.fileUpload.rowsNote} wide>
           <FileRowsDemo />
         </State>
         <PieceNote>
@@ -521,10 +523,10 @@ export function FormsPage() {
             headingLevel={3}
           />
         </State>
-        <State label={t.profileCover.empty} note={t.profileCover.emptyNote}>
+        <State label={t.profileCover.empty} note={t.profileCover.emptyNote} wide>
           <ProfileCover name={t.profileCover.emptyName} editable headingLevel={3} />
         </State>
-        <State label={t.profileCover.editing} note={t.profileCover.editingNote}>
+        <State label={t.profileCover.editing} note={t.profileCover.editingNote} wide>
           <ProfileCover name={t.profileCover.name} coverUrl={SAMPLE_COVER} logoUrl={SAMPLE_LOGO} editable headingLevel={3} />
         </State>
       </Piece>

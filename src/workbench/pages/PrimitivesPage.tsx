@@ -38,13 +38,12 @@ export function PrimitivesPage() {
   return (
     <SectionPage id="primitives">
       <Piece id="button">
-        <State label={t.button.variants} wide>
+        <State label={t.button.variants} note={t.button.variantsNote} wide>
           <Button>{t.button.primary}</Button>
           <Button variant="alternate">{t.button.alternate}</Button>
           <Button variant="secondary">{t.button.secondary}</Button>
           <Button variant="ghost">{t.button.ghost}</Button>
           <Button variant="link">{t.button.link}</Button>
-          <Button variant="destructive">{t.button.destructive}</Button>
         </State>
         <State label={t.button.sizes} note={t.button.sizesNote}>
           <Button size="sm" variant="secondary">
@@ -63,7 +62,7 @@ export function PrimitivesPage() {
             <Plus size={16} aria-hidden />
           </Button>
         </State>
-        <State label={t.button.onPhoto}>
+        <State label={t.button.onPhoto} note={t.button.onPhotoNote}>
           <div className="flex h-16 w-44 items-center justify-center rounded-md" style={{ background: "var(--ornament-gradient)" }}>
             <Button variant="overlay" size="sm">
               <Camera size={16} aria-hidden />
@@ -71,10 +70,22 @@ export function PrimitivesPage() {
             </Button>
           </div>
         </State>
-        <State label={t.button.disabledLabel}>
+        <State label={t.button.disabledLabel} note={t.button.disabledNote}>
           <Button disabled>{t.button.disabled}</Button>
           <Button variant="secondary" disabled>
             {t.button.disabled}
+          </Button>
+        </State>
+        <State label={t.button.destructiveLabel} note={t.button.destructiveNote}>
+          {/* The trigger offers; the red button only confirms, inside the
+              alert dialog, where the person has read what they will lose. */}
+          <Button variant="secondary">
+            <Trash2 size={16} aria-hidden />
+            {t.button.destructive}
+          </Button>
+          <Button variant="destructive">
+            <Trash2 size={16} aria-hidden />
+            {t.button.confirmDestructive}
           </Button>
         </State>
       </Piece>
