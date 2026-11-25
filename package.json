@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "description": "A brand-neutral React component workbench, distributed by copy.",
+  "license": "MIT",
   "engines": {
     "node": ">=22.18"
   },
