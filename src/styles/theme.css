@@ -1,0 +1,77 @@
+/* =============================================================================
+ * Tailwind v4 theme
+ *
+ * Turns the role tokens of `tokens.css` into utilities: `bg-surface`,
+ * `text-primary`, `border-border-strong`. A component never writes a hex value
+ * and never reaches the scales.
+ *
+ * The default palette is removed on purpose. Without it, `bg-blue-500` or
+ * `text-white` simply do not exist, so a color name cannot slip into a
+ * component — the build produces no class for it.
+ *
+ * `inline` makes each utility read the role variable directly, so the
+ * `light-dark()` inside it resolves on the element that is painted.
+ * ========================================================================== */
+
+@theme {
+  --color-*: initial;
+}
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-surface-chrome: var(--surface-chrome);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-highlight: var(--surface-highlight);
+  --color-surface-placeholder: var(--surface-placeholder);
+  --color-surface-emblem: var(--surface-emblem);
+  --color-surface-contrast: var(--surface-contrast);
+  --color-surface-feature: var(--surface-feature);
+
+  --color-primary: var(--text-primary);
+  --color-secondary: var(--text-secondary);
+  --color-subtle: var(--text-subtle);
+  --color-inverse: var(--text-inverse);
+  --color-on-contrast: var(--text-on-contrast);
+  --color-on-feature: var(--text-on-feature);
+  --color-on-feature-muted: var(--text-on-feature-muted);
+  --color-figure: var(--text-figure);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-border-emblem: var(--border-emblem);
+  --color-divider: var(--divider);
+
+  --color-accent: var(--accent);
+  --color-on-accent: var(--text-on-accent);
+  --color-action: var(--action);
+  --color-action-text: var(--action-text);
+  --color-action-alt: var(--action-alt);
+  --color-signal: var(--signal);
+  --color-on-signal: var(--text-on-signal);
+  --color-signal-label: var(--signal-label);
+  --color-accent-label: var(--accent-label);
+  --color-link: var(--link);
+
+  --color-error: var(--state-error);
+  --color-success: var(--state-success);
+  --color-warning: var(--state-warning);
+  --color-error-fill: var(--state-error-fill);
+  --color-success-fill: var(--state-success-fill);
+  --color-warning-fill: var(--state-warning-fill);
+  --color-on-error: var(--text-on-error);
+  --color-on-success: var(--text-on-success);
+  --color-on-warning: var(--text-on-warning);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1-soft: var(--chart-1-soft);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+}

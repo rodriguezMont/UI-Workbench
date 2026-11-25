@@ -1,0 +1,4 @@
+#!/bin/sh
+# Refuses the commit when its message contains a blocklisted term.
+# See scripts/guard.ts.
+exec node scripts/guard.ts --message "$1"

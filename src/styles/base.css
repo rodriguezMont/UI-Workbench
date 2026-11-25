@@ -1,0 +1,56 @@
+/* =============================================================================
+ * Base styles
+ *
+ * In `@layer base`, never unlayered: unlayered CSS beats every Tailwind
+ * utility no matter how specific, so a component could not override these.
+ * Inside the base layer they are the default, and the component wins.
+ * ========================================================================== */
+
+@layer base {
+  /* The page background goes on `html`: the scrollbar gutter sits outside the
+   * body and shows the document canvas. */
+  html {
+    background-color: var(--surface-sunken);
+  }
+
+  body {
+    background-color: var(--surface-sunken);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-weight: var(--weight-regular);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* A subtree that forces a scheme sets its own text color. `color` inherits
+   * as an already-resolved value: without this, a `data-theme="dark"` section
+   * inside a light page would keep the light page's dark ink. */
+  [data-theme] {
+    color: var(--text-primary);
+  }
+
+  /* The pointer comes back on what is clickable. Tailwind v4 dropped it from
+   * buttons to follow the browser default; one rule here instead of a
+   * `cursor-pointer` on every component. Disabled controls keep the arrow. */
+  :where(
+      button,
+      summary,
+      [role="button"],
+      [role="tab"],
+      [role="option"],
+      [role="menuitem"],
+      input[type="checkbox"],
+      input[type="radio"],
+      input[type="file"]
+    ):not(:disabled, [aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  /* A visible focus ring on everything focusable, offset from the element.
+   * `:focus-visible`, not `:focus`: it shows for the keyboard and does not
+   * flash on every mouse click. */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+}

@@ -1,0 +1,11 @@
+# Terms that must never appear in this repository: one per line.
+#
+# Copy this file to `.blocklist` at the repository root (it is ignored by git)
+# and replace the examples below with the real terms. Never commit the real
+# list. In CI, put the same terms in the BLOCKLIST environment variable,
+# separated by newlines or commas.
+#
+# Matching ignores case and accents and works inside longer words. A space in
+# a term also matches "-", "_", "." or nothing.
+acme corp
+globex

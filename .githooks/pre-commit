@@ -1,0 +1,4 @@
+#!/bin/sh
+# Refuses the commit when a blocklisted term is staged (content, path or
+# branch name). See scripts/guard.ts.
+exec node scripts/guard.ts --staged

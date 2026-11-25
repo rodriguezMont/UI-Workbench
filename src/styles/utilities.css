@@ -1,0 +1,103 @@
+/* =============================================================================
+ * Custom utilities shared by the components
+ * ========================================================================== */
+
+/* The extended touch area: a box may be smaller than 44px, the area a finger
+ * can hit never is. A centered pseudo-element at least 44 x 44 and at least
+ * the size of the box itself — on a control that is already large it matches
+ * the box and does nothing.
+ *
+ * The element must be positioned, so `relative` goes in the component's own
+ * classes, not here: if the component is `absolute`, `tailwind-merge` can
+ * resolve the conflict, which it could not do with a property hidden inside
+ * this utility.
+ *
+ * Three ways this fails without showing on screen: an ancestor with
+ * `overflow: hidden` clips the area; two neighbors too close overlap their
+ * areas; a positioned `::after` paints over a static neighbor and steals its
+ * taps. Only measuring the touch area catches them. */
+@utility touch-area {
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--tap-target));
+    height: max(100%, var(--tap-target));
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Text-field focus: the field's own border lights up, with a soft glow. It
+ * replaces the outer ring on fields only — buttons, links and checkboxes have
+ * no border of their own to light, and keep the base outline.
+ *
+ * The glow turns to the error color on an invalid field: focusing a wrong
+ * field must not erase the error signal.
+ *
+ * Only editable things glow — a glow says "type here". Read-only fields get no
+ * glow; busy fields (`aria-busy`) keep it because the state is transient; a
+ * select trigger (`role="combobox"`) is a choice the user makes, so it glows.
+ *
+ * Works on the control that owns the border (`input`, `select`, `textarea`)
+ * and on a wrapper drawing the border around an input; `:has` looks at the
+ * input only, so focusing a button inside (the password eye) does not light
+ * the field. */
+@utility field-glow {
+  --field-glow-color: var(--focus-ring);
+  transition-property: border-color, box-shadow;
+  transition-duration: var(--motion-fast);
+  transition-timing-function: var(--motion-ease-out);
+
+  &[aria-invalid="true"],
+  &:has(input[aria-invalid="true"]) {
+    --field-glow-color: var(--state-error);
+  }
+
+  /* `:focus-visible` twice raises specificity above the field's
+   * `enabled:hover:border-accent`, so hovering a focused field does not swap
+   * the border while the glow stays. */
+  &:focus-visible:focus-visible:is(:read-write, select, [role="combobox"], [aria-busy="true"]),
+  &:has(input:focus-visible:read-write) {
+    outline: none;
+    border-color: var(--field-glow-color);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--field-glow-color) 35%, transparent),
+      0 0 12px -3px color-mix(in srgb, var(--field-glow-color) 55%, transparent);
+  }
+
+  & input:focus-visible:read-write {
+    outline: none;
+  }
+}
+
+/* Field text: 16px on small screens, 14px from 768px up.
+ *
+ * iOS Safari zooms the page when focus enters a field whose font is smaller
+ * than 16px, and does not zoom back out. One rule for every typeable text —
+ * field, search, select trigger — so neighbors stay the same size. */
+@utility field-text {
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+
+  @variant md {
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+  }
+}
+
+/* The veil behind everything that overlays — dialog, sheet, drawer.
+ * Do not combine with `bg-*`: the background belongs to this utility. */
+@utility scrim {
+  background-color: var(--scrim);
+  -webkit-backdrop-filter: blur(var(--scrim-blur));
+  backdrop-filter: blur(var(--scrim-blur));
+}
+
+/* Floating panels — list, menu, calendar — get the shadow and, in dark, a
+ * 1px light line on top that separates them from the card underneath. */
+@utility floating-edge {
+  box-shadow:
+    inset 0 1px 0 0 var(--floating-edge),
+    var(--floating-shadow);
+}

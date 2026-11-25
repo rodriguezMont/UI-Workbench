@@ -1,0 +1,363 @@
+/* =============================================================================
+ * Design tokens
+ *
+ * Two layers, and the split is the point:
+ *
+ *   1. Scales  raw values, named by family and step (`--neutral-600`,
+ *              `--accent-500`) and never by hue. Components never read them.
+ *   2. Roles   what a component asks for (`--text-primary`, `--surface-raised`).
+ *              Components read only these, through the Tailwind theme in
+ *              `theme.css` (`bg-surface-raised`, `text-primary`).
+ *
+ * The default theme is deliberately plain: a neutral gray scale plus a single
+ * accent. Rebranding means editing the scales, and only occasionally a role
+ * mapping — never a component.
+ *
+ * ## Light and dark
+ *
+ * Every themed role holds both values side by side, in `light-dark()`. The
+ * pair resolves where the color is *used*, against that element's
+ * `color-scheme`:
+ *
+ *   - by default the page follows the operating system;
+ *   - `data-theme="light"` or `data-theme="dark"` on any element forces that
+ *     scheme for its whole subtree (the `<html>` element for the page, or a
+ *     single section that must always read dark).
+ *
+ * Nothing is redeclared per theme, so a derived role (`--link` pointing at the
+ * accent scale) can never drift out of sync with the role it derives from.
+ *
+ * Contrast targets are WCAG 2.2 AA: 4.5:1 for text, 3:1 for large text, UI
+ * boundaries and chart marks. `tokens.test.ts` measures every pair that
+ * matters, in both schemes — a ratio written in a comment goes stale silently.
+ * ========================================================================== */
+
+:root {
+  color-scheme: light dark;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* ── 1. Scales ──────────────────────────────────────────────────────────────
+ * Never used by a component. Steps are uneven on purpose: each one exists
+ * because a role needs to clear a contrast target on a specific surface. */
+:root {
+  --neutral-0: #ffffff;
+  --neutral-100: #f4f4f5;
+  --neutral-200: #e4e4e7;
+  --neutral-300: #d4d4d8;
+  --neutral-350: #b4b4bc;
+  --neutral-400: #9a9aa3;
+  --neutral-450: #8a8a94;
+  --neutral-500: #7c7c86;
+  --neutral-600: #6b6b75;
+  --neutral-700: #52525b;
+  --neutral-800: #3f3f46;
+  --neutral-850: #27272a;
+  --neutral-900: #18181b;
+  --neutral-950: #0c0c0e;
+
+  --accent-300: #93c5fd;
+  --accent-400: #60a5fa;
+  --accent-600: #2563eb;
+  --accent-700: #1d4ed8;
+}
+
+/* ── 2. Roles ───────────────────────────────────────────────────────────────
+ * The only layer components touch. Each themed role is `light-dark(light,
+ * dark)`. */
+:root {
+  /* surface */
+  --surface: light-dark(var(--neutral-0), var(--neutral-900)); /* card, default */
+  --surface-raised: light-dark(var(--neutral-0), var(--neutral-850)); /* popover, menu, list */
+  --surface-sunken: light-dark(var(--neutral-100), var(--neutral-950)); /* page background */
+  --surface-chrome: light-dark(var(--neutral-0), var(--neutral-950)); /* header, side nav */
+  --surface-hover: light-dark(var(--neutral-100), var(--neutral-850)); /* hover, active item */
+  /* The option under the pointer or the arrow keys, inside something that
+   * floats. A tint of the accent, so the accent text written on it still
+   * reads — a lighter gray would wash it out in dark. The light tint stays
+   * faint: at 12% the accent text on it dropped below 4.5:1. */
+  --surface-highlight: light-dark(
+    color-mix(in srgb, var(--accent-600) 8%, transparent),
+    color-mix(in srgb, var(--accent-400) 14%, transparent)
+  );
+  --surface-placeholder: light-dark(var(--neutral-200), var(--neutral-800)); /* skeleton */
+  /* The emblem: the circle behind initials or an icon (avatar fallback). */
+  --surface-emblem: light-dark(var(--neutral-100), var(--neutral-850));
+  /* The surface that stands out from the page — the tooltip. */
+  --surface-contrast: light-dark(var(--neutral-900), var(--neutral-100));
+  /* A panel that reads dark in both schemes: a featured stat, a media header.
+   * Text on it uses the `--text-on-feature*` roles, never `--text-primary`. */
+  --surface-feature: var(--neutral-950);
+
+  /* text */
+  --text-primary: light-dark(var(--neutral-900), var(--neutral-100));
+  --text-secondary: light-dark(var(--neutral-700), var(--neutral-350));
+  /* The floor, not the default: hints, captions, placeholders. */
+  --text-subtle: light-dark(var(--neutral-600), var(--neutral-400));
+  /* Text on a dark filled control in both schemes (the alternate action). */
+  --text-inverse: var(--neutral-0);
+  --text-on-contrast: light-dark(var(--neutral-0), var(--neutral-950));
+  --text-on-feature: var(--neutral-0);
+  --text-on-feature-muted: rgb(255 255 255 / 0.78);
+  /* A large highlighted number on the feature panel. Large text: 3:1 floor. */
+  --text-figure: var(--accent-400);
+
+  /* boundary */
+  --border: light-dark(var(--neutral-200), var(--neutral-800)); /* decorative divider */
+  /* Field and control outlines: the 3:1 non-text contrast minimum. */
+  --border-strong: light-dark(var(--neutral-450), var(--neutral-500));
+  --border-emblem: var(--border);
+  --divider: var(--border);
+
+  /* accent and action */
+  /* Active state and emphasis, as text, icon or fill. */
+  --accent: light-dark(var(--accent-600), var(--accent-400));
+  /* Ink on an accent fill (checked box, chosen option). */
+  --text-on-accent: light-dark(var(--neutral-0), var(--neutral-950));
+  /* The primary button fill and its label. */
+  --action: var(--accent);
+  --action-text: var(--text-on-accent);
+  /* The sibling action next to the primary one: a neutral fill. */
+  --action-alt: light-dark(var(--neutral-800), var(--neutral-700));
+  /* Highlights outside buttons: badge, counter, chosen day, filled track. */
+  --signal: var(--accent);
+  --text-on-signal: var(--text-on-accent);
+  /* The TEXT of a highlighted element. In light it is the accent itself; in
+   * dark it is light ink, and the color stays on the border and the icon. */
+  --signal-label: light-dark(var(--accent-600), var(--neutral-100));
+  --accent-label: light-dark(var(--accent-600), var(--neutral-100));
+  /* Always underlined: the underline is the affordance, not the color. */
+  --link: light-dark(var(--accent-700), var(--accent-300));
+  --focus-ring: light-dark(var(--accent-600), var(--accent-300));
+
+  /* state — one ink for text on surfaces, one fill with the ink on top of it.
+   * Raw values live here because states are not part of the brand scales:
+   * a rebrand rarely touches them. */
+  --state-error: light-dark(#b91c1c, #f87171);
+  --state-success: light-dark(#15803d, #4ade80);
+  --state-warning: light-dark(#b45309, #fbbf24);
+  --state-error-fill: light-dark(#b91c1c, #dc2626);
+  --state-success-fill: light-dark(#15803d, #16a34a);
+  --state-warning-fill: light-dark(#b45309, #f59e0b);
+  --text-on-error: var(--neutral-0);
+  --text-on-success: light-dark(var(--neutral-0), var(--neutral-950));
+  --text-on-warning: light-dark(var(--neutral-0), var(--neutral-950));
+
+  /* chart — two series, told apart by lightness as well as hue, so they
+   * survive grayscale and color-vision deficiency. A third series does not
+   * get a color: it becomes its own small chart. */
+  --chart-1: var(--accent);
+  --chart-2: light-dark(var(--neutral-800), var(--neutral-300));
+  /* Series 1 receded behind a highlighted bar. */
+  --chart-1-soft: color-mix(in srgb, var(--chart-1) 40%, var(--surface));
+
+  /* ornament — decoration only, never behind text. */
+  --ornament-gradient: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 30%, var(--surface)),
+    color-mix(in srgb, var(--accent) 6%, var(--surface))
+  );
+
+  /* overlay and depth */
+  --scrim: light-dark(rgb(12 12 14 / 0.5), rgb(0 0 0 / 0.7));
+  --scrim-blur: 6px;
+  --floating-shadow:
+    0 10px 24px -6px light-dark(rgb(0 0 0 / 0.14), rgb(0 0 0 / 0.6)),
+    0 2px 6px -2px light-dark(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.4));
+  /* A 1px light line on top of floating panels: in dark, the border alone
+   * barely separates them from the card underneath. */
+  --floating-edge: light-dark(transparent, rgb(255 255 255 / 0.06));
+  --card-shadow:
+    0 1px 2px light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.3)),
+    0 8px 24px -8px light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.5));
+}
+
+/* ── Scheme-independent tokens ─────────────────────────────────────────── */
+:root {
+  /* motion — a shared vocabulary, so the product does not move with a
+   * different accent on every screen. */
+  --motion-instant: 90ms; /* touch feedback, state change */
+  --motion-fast: 160ms; /* appear and disappear: tooltip, popover */
+  --motion-base: 240ms; /* sheet, dialog, route transition */
+  --motion-slow: 420ms; /* large movement, only when it helps reading */
+  --motion-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-ease-out: cubic-bezier(0, 0, 0.2, 1); /* entering */
+  --motion-ease-in: cubic-bezier(0.4, 0, 1, 1); /* leaving */
+
+  /* layout and rhythm */
+  --space-unit: 4px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+  --measure: 68ch; /* max width of running text */
+  --container: 1200px; /* max width of page content */
+  /* The minimum touch AREA, and the box height of medium controls. A box may
+   * be smaller; its touch area never is (see the `touch-area` utility). */
+  --tap-target: 44px;
+
+  /* typography — the operating system's own UI font; no web font to load. */
+  --font-sans:
+    ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+}
+
+/* Whoever asks for motion to stop gets it. Not a courtesy: motion-triggered
+ * vestibular symptoms are real. Every duration above collapses, so animations
+ * written with these tokens shrink without needing their own exception. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-instant: 1ms;
+    --motion-fast: 1ms;
+    --motion-base: 1ms;
+    --motion-slow: 1ms;
+  }
+}
+
+/* ── Keyframes ────────────────────────────────────────────────────────────
+ * Movement for overlays, written against the motion tokens above.
+ *
+ * Several animate the individual `translate` and `scale` properties instead of
+ * `transform`. Tailwind v4 positions elements with `translate`, which is
+ * independent of `transform` — the two ADD UP. A keyframe on `transform` would
+ * offset a centered dialog a second time until the animation ended. */
+
+@keyframes ui-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ui-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes ui-tooltip-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes ui-dialog-in {
+  from {
+    opacity: 0;
+    scale: 0.97;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* The mobile drawer enters from the left and leaves the same way. */
+@keyframes ui-drawer-in {
+  from {
+    translate: -100% 0;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+@keyframes ui-drawer-out {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: -100% 0;
+  }
+}
+
+/* The toast's swipe-to-dismiss also moves it through `translate`. */
+@keyframes ui-toast-in {
+  from {
+    opacity: 0;
+    translate: 12px 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes ui-toast-out {
+  from {
+    opacity: 1;
+    translate: 0 0;
+  }
+  to {
+    opacity: 0;
+    translate: 12px 0;
+  }
+}
+
+/* The mobile banner slides down from behind the header, and back. No fade:
+ * the header is what hides it. */
+@keyframes ui-banner-in {
+  from {
+    translate: 0 -100%;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+@keyframes ui-banner-out {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -100%;
+  }
+}
+
+/* The skeleton breathes down to 0.55 and back — never to zero, or it blinks.
+ *
+ * Its own class, not an arbitrary-value utility: the pulse has its own long
+ * rhythm outside the motion tokens, so reduced motion must switch it off
+ * explicitly, through the SAME selector that switches it on. */
+@keyframes ui-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.ui-skeleton {
+  animation: ui-pulse 1400ms var(--motion-ease) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-skeleton {
+    animation: none;
+  }
+}

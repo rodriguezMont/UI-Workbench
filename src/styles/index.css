@@ -1,0 +1,7 @@
+/* The entry stylesheet. Order matters: Tailwind first, then the tokens it
+ * maps, then the base layer and the shared utilities. */
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./theme.css";
+@import "./base.css";
+@import "./utilities.css";
