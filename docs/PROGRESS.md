@@ -27,19 +27,25 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 | #4 | Overlay: Dialog, AlertDialog, Sheet, Overlay, FullScreenPanel, SideMenu, ActionMenu |
 | #5 | Workbench: shell, provisional logo, map, section pages, registry, approval flow, `vercel.json` |
 | #6 | Forms 1: Field, Fieldset, PasswordField, MaskedField (US), PhoneField, Select |
+| #7 | This progress file and the working rules |
 
-Health on `main`: 263 tests passing, type-check and lint clean, guard clean.
+In review: **#8, Forms 2 (choices)** — Checkbox, CheckboxCard, CheckboxList,
+RadioGroup, Switch (+ `useSwitchSave`), SegmentedControl, Slider, Rating,
+RatingInput, plus `lib/format.ts` (en-US numbers) and `lib/slider.ts`.
+
+Health on the Forms 2 branch: 328 tests passing, type-check, lint and build
+clean, guard clean.
 
 ## Component status
 
-26 of 67 registry pieces are built. The registry
+35 of 67 registry pieces are built (counting the Forms 2 branch). The registry
 (`src/workbench/registry.ts`) is the source of truth; this table is a snapshot.
 
 | Section | Built | To build |
 | --- | --- | --- |
 | Foundation | logo, roles | typography, grid, motion, icons |
-| Primitives | button, link, badge, avatar, tabs, tooltip, separator, action-menu | rating |
-| Forms | field, fieldset, password-field, masked-field, select | checkbox, checkbox-card, checkbox-list, radio-group, switch, rating-input, segmented-control, slider, date-picker, time-picker, date-time-picker, file-upload, photo-upload, image-cropper, profile-cover, photo-gallery, card-form |
+| Primitives | button, link, badge, avatar, tabs, tooltip, separator, action-menu, rating | — |
+| Forms | field, fieldset, password-field, masked-field, select, checkbox, checkbox-card, checkbox-list, radio-group, switch, rating-input, segmented-control, slider | date-picker, time-picker, date-time-picker, file-upload, photo-upload, image-cropper, profile-cover, photo-gallery, card-form |
 | Data | — | table, data-table, stat, time-series, columns, comparison, ranking, meter, period, chart-states, radial-kpi |
 | States | empty, loading, error, progress | — |
 | Navigation | app-shell, side-menu | header, breadcrumb, footer, search, filters, account-switcher |
@@ -50,12 +56,10 @@ No piece is approved yet: approving is the reviewer's act, in the workbench.
 
 ## Next steps
 
-1. **Forms 2 — choices**: checkbox, checkbox-card, checkbox-list, radio-group,
-   switch, segmented-control, slider, rating-input (and `rating` in
-   Primitives, which rating-input pairs with).
-2. **Forms 3 — dates**: date-picker (MM/DD/YYYY, en-US calendar, week starts
-   on Sunday), time-picker (12-hour display, `HH:mm` submitted),
-   date-time-picker.
+1. **Forms 2 — choices**: in review as #8; after the merge, close the branch.
+2. **Forms 3 — dates**: date-picker (react-day-picker in en-US, MM/DD/YYYY,
+   week starts on Sunday), time-picker (12-hour display, `HH:mm` submitted),
+   date-time-picker, and the date-time helpers adapted to en-US.
 3. **Forms 4 — files and images**: file-upload, photo-upload, image-cropper,
    profile-cover, photo-gallery, card-form.
 4. **Navigation**: header (provisional logo, no brand line), breadcrumb,
@@ -88,7 +92,8 @@ ruleset so a red PR cannot be merged.
 - **Register and show it**: a registry row per component (the file name is the
   id), the section marked `built: true` once it has a page, and each built
   piece rendered with `<Piece id>` on its section page. The registry test
-  enforces all three.
+  enforces all three. A test that needs a piece still "to build" takes one
+  from the registry, never by name — a named one breaks when its group lands.
 - **Tests**: behavior tests per component (Testing Library + jsdom; use
   `installDomStubs()` from `src/test/dom.ts` for popovers and lists).
 - **Verify before the PR**: `npm run check`, `npm run build`, and the

@@ -6,9 +6,11 @@ its own source tree and owns them from then on. There is no npm package.
 
 > **Status:** design tokens, the blocklist guard, the workbench (shell, map,
 > section pages and approval flow) and the first component groups —
-> primitives, states, overlays and the form basics (field, fieldset,
-> password, masked fields for US formats, phone with country, select). The
-> rest of forms, data, content and navigation are on the map as "to build".
+> primitives (rating included), states, overlays, the form basics (field,
+> fieldset, password, masked fields for US formats, phone with country,
+> select) and the choice controls (checkbox, checkbox card, checkbox list,
+> radio group, switch, segmented control, slider, rating input). The rest of
+> forms, data, content and navigation are on the map as "to build".
 > Details, next steps and the working rules: [docs/PROGRESS.md](docs/PROGRESS.md).
 
 ## Stack
@@ -44,7 +46,8 @@ is not part of CI on purpose — see below.
 src/
   components/ui/    the components, one file each
   components/brand/ the provisional logo — the one file a rebrand replaces
-  lib/              shared helpers: cn (class-name merging), overlay breakpoints
+  lib/              shared helpers: cn (class-name merging), overlay breakpoints,
+                    masks, number formats (format.ts), the slider's step
   styles/
     tokens.css      scales and roles, light and dark
     theme.css       roles → Tailwind utilities; default palette removed
