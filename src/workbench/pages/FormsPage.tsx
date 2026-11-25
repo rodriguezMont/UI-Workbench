@@ -86,30 +86,51 @@ export function FormsPage() {
     <SectionPage id="forms">
       <Piece id="field">
         <State label={t.field.plain} note={t.field.plainNote}>
-          <Field label={t.field.name} hint={t.field.nameHint} autoComplete="name" />
+          <Field label={t.field.name} hint={t.field.nameHint} placeholder={t.field.namePlaceholder} autoComplete="name" />
         </State>
         <State label={t.field.icon} note={t.field.iconNote}>
           <Field label={t.field.email} icon="email" type="email" placeholder={t.field.emailPlaceholder} autoComplete="email" />
         </State>
         <State label={t.field.error} note={t.field.errorNote}>
-          <Field label={t.field.email} icon="email" type="email" defaultValue="name.example.com" error={t.field.emailError} />
+          <Field
+            label={t.field.email}
+            icon="email"
+            type="email"
+            placeholder={t.field.emailPlaceholder}
+            defaultValue="name.example.com"
+            error={t.field.emailError}
+          />
         </State>
         <State label={t.field.adornments} note={t.field.adornmentsNote}>
           <div className="grid w-full gap-3 sm:grid-cols-2">
-            <Field label={t.field.price} prefix="$" inputMode="decimal" defaultValue="49.00" />
-            <Field label={t.field.distance} suffix="mi" inputMode="numeric" defaultValue="25" />
+            <Field label={t.field.price} prefix="$" inputMode="decimal" placeholder={t.field.pricePlaceholder} defaultValue="49.00" />
+            <Field label={t.field.distance} suffix="mi" inputMode="numeric" placeholder={t.field.distancePlaceholder} defaultValue="25" />
           </div>
         </State>
         <State label={t.field.status} note={t.field.statusNote}>
           <div className="grid w-full gap-3 sm:grid-cols-2">
-            <Field label={t.field.address} icon="address" status="loading" loadingLabel={t.field.looking} defaultValue="1600 Pennsylvania Ave" />
-            <Field label={t.field.verified} icon="website" status="valid" validLabel={t.field.confirmed} defaultValue="example.com" />
+            <Field
+              label={t.field.address}
+              icon="address"
+              status="loading"
+              loadingLabel={t.field.looking}
+              placeholder={t.field.addressPlaceholder}
+              defaultValue="1600 Pennsylvania Ave"
+            />
+            <Field
+              label={t.field.verified}
+              icon="website"
+              status="valid"
+              validLabel={t.field.confirmed}
+              placeholder={t.field.websitePlaceholder}
+              defaultValue="example.com"
+            />
           </div>
         </State>
         <State label={t.field.readOnly} note={t.field.readOnlyNote}>
           <div className="grid w-full gap-3 sm:grid-cols-2">
-            <Field label={t.field.accountId} readOnly defaultValue={t.field.accountIdValue} />
-            <Field label={t.field.plan} disabled defaultValue="Team" hint={t.field.planReason} />
+            <Field label={t.field.accountId} readOnly placeholder={t.field.accountIdPlaceholder} defaultValue={t.field.accountIdValue} />
+            <Field label={t.field.plan} disabled placeholder={t.field.planPlaceholder} defaultValue="Team" hint={t.field.planReason} />
           </div>
         </State>
         <State label={t.field.textarea} note={t.field.textareaNote} wide>
@@ -121,16 +142,16 @@ export function FormsPage() {
         <State label={t.fieldset.label} note={t.fieldset.note}>
           <Fieldset legend={t.fieldset.legend} hint={t.fieldset.hint} error={t.fieldset.error}>
             <div className="grid gap-3">
-              <Field label={t.fieldset.street} autoComplete="address-line1" />
-              <Field label={t.fieldset.city} autoComplete="address-level2" />
+              <Field label={t.fieldset.street} placeholder={t.fieldset.streetPlaceholder} autoComplete="address-line1" />
+              <Field label={t.fieldset.city} placeholder={t.fieldset.cityPlaceholder} autoComplete="address-level2" />
             </div>
           </Fieldset>
         </State>
         <State label={t.fieldset.disabled} note={t.fieldset.disabledNote}>
           <Fieldset legend={t.fieldset.lockedLegend} hint={t.fieldset.lockedHint} disabled>
             <div className="grid gap-3">
-              <Field label={t.fieldset.street} defaultValue="350 Fifth Avenue" />
-              <Field label={t.fieldset.city} defaultValue="New York" />
+              <Field label={t.fieldset.street} placeholder={t.fieldset.streetPlaceholder} defaultValue="350 Fifth Avenue" />
+              <Field label={t.fieldset.city} placeholder={t.fieldset.cityPlaceholder} defaultValue="New York" />
             </div>
           </Fieldset>
         </State>
@@ -138,13 +159,20 @@ export function FormsPage() {
 
       <Piece id="password-field">
         <State label={t.password.signUp} note={t.password.signUpNote}>
-          <PasswordField label={t.password.newPassword} autoComplete="new-password" minLength={8} />
+          <PasswordField label={t.password.newPassword} placeholder={t.password.placeholder} autoComplete="new-password" minLength={8} />
         </State>
         <State label={t.password.signIn}>
-          <PasswordField label={t.password.current} autoComplete="current-password" />
+          <PasswordField label={t.password.current} placeholder={t.password.placeholder} autoComplete="current-password" />
         </State>
         <State label={t.password.error} note={t.password.errorNote}>
-          <PasswordField label={t.password.newPassword} autoComplete="new-password" minLength={8} defaultValue="abc" error={t.password.tooShort} />
+          <PasswordField
+            label={t.password.newPassword}
+            placeholder={t.password.placeholder}
+            autoComplete="new-password"
+            minLength={8}
+            defaultValue="abc"
+            error={t.password.tooShort}
+          />
         </State>
       </Piece>
 
@@ -162,7 +190,7 @@ export function FormsPage() {
           <MaskedField mask="currency" label={t.masked.priceLabel} prefix="$" placeholder="0.00" />
         </State>
         <State label={t.masked.integer} note={t.masked.integerNote}>
-          <MaskedField mask="integer" label={t.masked.seatsLabel} suffix={t.masked.seatsSuffix} defaultValue="1500" />
+          <MaskedField mask="integer" label={t.masked.seatsLabel} suffix={t.masked.seatsSuffix} placeholder={t.masked.seatsPlaceholder} defaultValue="1500" />
         </State>
         <State label={t.masked.international} note={t.masked.internationalNote}>
           <PhoneDemo />

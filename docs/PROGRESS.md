@@ -94,6 +94,9 @@ ruleset so a red PR cannot be merged.
   piece rendered with `<Piece id>` on its section page. The registry test
   enforces all three. A test that needs a piece still "to build" takes one
   from the registry, never by name — a named one breaks when its group lands.
+- **Every demo text input has a placeholder** — an example of what goes in
+  (dots for passwords). `pages/placeholders.test.tsx` renders every section
+  page and fails on a text input without one.
 - **Tests**: behavior tests per component (Testing Library + jsdom; use
   `installDomStubs()` from `src/test/dom.ts` for popovers and lists).
 - **Verify before the PR**: `npm run check`, `npm run build`, and the
