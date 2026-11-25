@@ -7,9 +7,12 @@
  * Writing the forbidden terms anywhere in the repo would publish exactly what
  * the guard exists to keep out. So the list lives outside version control:
  *
- *   - `.blocklist` at the repository root, ignored by git (local machines);
- *   - or the `BLOCKLIST` environment variable, newline- or comma-separated
- *     (CI, where a secret holds it).
+ *   - `.blocklist` at the repository root, ignored by git;
+ *   - or the `BLOCKLIST` environment variable, newline- or comma-separated,
+ *     for a shell or git worktree that does not have the file.
+ *
+ * The list never leaves the machine where the work is done — it is not a CI
+ * secret either. The check happens here, before anything is committed.
  *
  * Both are read when present. With neither, the guard refuses to pass: a
  * guard that silently checks nothing is worse than no guard, because it looks
@@ -17,7 +20,7 @@
  * ignored, the guard stops too.
  *
  * Findings name the file, the line and the term's position in the list —
- * never the term itself, so CI logs do not leak the list either.
+ * never the term itself, so terminal output and logs do not leak the list.
  *
  * ## Matching
  *
