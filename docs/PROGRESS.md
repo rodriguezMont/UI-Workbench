@@ -35,22 +35,27 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 | #15 | Forms 4: FileUpload, PhotoUpload, ImageCropper, ProfileCover, PhotoGallery, CardForm; file, image and card helpers |
 | #13 | Navigation: Header, Breadcrumb, Footer, Search, Filters, AccountSwitcher; approval tests no longer assume a piece is left to build |
 | #14 | Data: Table, DataTable, Stat, TimeSeries, Columns, Comparison, Ranking, Meter, Period, ChartStates, RadialKpi; chart parts; `lib/chart.ts`, `lib/table.ts`, `lib/report-period.ts`; shared `lib/iso-date.ts` |
+| #16 | README and this file record the finished map |
+| #17 | Polish 1: broken workbench demos and three component defects |
+| #18 | Polish 2: the frame — section intros, explanation boxes with bold leads, stage light and glass in dark |
+| #19 | Polish 3: Primitives — every piece with its states and explanation |
+| #20 | Polish 4: Forms, fields and choices — states and explanations for 13 pieces; `select` split into single, search and multiple |
 
 #10 to #15 were built in parallel by six builder agents, one per group, each
 in its own git worktree. Each group was then integrated one at a time: the
 diff read for leftovers from the source, a rebase onto `main`, the workbench
 checked in the browser, and a draft PR. They were merged in the order listed.
 
-Health on `main`: 657 tests passing (one skipped: it only runs while some
+Health on `main`: 662 tests passing (one skipped: it only runs while some
 piece is still to build), type-check, lint and build clean, guard clean.
 
 ## Component status
 
-All 67 registry pieces are built, in all eight sections. The registry
+All 69 registry pieces are built, in all eight sections. The registry
 (`src/workbench/registry.ts`) is the source of truth.
 
 **No piece is approved yet.** Approving is the reviewer's act, in the
-workbench: the map shows 0 of 67.
+workbench: the map shows 0 of 69.
 
 ## Next steps
 
@@ -58,14 +63,20 @@ workbench: the map shows 0 of 67.
    (every page, piece and state at 1280 light, 1280 dark and 375). The
    components were ported faithfully; what fell short is the workbench layer:
    explanation, states, staging and finish. In order:
-   1. Bugs in the demos and three component defects (#17).
+   1. Bugs in the demos and three component defects (#17). Done.
    2. The frame: section intros, explanation boxes with bold leads, the
-      stage light and glass cards in dark, more air between pieces.
+      stage light and glass cards in dark, more air between pieces (#18).
+      Done.
    3. Section by section, one PR each: an explanation box on every piece and
-      a note on every state; the missing states (about half of the source's);
-      split `select` (single, search, multiple) and `stat` (cases, group);
-      a "State colors" piece and a measured contrast table on Roles; a
-      "Dashboard" sector in Data; coherent demo data and a pinned "today".
+      a note on every state; the missing states (about half of the source's).
+      Done: Primitives (#19), Forms fields and choices (#20, which also split
+      `select` into single, search and multiple). Still to do, in order:
+      Forms dates, files and images (date, time and date-time pickers, file
+      and photo upload, cropper, profile cover, gallery, card form); Data
+      (split `stat` into cases and group, a "Dashboard" sector, coherent demo
+      numbers and a pinned "today"); States and Overlay; Navigation and
+      Content; Foundation (a "State colors" piece and a measured contrast
+      table on Roles).
 2. **General review in the workbench**, piece by piece, with approvals.
    Still noted for it: the footer's thick gradient edge from the source
    became a plain top border — restore it or keep it plain.

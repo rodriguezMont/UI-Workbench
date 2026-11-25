@@ -95,6 +95,8 @@ const ROWS: readonly Row[] = [
   { id: "password-field", section: "forms" },
   { id: "masked-field", section: "forms" },
   { id: "select", section: "forms" },
+  { id: "select-search", section: "forms" },
+  { id: "select-multiple", section: "forms" },
   { id: "fieldset", section: "forms" },
   { id: "checkbox", section: "forms" },
   { id: "checkbox-card", section: "forms" },
