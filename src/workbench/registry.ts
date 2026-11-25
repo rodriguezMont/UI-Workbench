@@ -104,12 +104,12 @@ const ROWS: readonly Row[] = [
   { id: "date-picker", section: "forms" },
   { id: "time-picker", section: "forms" },
   { id: "date-time-picker", section: "forms" },
-  { id: "file-upload", section: "forms", built: false },
-  { id: "photo-upload", section: "forms", built: false },
-  { id: "image-cropper", section: "forms", built: false },
-  { id: "profile-cover", section: "forms", built: false },
-  { id: "photo-gallery", section: "forms", built: false },
-  { id: "card-form", section: "forms", built: false },
+  { id: "file-upload", section: "forms" },
+  { id: "photo-upload", section: "forms" },
+  { id: "image-cropper", section: "forms" },
+  { id: "profile-cover", section: "forms" },
+  { id: "photo-gallery", section: "forms" },
+  { id: "card-form", section: "forms" },
 
   // data
   { id: "table", section: "data", built: false },
