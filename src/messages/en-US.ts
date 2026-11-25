@@ -12,6 +12,25 @@ export const enUS = {
       /** Read after an external link, for people who do not see the glyph. */
       opensInNewTab: "(opens in a new tab)",
     },
+    empty: {
+      didYouMean: "Did you mean",
+    },
+    error: {
+      title: "Couldn't load this",
+      retry: "Try again",
+      copyCode: "Copy error code",
+      copied: "Code copied.",
+      copyFailed: "Couldn't copy. The code is right below.",
+      /** Read before the revealed code, for people who do not see the layout. */
+      codeForSupport: "Code for support:",
+    },
+    toast: {
+      dismiss: "Dismiss notification",
+    },
+    progress: {
+      /** Announced while the route bar is running. */
+      loadingPage: "Loading the page",
+    },
   },
 
   /** Copy of the review workbench (not part of the library). */
@@ -40,6 +59,58 @@ export const enUS = {
       },
       sample: "The quick brown fox",
       forcedDark: "This section forces the dark scheme with data-theme.",
+    },
+
+    states: {
+      heading: "States",
+      intro: "Waiting, nothing found, something failed, something happened.",
+      skeleton: {
+        title: "Skeleton",
+        label: "Loading your projects",
+        note: "Screen readers hear the label of the waiting region, not the shapes.",
+      },
+      empty: {
+        title: "Empty",
+        withSuggestions: "No results for “dashbord”",
+        withSuggestionsHint: "Check the spelling or try one of these.",
+        suggestions: ["dashboard", "dashboards", "board"],
+        searching: "Searching for",
+        withAction: "No projects yet",
+        withActionHint: "Projects you create or join show up here.",
+        create: "Create a project",
+      },
+      error: {
+        title: "Error",
+        description: "The list of projects didn't load. Check your connection and try again.",
+        retrying: "Trying again…",
+        note: "The code is copied, never printed — unless copying fails.",
+      },
+      toast: {
+        title: "Toast",
+        info: "Info",
+        success: "Success",
+        warning: "Warning",
+        error: "Error",
+        messages: {
+          info: "Your export is being prepared",
+          success: "Changes saved",
+          warning: "Your session expires in 5 minutes",
+          error: "Couldn't save your changes",
+        },
+        errorDescription: "Check your connection and try again.",
+        note: "Narrow the window below 768px: the toast becomes a banner under the header.",
+      },
+      progress: {
+        title: "Progress",
+        uploading: "Uploading report.pdf",
+        uploaded: "Uploaded",
+        failed: "Failed at 60%",
+        saving: "Saving…",
+        page: "Loading your dashboard",
+        pageSmall: "Preparing the export",
+        route: "Route bar",
+        simulate: "Simulate a navigation",
+      },
     },
 
     foundation: {

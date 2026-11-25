@@ -361,3 +361,84 @@
     animation: none;
   }
 }
+
+/* ── Long-wait loaders ─────────────────────────────────────────────────────
+ * Their own classes for the same reason as the skeleton: they run on rhythms
+ * outside the motion tokens, so reduced motion switches them off through the
+ * SAME selector that switches them on. Standing still, the text beside them
+ * and `role="status"` still say what is happening.
+ *
+ * These are the places a brand usually shows up in a loader: restyle them
+ * here (a gradient arc, a branded bar) and the components follow. */
+
+/* The ring: an arc that starts transparent and ends in the accent, spinning.
+ * The end meets the transparent start, so there is no visible seam. The glow
+ * is a `drop-shadow` on the arc itself, so it follows the curve. */
+.ui-ring {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    color-mix(in srgb, var(--accent) 30%, transparent) 90deg,
+    var(--accent) 356deg,
+    transparent 360deg
+  );
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - var(--ring-width)),
+    #000 calc(100% - var(--ring-width))
+  );
+  mask: radial-gradient(farthest-side, transparent calc(100% - var(--ring-width)), #000 calc(100% - var(--ring-width)));
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--accent) 40%, transparent));
+  animation: ui-ring 1100ms linear infinite;
+}
+
+/* The head of the arc: a dot that closes the tip, so the stroke does not end
+ * in a hard cut. It spins on the same axis. */
+.ui-ring-head {
+  animation: ui-ring 1100ms linear infinite;
+}
+
+.ui-ring-dot {
+  background: var(--accent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+@keyframes ui-ring {
+  to {
+    rotate: 1turn;
+  }
+}
+
+/* The route bar runs edge to edge. It grows fast, slows near the end and waits
+ * at 92%; the component closes the last stretch when the route arrives. The
+ * tip fades instead of ending square — in percent, not pixels, because the bar
+ * grows by `scaleX` and a pixel mask would shrink with it. */
+.ui-route-bar {
+  background: var(--accent);
+  -webkit-mask-image: linear-gradient(to right, #000 97.5%, transparent);
+  mask-image: linear-gradient(to right, #000 97.5%, transparent);
+  transform-origin: left center;
+  animation: ui-route 8s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes ui-route {
+  from {
+    transform: scaleX(0.02);
+  }
+  to {
+    transform: scaleX(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-ring,
+  .ui-ring-head {
+    animation: none;
+  }
+  /* Standing still, the bar spans the full width: whoever asked for less
+   * motion still sees that something is happening, and the text says what. */
+  .ui-route-bar {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
