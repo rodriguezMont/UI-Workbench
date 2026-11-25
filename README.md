@@ -4,10 +4,11 @@ A brand-neutral library of React components, with a workbench to review them.
 Components are **distributed by copy**: an app takes the files it needs into
 its own source tree and owns them from then on. There is no npm package.
 
-> **Status:** design tokens, the blocklist guard and the first component
-> group (foundation: Button, TextLink, Badge, Avatar, Separator, Tabs,
-> Tooltip). The remaining groups, the workbench approval flow and the layout
-> ruler arrive in the next steps.
+> **Status:** design tokens, the blocklist guard and two component groups —
+> foundation (Button, TextLink, Badge, Avatar, Separator, Tabs, Tooltip) and
+> states (Skeleton, Empty, ErrorState, Toast, ProgressBar, Spinner,
+> PageSpinner, RouteProgress). The remaining groups, the workbench approval
+> flow and the layout ruler arrive in the next steps.
 
 ## Stack
 
@@ -41,7 +42,7 @@ is not part of CI on purpose — see below.
 ```
 src/
   components/ui/    the components, one file each
-  lib/cn.ts         class-name merging shared by every component
+  lib/              shared helpers: cn (class-name merging), overlay breakpoints
   styles/
     tokens.css      scales and roles, light and dark
     theme.css       roles → Tailwind utilities; default palette removed
@@ -90,15 +91,19 @@ Copy what you need and keep the paths:
    `theme.css`, `base.css` and `utilities.css` right after
    `@import "tailwindcss"` in your own entry stylesheet. Requires
    **Tailwind CSS v4**.
-2. The components you want from `src/components/ui/`, plus `src/lib/cn.ts`
-   and `src/messages/`. Runtime dependencies: `radix-ui`, `lucide-react`,
+2. The components you want from `src/components/ui/`, plus `src/lib/` and
+   `src/messages/`. Runtime dependencies: `radix-ui`, `lucide-react`,
    `class-variance-authority`, `clsx`, `tailwind-merge`.
 3. Map the `@/` alias to your source folder (Vite `resolve.alias` and
    `tsconfig` `paths`).
-4. Mount `TooltipProvider` once at the root of the app.
+4. Mount `TooltipProvider` and `Toaster` once at the root of the app. On
+   phones the toast becomes a banner under the header: set `--header-h` to
+   your header's height (it defaults to `4rem`).
 
 No component imports a router: links are passed in from outside, through
 `asChild` — `<TextLink asChild><RouterLink to="/about">About</RouterLink></TextLink>`.
+`RouteProgress` takes the navigation state as a prop (`active`) for the same
+reason.
 `src/components/ui/conventions.test.ts` fails if a component ever imports one.
 
 ## The blocklist guard
