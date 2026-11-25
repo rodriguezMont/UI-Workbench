@@ -1,11 +1,12 @@
 import { messages } from "@/messages";
 
 import { componentsOf, findSection, type SectionId } from "../registry";
+import { Rich } from "../rich";
 
 const m = messages.workbench.section;
 
 /**
- * The frame of one section: title, summary, its pieces, and — at the end —
+ * The frame of one section: title, intro, its pieces, and — at the end —
  * the pieces still on the map without a shape, so what is missing stays in
  * view instead of disappearing from the page.
  */
@@ -16,12 +17,16 @@ export function SectionPage({ id, children }: { id: SectionId; children: React.R
 
   return (
     <div className="space-y-8">
-      <header className="space-y-1">
+      <header className="space-y-2">
         <h1 className="text-3xl font-bold">{section.name}</h1>
-        <p className="text-secondary">{section.summary}</p>
+        {/* The rule the section protects, not a list of its pieces — that is
+            the map's line. */}
+        <p className="text-sm leading-relaxed text-secondary">
+          <Rich text={section.intro} />
+        </p>
       </header>
 
-      <div className="space-y-6">{children}</div>
+      <div className="space-y-8">{children}</div>
 
       {toBuild.length ? (
         <section aria-labelledby="to-build" className="rounded-lg border border-dashed border-border p-4">

@@ -67,15 +67,59 @@ export const workbench = {
       "Approving is a person's act, never the code's: a click on the piece's header, which writes one line to src/workbench/approvals.json. The file is versioned on purpose — a mass approval would show up in the pull request as one changed line per piece. Approvals are saved only while the dev server runs; the deployed workbench is read-only.",
   },
 
+  /**
+   * `summary` is the one line on the map; `intro` opens the section's page — the
+   * rule the section protects, with its claim in bold (`**…**`, see `Rich`).
+   */
   sections: {
-    foundation: { name: "Foundation", summary: "tokens, logo, type, grid and motion — the base of everything" },
-    primitives: { name: "Primitives", summary: "the pieces every composition uses: button, link, badge, tabs" },
-    forms: { name: "Forms", summary: "fields, masks, selects, choices, dates, sliders and uploads" },
-    data: { name: "Data", summary: "tables, numbers, charts and the dashboard" },
-    states: { name: "States", summary: "empty is never empty, loading, error and progress" },
-    navigation: { name: "Navigation", summary: "app shell, header, search, filters and the account switcher" },
-    content: { name: "Content", summary: "carousel and the map placeholder" },
-    overlay: { name: "Overlay", summary: "responsive overlay, sheet, dialog and toast" },
+    foundation: {
+      name: "Foundation",
+      summary: "tokens, logo, type, grid and motion — the base of everything",
+      intro:
+        "The base under everything else: the color roles and what they are for, the logo, the type scale, spacing and touch area, motion and icons. **Nothing on this page is typed by hand** — sizes, radii and durations are read from the rendered page, and every color pair is measured by the token tests, so none of it can drift from the CSS.",
+    },
+    primitives: {
+      name: "Primitives",
+      summary: "the pieces every composition uses: button, link, badge, tabs",
+      intro:
+        "The pieces every composition uses, each in its real states — not only the default, because a component usually breaks silently when it is disabled, focused or busy. **Press Tab to walk through everything**: the focus ring is the same on every control, and it comes from one place.",
+    },
+    forms: {
+      name: "Forms",
+      summary: "fields, masks, selects, choices, dates, sliders and uploads",
+      intro:
+        "Every field, choice and upload, under one rule: **the accessibility wiring is written once, inside the components**. The label is tied to its control, the hint and the error are pointed at by `aria-describedby`, and `aria-invalid` marks the wrong state. A form that redid this by hand would get a piece wrong — and the wrong piece never shows on screen for people who can see it.",
+    },
+    data: {
+      name: "Data",
+      summary: "tables, numbers, charts and the dashboard",
+      intro:
+        "The screens that show numbers: tables to read and to search, figures at a glance, and charts. **The charts are SVG and HTML drawn here, with no chart library**, and they carry two series at most — a third does not get a color, it becomes its own small chart. Every value a chart draws can also be read as text.",
+    },
+    states: {
+      name: "States",
+      summary: "empty is never empty, loading, error and progress",
+      intro:
+        "What appears when there is nothing to show yet — and it decides whether the person waits, tries again or leaves. **None of these screens is neutral**: an empty list reads as a broken product, and an error with no way out turns a failure of seconds into a lost visit.",
+    },
+    navigation: {
+      name: "Navigation",
+      summary: "app shell, header, search, filters and the account switcher",
+      intro:
+        "The pieces that take someone from a question to a list: the shell, the header, search and filters. Each carries a rule that, broken, ends the same way — **the person concludes there is less here than there is**, and leaves. **Nothing is wired to a backend**: results are made up, and links stay on this page.",
+    },
+    content: {
+      name: "Content",
+      summary: "carousel and the map placeholder",
+      intro:
+        "The pieces that show what a page is about. Here the rules move from accessibility to **honesty about what the screen claims**: an image that changes only when someone asks, and a map that says it is a drawing.",
+    },
+    overlay: {
+      name: "Overlay",
+      summary: "responsive overlay, sheet, dialog and toast",
+      intro:
+        "The pieces that interrupt — and the costly part is the invisible one: **focus trapped while open, focus returned to the trigger on close, and the rest of the page hidden from screen readers**. Radix provides it, and it breaks silently when built by hand. Go through everything with Tab and Escape.",
+    },
   },
 
   components: {
@@ -165,7 +209,7 @@ export const workbench = {
       markNote: "for the collapsed panel and favicons",
       onFeature: "On a dark panel",
       onFeatureNote: "it follows the text color",
-      note: "A provisional mark: a neutral square with the accent, and the name set in the system font. Replace it with the brand's own artwork in src/components/brand/logo.tsx — every place that shows a logo reads it from there.",
+      note: "**A provisional mark, made to be replaced.** A neutral square with the accent, and the name set in the system font. The brand's own artwork goes in `src/components/brand/logo.tsx` — every place that shows a logo reads it from there.",
     },
     roles: {
       groups: {
@@ -183,7 +227,7 @@ export const workbench = {
         forcedDark: "data-theme on a section",
       },
       sample: "The quick brown fox",
-      note: "Components read only these roles; the scales underneath are what a rebrand edits. Every pair that matters is measured in both schemes by src/styles/tokens.test.ts — a contrast ratio written in a comment goes stale silently.",
+      note: "**Components read only these roles**; the scales underneath are what a rebrand edits. **Every pair that matters is measured** in both schemes by `src/styles/tokens.test.ts` — a contrast ratio written in a comment goes stale silently.",
     },
     button: {
       variants: "Variants",
@@ -379,7 +423,7 @@ export const workbench = {
       openDrawer: "Open the drawer",
       drawerNote: "below 768px only",
       explain:
-        "The shell is the frame of this page, so it cannot sit inside a piece. These buttons drive the real one: the side panel collapses to icons on desktop, and on phones the panel becomes a drawer behind the hamburger.",
+        "**The shell is the frame of this page**, so it cannot sit inside a piece. **These buttons drive the real one**: the side panel collapses to icons on desktop, and on phones the panel becomes a drawer behind the hamburger.",
     },
     sideMenu: {
       label: "Drawer",
@@ -701,10 +745,10 @@ export const workbench = {
       noneNote: "an empty list renders nothing",
       nothingDrawn: "Nothing is drawn beside this text — on purpose.",
       explain: [
-        "Scrolling is the browser's own, with snap points — no gesture library. A finger swipes as on any phone list and a trackpad scrolls sideways. The arrows sit on the image with their own background and fade at the ends without dropping focus.",
-        "It never loops and never advances on its own: an image that changes unasked takes away control of what the person is looking at. With the strip in focus, the arrow keys, Home and End move one image, and each change is announced.",
-        "Dots up to seven images, a counter after that: each dot is a button with a 44px touch area, and seven fit a 375px phone. The current dot is wider — the shape says where you are, not only the color.",
-        "No images, no carousel. Only the first image loads up front; the rest wait until they come near, because images are the heavy bytes of a page.",
+        "**Scrolling is the browser's own**, with snap points — no gesture library. A finger swipes as on any phone list and a trackpad scrolls sideways. The arrows sit on the image with their own background and fade at the ends without dropping focus.",
+        "**It never loops and never advances on its own**: an image that changes unasked takes away control of what the person is looking at. With the strip in focus, the arrow keys, Home and End move one image, and each change is announced.",
+        "**Dots up to seven images, a counter after that**: each dot is a button with a 44px touch area, and seven fit a 375px phone. The current dot is wider — the shape says where you are, not only the color.",
+        "**No images, no carousel.** Only the first image loads up front; the rest wait until they come near, because images are the heavy bytes of a page.",
       ],
     },
     mapPlaceholder: {
@@ -715,8 +759,8 @@ export const workbench = {
       customLabel: "Map preview. The drawing is not to scale.",
       customCaption: "Map preview",
       explain: [
-        "Illustrative, and it says so on screen. The streets are generic and the pin is always in the center: the drawing holds the place of a map without pretending to be a location. The address as text, next to it, is what informs.",
-        "Every fill is a role token — blocks, streets, park and pin — so the drawing follows light and dark, and a real map styled later can take the same roles. No map library and no tiles: whether a map belongs on the screen is the caller's decision.",
+        "**Illustrative, and it says so on screen.** The streets are generic and the pin is always in the center: the drawing holds the place of a map without pretending to be a location. The address as text, next to it, is what informs.",
+        "**Every fill is a role token** — blocks, streets, park and pin — so the drawing follows light and dark, and a real map styled later can take the same roles. No map library and no tiles: whether a map belongs on the screen is the caller's decision.",
       ],
     },
     /** Shared by the foundation pieces that read their numbers from the screen. */
@@ -749,9 +793,9 @@ export const workbench = {
       measureNote: "running text stops at --measure",
       measureSample:
         "Running text is held to about 68 characters per line, the width the eye can follow back to the start of the next line without losing its place. Short notes and labels do not need the limit; paragraphs do. Widen the window: this paragraph stops growing while the card keeps going.",
-      note: "The interface uses the operating system's own font: nothing to download, no flash while a web font swaps in, and text that looks native on every platform. A brand font replaces --font-sans in tokens.css and the scale stays. Sizes come from Tailwind's type scale, so a component asks for text-sm, never for a pixel value.",
+      note: "**The operating system's own font.** Nothing to download, no flash while a web font swaps in, and text that looks native on every platform. A brand font replaces `--font-sans` in `tokens.css` and the scale stays. Sizes come from Tailwind's type scale, so a component asks for `text-sm`, never for a pixel value.",
       noteField:
-        "Field text is the one size that changes with the screen. iOS Safari zooms the page when focus enters a field under 16px and does not zoom back, so every typeable text uses the field-text utility: 16px on phones, 14px from 768px up.",
+        "**Field text is the one size that changes with the screen.** iOS Safari zooms the page when focus enters a field under 16px and does not zoom back, so every typeable text uses the `field-text` utility: 16px on phones, 14px from 768px up.",
     },
     grid: {
       space: "Space",
@@ -763,7 +807,7 @@ export const workbench = {
       touchText:
         "The box is what you see; the area is where a finger lands. A box may be 36px — the area is never smaller than 44 × 44, and two neighbors' areas never overlap.",
       touchReadout: (box: number, area: number) => `box ${box} · touch ${area}`,
-      note: "Spacing steps by 4px, the same unit as Tailwind's spacing scale, so gap-3 is 12px and p-4 is 16px — pick a step, never a pixel. The bars, the corners and the touch areas above are measured from the rendered page, so if the CSS changes the numbers change with it.",
+      note: "**Spacing steps by 4px**, the same unit as Tailwind's spacing scale, so `gap-3` is 12px and `p-4` is 16px — pick a step, never a pixel. **The bars, the corners and the touch areas above are measured from the rendered page**: if the CSS changes, the numbers change with it.",
     },
     motion: {
       durations: "Durations",
@@ -783,7 +827,7 @@ export const workbench = {
       },
       play: "Play",
       rewind: "Rewind",
-      note: "Duration and easing are tokens so the whole product moves with one accent instead of a different one on every screen. Whoever asks the system for reduced motion gets 1ms in every duration — the values above are read from the page, so turn the setting on and they say 1ms. Loops with their own rhythm (skeleton, ring, route bar) switch off through their own class.",
+      note: "**Duration and easing are tokens**, so the whole product moves with one accent instead of a different one on every screen. **Whoever asks the system for reduced motion gets 1ms in every duration** — the values above are read from the page, so turn the setting on and they say 1ms. Loops with their own rhythm (skeleton, ring, route bar) switch off through their own class.",
     },
     icons: {
       set: "The set",
@@ -813,9 +857,9 @@ export const workbench = {
       color: "Color",
       colorNote: "currentColor: it follows the text",
       colorSamples: { secondary: "Secondary", accent: "Accent", success: "Saved", error: "Failed" },
-      note: "Lucide, drawn on a 24 × 24 grid with a 2-unit stroke. The stroke lives in the grid, so a 16px icon draws it thinner and a 40px one thicker; absoluteStrokeWidth holds it at 2px when a row mixes sizes. Icons take the text color, so they need no color of their own.",
+      note: "**Lucide, on a 24 × 24 grid with a 2-unit stroke.** The stroke lives in the grid, so a 16px icon draws it thinner and a 40px one thicker; `absoluteStrokeWidth` holds it at 2px when a row mixes sizes. Icons take the text color, so they need no color of their own.",
       noteA11y:
-        "An icon next to its label is decoration and is hidden from screen readers (aria-hidden). An icon alone in a button is the label's stand-in: the button then needs an accessible name, and a tooltip when the meaning is not obvious.",
+        "**An icon next to its label is decoration**, hidden from screen readers (`aria-hidden`). **An icon alone in a button stands in for the label**: the button then needs an accessible name, and a tooltip when the meaning is not obvious.",
     },
     datePicker: {
       typeOrPick: "Type or pick",
@@ -881,7 +925,7 @@ export const workbench = {
       hint: "Signed and scanned, one file per document.",
       singleLabel: "Signed contract",
       rowNames: ["quarterly-report.pdf", "floor-plan.png", "signed-agreement-final-version-with-all-annexes.pdf"],
-      note: "The upload here is pretend: a clock fills the bar and no byte leaves the browser. In the component, the caller passes the real upload function, which reports progress and listens to the abort signal.",
+      note: "**The upload here is pretend**: a clock fills the bar and no byte leaves the browser. **In the component, the caller passes the real upload function**, which reports progress and listens to the abort signal.",
     },
     photoUpload: {
       plain: "Choose and preview",

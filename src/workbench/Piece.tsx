@@ -8,6 +8,7 @@ import { locale, messages } from "@/messages";
 import { approvedOn, stateOf, type PieceState } from "./approvals";
 import { useLedger } from "./ledger";
 import { findComponent, type ComponentEntry } from "./registry";
+import { Rich } from "./rich";
 import { StatusBadge } from "./StatusBadge";
 
 const m = messages.workbench;
@@ -241,7 +242,7 @@ function PieceBody({
   }
 
   return (
-    <section id={entry.id} className="scroll-mt-24 rounded-lg border border-border bg-surface">
+    <section id={entry.id} className="glass scroll-mt-24 rounded-lg border border-border">
       {/* The seal leaves the text flow, and the text wraps in what remains:
           sharing one wrapping line, a long summary would push the seal down
           and every card would get a different header. On phones the toggle
@@ -378,19 +379,25 @@ export function State({
 }
 
 /**
- * The explanation box — **prose in two columns from `lg`**, each paragraph
- * held to the reading measure. One paragraph alone takes the first column and
- * leaves the other free; stretched prose does not read better.
+ * The explanation box: why the piece is the way it is, always last — people
+ * read the why after looking. It spans the piece's columns.
+ *
+ * **Each paragraph opens with its claim in bold** (`**…**` in the copy, see
+ * `Rich`), so the box can be scanned by its leads. **Prose in two columns from
+ * `lg`**, filling the box: a single paragraph spans both, instead of leaving
+ * half of it empty. No reading-measure cap here — inside a two-column box the
+ * column is the measure.
  */
-export function NoteBox({ children, className }: { children: React.ReactNode; className?: string }) {
+export function PieceNote({ paragraphs }: { paragraphs: readonly string[] }) {
   return (
-    <div data-note className={cn("rounded-md border border-border bg-surface-sunken p-3.5", className)}>
-      <div className="grid gap-x-8 gap-y-3 text-sm text-secondary lg:grid-cols-2">{children}</div>
+    <div data-note className="rounded-md border border-border bg-surface-sunken p-4 lg:col-span-2">
+      <div className="grid gap-x-8 gap-y-3 text-sm leading-relaxed text-secondary lg:grid-cols-2">
+        {paragraphs.map((paragraph) => (
+          <p key={paragraph} className={paragraphs.length === 1 ? "lg:col-span-2" : undefined}>
+            <Rich text={paragraph} />
+          </p>
+        ))}
+      </div>
     </div>
   );
-}
-
-/** The same box across a piece's columns, always last: people read the why after looking. */
-export function PieceNote({ children }: { children: React.ReactNode }) {
-  return <NoteBox className="lg:col-span-2">{children}</NoteBox>;
 }

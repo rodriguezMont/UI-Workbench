@@ -24,7 +24,10 @@ export type Section = {
   /** Also the URL segment: `/primitives`. */
   id: SectionId;
   name: string;
+  /** One line, for the map. */
   summary: string;
+  /** The paragraph that opens the section's page: the rule it protects. */
+  intro: string;
   /** `false` while the section has no page. */
   built: boolean;
 };

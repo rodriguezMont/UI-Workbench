@@ -487,9 +487,7 @@ export function FormsPage() {
         <State label={t.fileUpload.rows} note={t.fileUpload.rowsNote}>
           <FileRowsDemo />
         </State>
-        <PieceNote>
-          <p>{t.fileUpload.note}</p>
-        </PieceNote>
+        <PieceNote paragraphs={[t.fileUpload.note]} />
       </Piece>
 
       <Piece id="photo-upload">

@@ -227,9 +227,7 @@ export function NavigationPage() {
         <State label={t.appShell.label} note={t.appShell.note}>
           <ShellControls />
         </State>
-        <PieceNote>
-          <p className="max-w-[var(--measure)]">{t.appShell.explain}</p>
-        </PieceNote>
+        <PieceNote paragraphs={[t.appShell.explain]} />
       </Piece>
       <Piece id="side-menu">
         <State label={t.sideMenu.label} note={t.sideMenu.note}>

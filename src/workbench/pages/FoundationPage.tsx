@@ -200,9 +200,7 @@ function Roles() {
             <span className="text-accent">{t.roles.sample}</span>
           </div>
         </Group>
-        <PieceNote>
-          <p className="max-w-[var(--measure)]">{t.roles.note}</p>
-        </PieceNote>
+        <PieceNote paragraphs={[t.roles.note]} />
       </div>
     </Piece>
   );
@@ -309,10 +307,7 @@ function Typography() {
       <State label={ty.measure} note={ty.measureNote} wide>
         <MeasureSample />
       </State>
-      <PieceNote>
-        <p className="max-w-[var(--measure)]">{ty.note}</p>
-        <p className="max-w-[var(--measure)]">{ty.noteField}</p>
-      </PieceNote>
+      <PieceNote paragraphs={[ty.note, ty.noteField]} />
     </Piece>
   );
 }
@@ -407,9 +402,7 @@ function Grid() {
           </div>
         </div>
       </State>
-      <PieceNote>
-        <p className="max-w-[var(--measure)]">{g.note}</p>
-      </PieceNote>
+      <PieceNote paragraphs={[g.note]} />
     </Piece>
   );
 }
@@ -517,9 +510,7 @@ function Motion() {
           {(played) => EASINGS.map((e) => <EasingRow key={e.token} {...e} played={played} />)}
         </MotionDemo>
       </State>
-      <PieceNote>
-        <p className="max-w-[var(--measure)]">{mo.note}</p>
-      </PieceNote>
+      <PieceNote paragraphs={[mo.note]} />
     </Piece>
   );
 }
@@ -599,10 +590,7 @@ function Icons() {
           ))}
         </ul>
       </State>
-      <PieceNote>
-        <p className="max-w-[var(--measure)]">{ic.note}</p>
-        <p className="max-w-[var(--measure)]">{ic.noteA11y}</p>
-      </PieceNote>
+      <PieceNote paragraphs={[ic.note, ic.noteA11y]} />
     </Piece>
   );
 }
@@ -624,9 +612,7 @@ export function FoundationPage() {
             <Logo height={28} />
           </div>
         </State>
-        <PieceNote>
-          <p className="max-w-[var(--measure)]">{t.logo.note}</p>
-        </PieceNote>
+        <PieceNote paragraphs={[t.logo.note]} />
       </Piece>
       <Roles />
       <Typography />
