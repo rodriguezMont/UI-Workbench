@@ -54,20 +54,29 @@ workbench: the map shows 0 of 67.
 
 ## Next steps
 
-1. **General review in the workbench**, piece by piece, with approvals.
-   Points already noted for it:
-   - the newsletter field's placeholder is cut off at 375px;
-   - the footer's thick gradient edge from the source became a plain top
-     border, the same kind of decoration as the dropped brand line —
-     restore it or keep it plain.
-2. **Fix `usePendingFocus`** (`action-menu.tsx`): when an action keeps its
+1. **Polish pass**, from a side-by-side review against the source library
+   (every page, piece and state at 1280 light, 1280 dark and 375). The
+   components were ported faithfully; what fell short is the workbench layer:
+   explanation, states, staging and finish. In order:
+   1. Bugs in the demos and three component defects (#17).
+   2. The frame: section intros, explanation boxes with bold leads, the
+      stage light and glass cards in dark, more air between pieces.
+   3. Section by section, one PR each: an explanation box on every piece and
+      a note on every state; the missing states (about half of the source's);
+      split `select` (single, search, multiple) and `stat` (cases, group);
+      a "State colors" piece and a measured contrast table on Roles; a
+      "Dashboard" sector in Data; coherent demo data and a pinned "today".
+2. **General review in the workbench**, piece by piece, with approvals.
+   Still noted for it: the footer's thick gradient edge from the source
+   became a plain top border — restore it or keep it plain.
+3. **Fix `usePendingFocus`** (`action-menu.tsx`): when an action keeps its
    menu item on screen ("Make main" in the photo gallery), focus moves while
    the menu is still closing and ends up on `body`. The gallery works around
    it locally; the fix belongs in the hook.
-3. **Block 4 leftovers**: the Playwright layout ruler (375 / 768 / 1280 /
+4. **Block 4 leftovers**: the Playwright layout ruler (375 / 768 / 1280 /
    1920), from the source's `measure-workbench`, `measure-touch` and the
    shared ruler library, and live contrast measurement on the Roles page.
-4. **Block 5**: the brand guide.
+5. **Block 5**: the brand guide.
 
 Optional, waiting for a decision: require the CI `Check` status in the `main`
 ruleset so a red PR cannot be merged.
@@ -90,6 +99,11 @@ ruleset so a red PR cannot be merged.
   piece rendered with `<Piece id>` on its section page. The registry test
   enforces all three. Tests about the "to build" state make up their own
   piece instead of relying on the registry having one left.
+- **Every piece explains itself.** A note under every state label (what to
+  look at), and a `PieceNote` closing every piece (`paragraphs`, each opening
+  with its claim in bold — `**…**` and `` `code` `` are rendered by
+  `workbench/rich.tsx`). Each section opens with its `intro`: the rule it
+  protects, not a list of its pieces.
 - **Every demo text input has a placeholder** — an example of what goes in
   (dots for passwords). `pages/placeholders.test.tsx` renders every section
   page and fails on a text input without one (file inputs excepted).

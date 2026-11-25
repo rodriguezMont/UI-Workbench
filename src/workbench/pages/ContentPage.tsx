@@ -50,13 +50,7 @@ export function ContentPage() {
             {t.carousel.nothingDrawn}
           </span>
         </State>
-        <PieceNote>
-          {t.carousel.explain.map((paragraph) => (
-            <p key={paragraph} className="max-w-[var(--measure)]">
-              {paragraph}
-            </p>
-          ))}
-        </PieceNote>
+        <PieceNote paragraphs={t.carousel.explain} />
       </Piece>
 
       <Piece id="map-placeholder">
@@ -73,13 +67,7 @@ export function ContentPage() {
             <MapPlaceholder label={t.mapPlaceholder.customLabel} caption={t.mapPlaceholder.customCaption} />
           </address>
         </State>
-        <PieceNote>
-          {t.mapPlaceholder.explain.map((paragraph) => (
-            <p key={paragraph} className="max-w-[var(--measure)]">
-              {paragraph}
-            </p>
-          ))}
-        </PieceNote>
+        <PieceNote paragraphs={t.mapPlaceholder.explain} />
       </Piece>
     </SectionPage>
   );

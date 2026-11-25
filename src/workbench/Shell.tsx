@@ -206,7 +206,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </div>
           </header>
 
-          <main className="min-w-0 flex-1 px-4 py-8 sm:px-6">
+          <main className="min-w-0 flex-1 bg-[image:var(--stage-light)] bg-fixed px-4 py-8 sm:px-6">
             <div className="mx-auto max-w-[var(--container)]">{children}</div>
           </main>
         </div>
