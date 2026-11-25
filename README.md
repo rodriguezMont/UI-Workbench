@@ -4,12 +4,10 @@ A brand-neutral library of React components, with a workbench to review them.
 Components are **distributed by copy**: an app takes the files it needs into
 its own source tree and owns them from then on. There is no npm package.
 
-> **Status:** design tokens, the blocklist guard and three component groups —
-> foundation (Button, TextLink, Badge, Avatar, Separator, Tabs, Tooltip),
-> states (Skeleton, Empty, ErrorState, Toast, ProgressBar, Spinner,
-> PageSpinner, RouteProgress) and overlay (Dialog, AlertDialog, Sheet,
-> Overlay, FullScreenPanel, SideMenu, ActionMenu). Next: the workbench shell
-> with sections and the approval flow, then the remaining groups.
+> **Status:** design tokens, the blocklist guard, the workbench (shell, map,
+> section pages and approval flow) and the first component groups —
+> primitives, states and overlays. Forms, data, content and the rest of
+> navigation are on the map as "to build".
 
 ## Stack
 
@@ -43,6 +41,7 @@ is not part of CI on purpose — see below.
 ```
 src/
   components/ui/    the components, one file each
+  components/brand/ the provisional logo — the one file a rebrand replaces
   lib/              shared helpers: cn (class-name merging), overlay breakpoints
   styles/
     tokens.css      scales and roles, light and dark
@@ -50,12 +49,37 @@ src/
     base.css        page defaults, focus ring, pointer cursor
     utilities.css   touch-area, field-glow, field-text, scrim, floating-edge
     index.css       entry: imports the four above after Tailwind
-  messages/         every interface string (en-US)
+  messages/en-US/   every interface string: ui.ts (library), workbench.ts
   workbench/        the review app (not part of the library)
+    registry.ts     every section and piece, built or still to build
+    approvals.json  the approval ledger, versioned
+    pages/          one page per built section
 scripts/
   guard.ts          the blocklist guard
 .githooks/          pre-commit and commit-msg hooks that run the guard
 ```
+
+## The workbench
+
+`npm run dev` opens the workbench: a header with the color-scheme switch, a
+side panel with the sections (a drawer on phones), **the map** at `/` with
+every section, its pieces and how many are approved, and one page per section
+(`/primitives`, `/states`, …) where each piece sits in the same frame — name,
+state, its real states side by side, and the approval seal.
+
+- **The registry** (`src/workbench/registry.ts`) lists the whole map from day
+  one; pieces without a shape are marked "to build" and stay out of the counts.
+  Tests fail if a component file has no entry, if a built piece is missing from
+  its section page, or if a page exists for a section still to build.
+- **Approving** is a click on the seal, and it only works under the dev server:
+  a dev-only endpoint writes one sorted line per piece to
+  `src/workbench/approvals.json`, refusing cross-site requests and automated
+  browsers. The file is versioned on purpose — a mass approval would show up
+  in the pull request as one changed line per piece.
+- **The deployed build is read-only**: the endpoint does not exist outside
+  `vite dev`, so the seal shows the committed state without a button.
+  `vercel.json` serves every route from `index.html` and marks the site
+  `noindex`.
 
 ## Design tokens
 
@@ -92,8 +116,9 @@ Copy what you need and keep the paths:
    `theme.css`, `base.css` and `utilities.css` right after
    `@import "tailwindcss"` in your own entry stylesheet. Requires
    **Tailwind CSS v4**.
-2. The components you want from `src/components/ui/`, plus `src/lib/` and
-   `src/messages/`. Runtime dependencies: `radix-ui`, `lucide-react`,
+2. The components you want from `src/components/ui/`, plus `src/lib/`,
+   `src/components/brand/` and `src/messages/` (drop `en-US/workbench.ts` and
+   its line in `en-US/index.ts` — that copy is the workbench's). Runtime dependencies: `radix-ui`, `lucide-react`,
    `class-variance-authority`, `clsx`, `tailwind-merge`; the sheet and the
    side menu also need `vaul`, `@radix-ui/react-focus-scope` and
    `aria-hidden`.
