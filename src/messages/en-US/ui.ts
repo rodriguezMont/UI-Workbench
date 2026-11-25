@@ -143,4 +143,42 @@ export const ui = {
     /** The label always visible on the drawing. */
     caption: "Illustrative map",
   },
+  datePicker: {
+    /** The format, as an example of what goes in. */
+    placeholder: "MM/DD/YYYY",
+    incomplete: "The date is incomplete. Use month, day and year, as in 09/17/2026.",
+    doesNotExist: (text: string) => `That date doesn't exist: ${text}.`,
+    /** Gets the first accepted date, already in MM/DD/YYYY. */
+    tooEarly: (date: string) => `Choose ${date} or later.`,
+    /** Gets the last accepted date, already in MM/DD/YYYY. */
+    tooLate: (date: string) => `Choose ${date} or earlier.`,
+    openCalendar: (label: string) => `Open the calendar for ${label}`,
+    calendar: (label: string) => `Calendar for ${label}`,
+    today: "Today",
+    /** The calendar's title: "September 2026". */
+    monthTitle: (month: string, year: number) => `${month} ${year}`,
+    /** A day button: "Today, Thursday, September 17, 2026, selected". Gets the full date. */
+    day: (date: string, isToday: boolean, isSelected: boolean) =>
+      `${isToday ? "Today, " : ""}${date}${isSelected ? ", selected" : ""}`,
+    previousMonth: "Previous month",
+    nextMonth: "Next month",
+    previousYear: "Previous year",
+    nextYear: "Next year",
+    previousYears: "Previous years",
+    nextYears: "Next years",
+    /** The title button in the days view; gets the title it shows. */
+    chooseMonth: (title: string) => `Choose month and year. ${title}`,
+    /** The title button in the months view; gets the year it shows. */
+    chooseYear: (title: string) => `Choose year. ${title}`,
+    monthsOf: (year: number) => `Months of ${year}`,
+    yearsOf: (range: string) => `Years ${range}`,
+  },
+  timePicker: {
+    /** The shape of a 12-hour time, short enough for a narrow column. */
+    placeholder: "h:mm AM",
+  },
+  dateTimePicker: {
+    date: "Date",
+    time: "Time",
+  },
 } as const;
