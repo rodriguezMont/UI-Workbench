@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TextLink } from "@/components/ui/link";
+import { Rating } from "@/components/ui/rating";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/toast";
@@ -235,6 +236,22 @@ export function PrimitivesPage() {
               </ActionMenuItem>
             </ActionMenuContent>
           </ActionMenu>
+        </State>
+      </Piece>
+
+      <Piece id="rating">
+        <State label={t.rating.full} note={t.rating.fullNote}>
+          <div className="flex flex-col gap-2">
+            <Rating value={4.3} count={1280} />
+            <Rating value={3.5} count={12} size="sm" />
+          </div>
+        </State>
+        <State label={t.rating.compact} note={t.rating.compactNote}>
+          <Rating value={4.3} count={128} variant="compact" />
+        </State>
+        <State label={t.rating.none} note={t.rating.noneNote}>
+          <Rating value={0} count={0} />
+          <span className="text-sm text-subtle">{t.rating.nothing}</span>
         </State>
       </Piece>
     </SectionPage>
