@@ -9,6 +9,7 @@ its own source tree and owns them from then on. There is no npm package.
 > primitives, states, overlays and the form basics (field, fieldset,
 > password, masked fields for US formats, phone with country, select). The
 > rest of forms, data, content and navigation are on the map as "to build".
+> Details, next steps and the working rules: [docs/PROGRESS.md](docs/PROGRESS.md).
 
 ## Stack
 
