@@ -41,3 +41,18 @@ describe("percent", () => {
     expect(formatPercent(0.004)).toBe("0.4%");
   });
 });
+
+describe("whole percent and dollars", () => {
+  it("a share stays whole, even below 10%", async () => {
+    const { formatWholePercent } = await import("./format");
+    expect(formatWholePercent(0.6)).toBe("60%");
+    expect(formatWholePercent(0.04)).toBe("4%");
+    expect(formatWholePercent(1.1)).toBe("110%");
+  });
+
+  it("dollars in whole amounts, with grouped thousands", async () => {
+    const { formatDollars } = await import("./format");
+    expect(formatDollars(12400)).toBe("$12,400");
+    expect(formatDollars(89.6)).toBe("$90");
+  });
+});

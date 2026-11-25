@@ -52,3 +52,23 @@ const percentFine = new Intl.NumberFormat(locale, {
 export function formatPercent(ratio: number): string {
   return Math.abs(ratio) < 0.1 ? percentFine.format(ratio) : percentShort.format(ratio);
 }
+
+/**
+ * "60%" · "4%" — always a whole percentage, for a share that was already
+ * rounded on purpose (a ranking row, a meter). Takes the ratio (0.6).
+ */
+export function formatWholePercent(ratio: number): string {
+  return percentShort.format(ratio);
+}
+
+const dollars = new Intl.NumberFormat(locale, {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
+
+/** "$12,400" — an amount in whole dollars, for a report column or a total. */
+export function formatDollars(value: number): string {
+  return dollars.format(value);
+}
