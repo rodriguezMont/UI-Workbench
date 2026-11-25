@@ -133,12 +133,12 @@ const ROWS: readonly Row[] = [
   // navigation
   { id: "app-shell", section: "navigation" },
   { id: "side-menu", section: "navigation" },
-  { id: "header", section: "navigation", built: false },
-  { id: "breadcrumb", section: "navigation", built: false },
-  { id: "footer", section: "navigation", built: false },
-  { id: "search", section: "navigation", built: false },
-  { id: "filters", section: "navigation", built: false },
-  { id: "account-switcher", section: "navigation", built: false },
+  { id: "header", section: "navigation" },
+  { id: "breadcrumb", section: "navigation" },
+  { id: "footer", section: "navigation" },
+  { id: "search", section: "navigation" },
+  { id: "filters", section: "navigation" },
+  { id: "account-switcher", section: "navigation" },
 
   // content
   { id: "carousel", section: "content" },

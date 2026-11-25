@@ -303,4 +303,52 @@ export const ui = {
     cvvFront: "The 4 digits on the front.",
     cvvBack: "The 3 digits on the back.",
   },
+  header: {
+    /** The logo link's accessible name: "UI Workbench, home". */
+    home: (brand: string) => `${brand}, home`,
+    /** The phone trigger that opens the full-screen search. */
+    openSearch: "Search",
+  },
+  breadcrumb: {
+    label: "Breadcrumb",
+  },
+  search: {
+    label: "Search",
+    placeholder: "Search…",
+    /** The suggestion list's name. */
+    suggestions: "Suggestions",
+    /** The last row of the full-screen list: submit what was typed as is. */
+    searchFor: (term: string) => `Search for “${term}”`,
+  },
+  filters: {
+    /** Before the chips of the active filters. */
+    activeLead: "Filtering by",
+    remove: (label: string) => `Remove filter ${label}`,
+    clearAll: "Clear all",
+  },
+  footer: {
+    /** The newsletter field's label, hidden but read. */
+    email: "Email",
+    emailPlaceholder: "name@example.com",
+    subscribe: "Subscribe",
+    contacts: "Contact",
+    legal: "Legal",
+    /** "© 2020–2026 Example Inc. All rights reserved." */
+    copyright: (years: string, holder: string) => `© ${years} ${holder}. All rights reserved.`,
+    /** The honeypot's label: only a bot reads it. */
+    honeypot: "Website",
+    honeypotPlaceholder: "example.com",
+  },
+  accountSwitcher: {
+    /** The trigger's accessible name while an account is active. */
+    current: (name: string) => `Switch account. Current: ${name}`,
+    choose: "Choose an account",
+    heading: "Your accounts",
+    /** The active account is gone and the caller knows which one it was. */
+    ended: (name: string) => `You no longer have access to ${name}. Choose an account to continue.`,
+    /** The active account is gone and nobody said which. */
+    unavailable: "The account you were using is no longer available. Choose one to continue.",
+    account: "Your account",
+    signOut: "Sign out",
+  },
 } as const;
