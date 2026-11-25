@@ -11,6 +11,7 @@ import type { SectionId } from "../registry";
 export const PAGES: Partial<Record<SectionId, React.LazyExoticComponent<() => React.ReactNode>>> = {
   foundation: lazy(() => import("./FoundationPage").then((m) => ({ default: m.FoundationPage }))),
   primitives: lazy(() => import("./PrimitivesPage").then((m) => ({ default: m.PrimitivesPage }))),
+  forms: lazy(() => import("./FormsPage").then((m) => ({ default: m.FormsPage }))),
   states: lazy(() => import("./StatesPage").then((m) => ({ default: m.StatesPage }))),
   navigation: lazy(() => import("./NavigationPage").then((m) => ({ default: m.NavigationPage }))),
   overlay: lazy(() => import("./OverlayPage").then((m) => ({ default: m.OverlayPage }))),
