@@ -17,8 +17,9 @@ afterEach(cleanup);
 
 const pages = import.meta.glob<Record<string, React.ComponentType>>("./*Page.tsx", { eager: true });
 
-/** Inputs that take typed text; choices, ranges and hidden values do not. */
-const TEXT_INPUTS = 'input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="range"]), textarea';
+/** Inputs that take typed text; choices, ranges, files and hidden values do not. */
+const TEXT_INPUTS =
+  'input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="range"]):not([type="file"]), textarea';
 
 describe("demo inputs have placeholders", () => {
   for (const [file, module] of Object.entries(pages)) {

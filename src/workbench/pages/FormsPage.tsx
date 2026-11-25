@@ -12,6 +12,9 @@ import { TextLink } from "@/components/ui/link";
 import { MaskedField } from "@/components/ui/masked-field";
 import { PhoneField } from "@/components/ui/masked-field/phone-field";
 import { PasswordField } from "@/components/ui/password-field";
+import { PhotoGallery } from "@/components/ui/photo-gallery";
+import { PhotoUpload } from "@/components/ui/photo-upload";
+import { ProfileCover } from "@/components/ui/profile-cover";
 import { Radio, RadioGroup } from "@/components/ui/radio-group";
 import { RatingInput } from "@/components/ui/rating-input";
 import { SegmentedControl } from "@/components/ui/segmented-control";
@@ -23,8 +26,10 @@ import { dateToIso } from "@/lib/date-time";
 import { formatInteger } from "@/lib/format";
 import { messages } from "@/messages";
 
-import { Piece, State } from "../Piece";
+import { Piece, PieceNote, State } from "../Piece";
+import { SAMPLE_COVER, SAMPLE_LOGO, SAMPLE_PHOTOS } from "../samples";
 import { SectionPage } from "./SectionPage";
+import { CardFormDemo, FileRowsDemo, FileUploadDemo, ImageCropperDemo } from "./file-demos";
 
 const t = messages.workbench.demos;
 
@@ -466,6 +471,89 @@ export function FormsPage() {
         </State>
         <State label={t.dateTimePicker.disabled} note={t.dateTimePicker.disabledNote} wide>
           <DateTimePicker label={t.dateTimePicker.locked} hint={t.dateTimePicker.lockedHint} defaultValue="2026-12-15T08:00" disabled />
+        </State>
+      </Piece>
+
+      <Piece id="file-upload">
+        <State label={t.fileUpload.several} note={t.fileUpload.severalNote}>
+          <FileUploadDemo />
+        </State>
+        <State label={t.fileUpload.retry} note={t.fileUpload.retryNote}>
+          <FileUploadDemo failFirst />
+        </State>
+        <State label={t.fileUpload.single} note={t.fileUpload.singleNote}>
+          <FileUploadDemo maxFiles={1} single />
+        </State>
+        <State label={t.fileUpload.rows} note={t.fileUpload.rowsNote}>
+          <FileRowsDemo />
+        </State>
+        <PieceNote>
+          <p>{t.fileUpload.note}</p>
+        </PieceNote>
+      </Piece>
+
+      <Piece id="photo-upload">
+        <State label={t.photoUpload.plain} note={t.photoUpload.plainNote}>
+          <PhotoUpload label={t.photoUpload.label} />
+        </State>
+        <State label={t.photoUpload.hint} note={t.photoUpload.hintNote}>
+          <PhotoUpload label={t.photoUpload.label} hint={t.photoUpload.hintText} />
+        </State>
+      </Piece>
+
+      <Piece id="image-cropper">
+        <State label={t.imageCropper.formats} note={t.imageCropper.formatsNote}>
+          <ImageCropperDemo />
+        </State>
+        <State label={t.imageCropper.small} note={t.imageCropper.smallNote}>
+          <ImageCropperDemo small />
+        </State>
+      </Piece>
+
+      <Piece id="profile-cover">
+        <State label={t.profileCover.visitor} note={t.profileCover.visitorNote} wide>
+          <ProfileCover
+            name={t.profileCover.name}
+            subtitle={t.profileCover.subtitle}
+            rating={{ value: 4.8, count: 126 }}
+            coverUrl={SAMPLE_COVER}
+            logoUrl={SAMPLE_LOGO}
+            headingLevel={3}
+          />
+        </State>
+        <State label={t.profileCover.empty} note={t.profileCover.emptyNote}>
+          <ProfileCover name={t.profileCover.emptyName} editable headingLevel={3} />
+        </State>
+        <State label={t.profileCover.editing} note={t.profileCover.editingNote}>
+          <ProfileCover name={t.profileCover.name} coverUrl={SAMPLE_COVER} logoUrl={SAMPLE_LOGO} editable headingLevel={3} />
+        </State>
+      </Piece>
+
+      <Piece id="photo-gallery">
+        <State label={t.photoGallery.editing} note={t.photoGallery.editingNote} wide>
+          <PhotoGallery
+            label={t.photoGallery.label}
+            defaultPhotos={SAMPLE_PHOTOS.map((url, i) => ({ id: `sample-${i}`, url, alt: t.photoGallery.alts[i] }))}
+            max={6}
+            editable
+            headingLevel={3}
+          />
+        </State>
+        <State label={t.photoGallery.visitor} note={t.photoGallery.visitorNote} wide>
+          <PhotoGallery
+            label={t.photoGallery.label}
+            defaultPhotos={SAMPLE_PHOTOS.map((url, i) => ({ id: `sample-${i}`, url, alt: t.photoGallery.alts[i] }))}
+            headingLevel={3}
+          />
+        </State>
+      </Piece>
+
+      <Piece id="card-form">
+        <State label={t.cardForm.empty} note={t.cardForm.emptyNote}>
+          <CardFormDemo />
+        </State>
+        <State label={t.cardForm.declined} note={t.cardForm.declinedNote}>
+          <CardFormDemo declined />
         </State>
       </Piece>
     </SectionPage>
