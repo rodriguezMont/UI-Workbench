@@ -1,12 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import { approvedOn, parseLedger, sortLedger, stateOf, tally, tallyOfSection } from "./approvals";
-import { COMPONENTS, SECTIONS, componentsOf, findComponent } from "./registry";
+import { COMPONENTS, componentsOf, findComponent } from "./registry";
 
 const built = findComponent("button")!;
-// Any piece still without a shape: read from the registry, so the tests do
-// not break each time a group gets built.
-const toBuild = COMPONENTS.find((c) => c.built === false)!;
+// A piece without a shape, made up here: the registry may have none left to
+// build, and the rule must still hold. Same id as `built`, so an approval on
+// the ledger is there for it to ignore.
+const toBuild = { ...built, built: false as const };
 
 describe("parseLedger", () => {
   it("keeps only well-formed entries and never throws", () => {
@@ -50,16 +51,11 @@ describe("tally", () => {
   });
 
   it("counts per section", () => {
-    // A section with pieces of both kinds, whichever it is today.
-    const mixed = SECTIONS.find((s) => {
-      const pieces = componentsOf(s.id);
-      return pieces.some((c) => c.built === false) && pieces.some((c) => c.built !== false);
-    })!;
-    const pieces = componentsOf(mixed.id);
-    const done = pieces.find((c) => c.built !== false)!;
-    const counts = tallyOfSection(mixed.id, { [done.id]: { on: "2026-11-25" } });
-    expect(counts.approved).toBe(1);
-    expect(counts.toBuild).toBe(pieces.filter((c) => c.built === false).length);
+    // Read from the registry, whatever is left to build in the section today.
+    const pieces = componentsOf(built.section);
+    const toBuildCount = pieces.filter((c) => c.built === false).length;
+    const counts = tallyOfSection(built.section, { [built.id]: { on: "2026-11-25" } });
+    expect(counts).toEqual({ approved: 1, pending: pieces.length - toBuildCount - 1, toBuild: toBuildCount });
   });
 });
 
