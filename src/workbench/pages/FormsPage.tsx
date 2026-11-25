@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DatabaseBackup, Globe, Headset, LayoutGrid, List, ZoomIn, ZoomOut } from "lucide-react";
+import { CreditCard, DatabaseBackup, Download, FileText, Globe, Headset, KeyRound, Landmark, LayoutGrid, List, ZoomIn, ZoomOut } from "lucide-react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { CheckboxCard } from "@/components/ui/checkbox-card";
@@ -10,7 +10,6 @@ import { Field } from "@/components/ui/field";
 import { Fieldset } from "@/components/ui/fieldset";
 import { TextLink } from "@/components/ui/link";
 import { MaskedField } from "@/components/ui/masked-field";
-import { PhoneField } from "@/components/ui/masked-field/phone-field";
 import { PasswordField } from "@/components/ui/password-field";
 import { PhotoGallery } from "@/components/ui/photo-gallery";
 import { PhotoUpload } from "@/components/ui/photo-upload";
@@ -20,7 +19,7 @@ import { RatingInput } from "@/components/ui/rating-input";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Select } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Switch, useSwitchSave } from "@/components/ui/switch";
+import { Switch } from "@/components/ui/switch";
 import { TimePicker } from "@/components/ui/time-picker";
 import { dateToIso } from "@/lib/date-time";
 import { formatInteger } from "@/lib/format";
@@ -30,65 +29,23 @@ import { Piece, PieceNote, State } from "../Piece";
 import { SAMPLE_COVER, SAMPLE_LOGO, SAMPLE_PHOTOS } from "../samples";
 import { SectionPage } from "./SectionPage";
 import { CardFormDemo, FileRowsDemo, FileUploadDemo, ImageCropperDemo } from "./file-demos";
+import {
+  FailedSwitchDemo,
+  FieldFormDemo,
+  IndeterminateDemo,
+  PhoneDemo,
+  PreferencesDemo,
+  SliderSubmittedDemo,
+  Submitted,
+  ZipLookupDemo,
+} from "./form-demos";
 
 const t = messages.workbench.demos;
 
+/** Cards fill the row and wrap at a readable width, instead of a fixed count of columns. */
+const CARD_GRID = "grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(13rem,1fr))]";
+
 const toOptions = (labels: readonly string[]) => labels.map((label) => ({ value: label.toLowerCase().replace(/\s+/g, "-"), label }));
-
-/** The value that would be submitted, written under the piece. */
-function Submitted({ value, empty = t.masked.nothing }: { value: string; empty?: string }) {
-  return (
-    <p className="w-full text-xs text-secondary">
-      {t.masked.submitted}: <code className="font-mono text-primary">{value || empty}</code>
-    </p>
-  );
-}
-
-function PhoneDemo() {
-  const [value, setValue] = useState("");
-  return (
-    <div className="flex w-full flex-col gap-2">
-      <PhoneField label={t.masked.intlLabel} hint={t.masked.intlHint} onValueChange={setValue} />
-      <Submitted value={value} />
-    </div>
-  );
-}
-
-/** The parent box sums up its children: checked, unchecked or "some". */
-function IndeterminateDemo() {
-  const items = t.checkbox.notifications;
-  const [on, setOn] = useState<readonly string[]>([items[0]!]);
-  const all = on.length === items.length;
-  return (
-    <div className="w-full">
-      <Checkbox
-        label={t.checkbox.allNotifications}
-        checked={all}
-        indeterminate={on.length > 0 && !all}
-        onChange={() => setOn(all ? [] : items)}
-      />
-      <div className="pl-8">
-        {items.map((item) => (
-          <Checkbox
-            key={item}
-            label={item}
-            checked={on.includes(item)}
-            onChange={() => setOn((current) => (current.includes(item) ? current.filter((i) => i !== item) : items.filter((i) => i === item || current.includes(i))))}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/** A pretend server: answers after a moment, or fails on purpose. */
-const pretendSave = (fails: boolean) => () =>
-  new Promise<void>((resolve, reject) => setTimeout(() => (fails ? reject(new Error("demo")) : resolve()), 900));
-
-function SavingSwitchDemo({ fails }: { fails?: boolean }) {
-  const state = useSwitchSave(!fails, pretendSave(Boolean(fails)));
-  return fails ? <Switch label={t.switch.digest} hint={t.switch.digestHint} {...state} /> : <Switch label={t.switch.replies} {...state} />;
-}
 
 /** A date picker with what it would submit under it. */
 function DateDemo() {
@@ -135,11 +92,11 @@ export function FormsPage() {
   return (
     <SectionPage id="forms">
       <Piece id="field">
-        <State label={t.field.plain} note={t.field.plainNote}>
-          <Field label={t.field.name} hint={t.field.nameHint} placeholder={t.field.namePlaceholder} autoComplete="name" />
+        <State label={t.field.inForm} note={t.field.inFormNote} wide>
+          <FieldFormDemo />
         </State>
-        <State label={t.field.icon} note={t.field.iconNote}>
-          <Field label={t.field.email} icon="email" type="email" placeholder={t.field.emailPlaceholder} autoComplete="email" />
+        <State label={t.field.plain} note={t.field.plainNote}>
+          <Field label={t.field.displayName} icon="name" hint={t.field.displayNameHint} placeholder={t.field.displayNamePlaceholder} />
         </State>
         <State label={t.field.error} note={t.field.errorNote}>
           <Field
@@ -151,15 +108,9 @@ export function FormsPage() {
             error={t.field.emailError}
           />
         </State>
-        <State label={t.field.adornments} note={t.field.adornmentsNote}>
-          <div className="grid w-full gap-3 sm:grid-cols-2">
-            <Field label={t.field.price} prefix="$" inputMode="decimal" placeholder={t.field.pricePlaceholder} defaultValue="49.00" />
-            <Field label={t.field.distance} suffix="mi" inputMode="numeric" placeholder={t.field.distancePlaceholder} defaultValue="25" />
-          </div>
-        </State>
         <State label={t.field.status} note={t.field.statusNote}>
           {/* Stacked, not paired: the status sits at the field's end, and a
-              quarter-width field cut the address off under the spinner. */}
+              quarter-width field cut the value off under the spinner. */}
           <div className="grid w-full gap-3">
             <Field
               label={t.field.address}
@@ -179,46 +130,38 @@ export function FormsPage() {
             />
           </div>
         </State>
-        <State label={t.field.readOnly} note={t.field.readOnlyNote}>
+        <State label={t.field.adornments} note={t.field.adornmentsNote}>
           <div className="grid w-full gap-3 sm:grid-cols-2">
-            <Field label={t.field.accountId} readOnly placeholder={t.field.accountIdPlaceholder} defaultValue={t.field.accountIdValue} />
-            <Field label={t.field.plan} disabled placeholder={t.field.planPlaceholder} defaultValue="Team" hint={t.field.planReason} />
+            <Field label={t.field.price} prefix="$" inputMode="decimal" placeholder={t.field.pricePlaceholder} defaultValue="49.00" />
+            <Field label={t.field.distance} suffix="mi" inputMode="numeric" placeholder={t.field.distancePlaceholder} defaultValue="25" />
           </div>
         </State>
-        <State label={t.field.textarea} note={t.field.textareaNote} wide>
-          <Field as="textarea" label={t.field.about} placeholder={t.field.aboutPlaceholder} maxLength={280} />
+        <State label={t.field.textarea} note={t.field.textareaNote}>
+          <Field as="textarea" label={t.field.about} hint={t.field.aboutHint} placeholder={t.field.aboutPlaceholder} maxLength={280} />
         </State>
-      </Piece>
-
-      <Piece id="fieldset">
-        <State label={t.fieldset.label} note={t.fieldset.note}>
-          <Fieldset legend={t.fieldset.legend} hint={t.fieldset.hint} error={t.fieldset.error}>
-            <div className="grid gap-3">
-              <Field label={t.fieldset.street} placeholder={t.fieldset.streetPlaceholder} autoComplete="address-line1" />
-              <Field label={t.fieldset.city} placeholder={t.fieldset.cityPlaceholder} autoComplete="address-level2" />
-            </div>
-          </Fieldset>
+        <State label={t.field.disabled} note={t.field.disabledNote}>
+          <Field label={t.field.plan} disabled placeholder={t.field.planPlaceholder} defaultValue="Team" hint={t.field.planReason} />
         </State>
-        <State label={t.fieldset.disabled} note={t.fieldset.disabledNote}>
-          <Fieldset legend={t.fieldset.lockedLegend} hint={t.fieldset.lockedHint} disabled>
-            <div className="grid gap-3">
-              <Field label={t.fieldset.street} placeholder={t.fieldset.streetPlaceholder} defaultValue="350 Fifth Avenue" />
-              <Field label={t.fieldset.city} placeholder={t.fieldset.cityPlaceholder} defaultValue="New York" />
-            </div>
-          </Fieldset>
+        <State label={t.field.readOnly} note={t.field.readOnlyNote}>
+          <Field label={t.field.accountId} readOnly placeholder={t.field.accountIdPlaceholder} defaultValue={t.field.accountIdValue} hint={t.field.accountIdHint} />
         </State>
+        <State label={t.field.hidden} note={t.field.hiddenNote}>
+          <Field label={t.field.search} hiddenLabel type="search" icon="search" placeholder={t.field.searchPlaceholder} />
+        </State>
+        <PieceNote paragraphs={t.field.explain} />
       </Piece>
 
       <Piece id="password-field">
-        <State label={t.password.signUp} note={t.password.signUpNote}>
-          <PasswordField label={t.password.newPassword} placeholder={t.password.placeholder} autoComplete="new-password" minLength={8} />
+        <State label={t.password.signIn} note={t.password.signInNote}>
+          <PasswordField label={t.password.current} icon="password" placeholder={t.password.placeholder} autoComplete="current-password" />
         </State>
-        <State label={t.password.signIn}>
-          <PasswordField label={t.password.current} placeholder={t.password.placeholder} autoComplete="current-password" />
+        <State label={t.password.signUp} note={t.password.signUpNote}>
+          <PasswordField label={t.password.newPassword} icon="password" placeholder={t.password.placeholder} autoComplete="new-password" minLength={8} />
         </State>
         <State label={t.password.error} note={t.password.errorNote}>
           <PasswordField
             label={t.password.newPassword}
+            icon="password"
             placeholder={t.password.placeholder}
             autoComplete="new-password"
             minLength={8}
@@ -226,11 +169,22 @@ export function FormsPage() {
             error={t.password.tooShort}
           />
         </State>
+        <State label={t.password.met} note={t.password.metNote}>
+          <PasswordField
+            label={t.password.newPassword}
+            icon="password"
+            placeholder={t.password.placeholder}
+            autoComplete="new-password"
+            minLength={8}
+            defaultValue="correct-horse"
+          />
+        </State>
+        <PieceNote paragraphs={t.password.explain} />
       </Piece>
 
       <Piece id="masked-field">
-        <State label={t.masked.zip} note={t.masked.zipNote}>
-          <MaskedField mask="zip" label={t.masked.zipLabel} icon="zip" placeholder="90210" />
+        <State label={t.masked.inForm} note={t.masked.inFormNote} wide>
+          <ZipLookupDemo />
         </State>
         <State label={t.masked.phone} note={t.masked.phoneNote}>
           <MaskedField mask="phone" label={t.masked.phoneLabel} icon="phone" placeholder="(213) 373-4253" />
@@ -238,44 +192,145 @@ export function FormsPage() {
         <State label={t.masked.date} note={t.masked.dateNote}>
           <MaskedField mask="date" label={t.masked.dateLabel} icon="date" placeholder="MM/DD/YYYY" />
         </State>
-        <State label={t.masked.currency} note={t.masked.currencyNote}>
-          <MaskedField mask="currency" label={t.masked.priceLabel} prefix="$" placeholder="0.00" />
+        <State label={t.masked.money} note={t.masked.moneyNote}>
+          <div className="grid w-full gap-3 sm:grid-cols-2">
+            <MaskedField mask="currency" label={t.masked.priceLabel} prefix="$" placeholder="0.00" />
+            <MaskedField mask="integer" label={t.masked.seatsLabel} suffix={t.masked.seatsSuffix} placeholder={t.masked.seatsPlaceholder} defaultValue="1500" />
+          </div>
         </State>
-        <State label={t.masked.integer} note={t.masked.integerNote}>
-          <MaskedField mask="integer" label={t.masked.seatsLabel} suffix={t.masked.seatsSuffix} placeholder={t.masked.seatsPlaceholder} defaultValue="1500" />
+        <State label={t.masked.processing} note={t.masked.processingNote}>
+          <MaskedField
+            mask="zip"
+            label={t.masked.zipLabel}
+            icon="zip"
+            placeholder="90210"
+            defaultValue="60601"
+            readOnly
+            status="loading"
+            loadingLabel={t.masked.zipLooking}
+          />
+        </State>
+        <State label={t.masked.error} note={t.masked.errorNote}>
+          <MaskedField mask="zip" label={t.masked.zipLabel} icon="zip" placeholder="90210" defaultValue="9021" error={t.masked.zipMissing(1)} />
+        </State>
+        <State label={t.masked.notInCountry} note={t.masked.notInCountryNote}>
+          <MaskedField mask="phone" label={t.masked.phoneLabel} icon="phone" placeholder="(213) 373-4253" defaultValue="(123) 456-7890" error={messages.ui.phone.notInUS} />
         </State>
         <State label={t.masked.international} note={t.masked.internationalNote} wide>
           <PhoneDemo />
         </State>
+        <PieceNote paragraphs={t.masked.explain} />
       </Piece>
 
       <Piece id="select">
         <State label={t.select.single} note={t.select.singleNote}>
+          <Select label={t.select.role} hint={t.select.roleHint} placeholder={t.select.rolePlaceholder} options={toOptions(t.select.roleOptions)} />
+        </State>
+        <State label={t.select.error} note={t.select.errorNote}>
+          <Select label={t.select.role} placeholder={t.select.rolePlaceholder} options={toOptions(t.select.roleOptions)} error={t.select.roleError} />
+        </State>
+        <State label={t.select.described} note={t.select.describedNote}>
           <Select label={t.select.plan} options={t.select.planOptions} defaultValue="team" />
         </State>
+        <State label={t.select.disabled} note={t.select.disabledNote}>
+          <Select label={t.select.region} options={toOptions(t.select.regionOptions)} defaultValue="united-states" hint={t.select.regionReason} disabled />
+        </State>
+        <PieceNote paragraphs={t.select.explain} />
+      </Piece>
+
+      <Piece id="select-search">
         <State label={t.select.search} note={t.select.searchNote}>
+          <Select
+            label={t.select.timezone}
+            icon="time"
+            searchable
+            placeholder={t.select.timezonePlaceholder}
+            searchPlaceholder={t.select.timezoneSearch}
+            options={toOptions(t.select.timezoneOptions)}
+          />
+        </State>
+        <State label={t.select.chosen} note={t.select.chosenNote}>
           <Select
             label={t.select.timezone}
             icon="time"
             searchable
             searchPlaceholder={t.select.timezoneSearch}
             options={toOptions(t.select.timezoneOptions)}
+            defaultValue="london"
           />
         </State>
+        <PieceNote paragraphs={t.select.explainSearch} />
+      </Piece>
+
+      <Piece id="select-multiple">
         <State label={t.select.multiple} note={t.select.multipleNote}>
-          <Select multiple label={t.select.services} options={toOptions(t.select.serviceOptions)} defaultValue={["oil-change", "tires"]} />
+          <Select multiple label={t.select.features} options={toOptions(t.select.featureOptions)} />
         </State>
-        <State label={t.select.error} note={t.select.errorNote}>
-          <Select label={t.select.role} options={toOptions(t.select.roleOptions)} error={t.select.roleError} />
+        <State label={t.select.checked} note={t.select.checkedNote}>
+          <Select
+            multiple
+            label={t.select.features}
+            hint={t.select.featuresHint}
+            options={toOptions(t.select.featureOptions)}
+            defaultValue={["single-sign-on", "audit-log", "data-export"]}
+          />
         </State>
+        <State label={t.select.multipleSearch} note={t.select.multipleSearchNote}>
+          <Select
+            multiple
+            searchable
+            label={t.select.features}
+           
+            searchPlaceholder={t.select.featuresSearch}
+            options={toOptions(t.select.featureOptions)}
+            defaultValue={["api-access"]}
+          />
+        </State>
+        <State label={t.select.multipleError} note={t.select.multipleErrorNote}>
+          <Select multiple label={t.select.features} options={toOptions(t.select.featureOptions)} error={t.select.featuresError} />
+        </State>
+        <PieceNote paragraphs={t.select.explainMultiple} />
+      </Piece>
+
+      <Piece id="fieldset">
+        <State label={t.fieldset.grouping} note={t.fieldset.groupingNote} wide>
+          <Fieldset legend={t.fieldset.legend} hint={t.fieldset.hint}>
+            <div className="grid gap-3 sm:grid-cols-[2fr_1fr]">
+              <Field label={t.fieldset.street} icon="address" placeholder={t.fieldset.streetPlaceholder} autoComplete="address-line1" />
+              <Field label={t.fieldset.unit} placeholder={t.fieldset.unitPlaceholder} autoComplete="address-line2" />
+              <Field label={t.fieldset.city} placeholder={t.fieldset.cityPlaceholder} autoComplete="address-level2" />
+              <MaskedField mask="zip" label={t.fieldset.zip} icon="zip" placeholder="90210" autoComplete="postal-code" />
+            </div>
+          </Fieldset>
+        </State>
+        <State label={t.fieldset.groupError} note={t.fieldset.groupErrorNote}>
+          <Fieldset legend={t.fieldset.hoursLegend} error={t.fieldset.hoursError}>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Field label={t.fieldset.opens} icon="time" placeholder="09:00" defaultValue="18:00" />
+              <Field label={t.fieldset.closes} icon="time" placeholder="17:00" defaultValue="09:00" />
+            </div>
+          </Fieldset>
+        </State>
+        <State label={t.fieldset.disabled} note={t.fieldset.disabledNote}>
+          <Fieldset legend={t.fieldset.lockedLegend} hint={t.fieldset.lockedHint} disabled>
+            <div className="grid gap-3">
+              <Field label={t.fieldset.street} icon="address" placeholder={t.fieldset.streetPlaceholder} defaultValue="350 Fifth Avenue" />
+              <Field label={t.fieldset.city} placeholder={t.fieldset.cityPlaceholder} defaultValue="New York" />
+            </div>
+          </Fieldset>
+        </State>
+        <PieceNote paragraphs={t.fieldset.explain} />
       </Piece>
 
       <Piece id="checkbox">
-        <State label={t.checkbox.plain} note={t.checkbox.plainNote}>
-          <Checkbox label={t.checkbox.digest} defaultChecked />
+        <State label={t.checkbox.alone} note={t.checkbox.aloneNote}>
+          <Checkbox label={t.checkbox.digest} hint={t.checkbox.digestHint} defaultChecked />
+        </State>
+        <State label={t.checkbox.error} note={t.checkbox.errorNote}>
+          <Checkbox label={t.checkbox.consent} error={t.checkbox.consentError} />
         </State>
         <State label={t.checkbox.description} note={t.checkbox.descriptionNote}>
-          <Checkbox label={t.checkbox.giftWrap} description={t.checkbox.giftWrapDescription} hint={t.checkbox.giftWrapHint} />
+          <Checkbox label={t.checkbox.giftWrap} description={t.checkbox.giftWrapDescription} />
         </State>
         <State label={t.checkbox.link} note={t.checkbox.linkNote}>
           <Checkbox
@@ -292,29 +347,43 @@ export function FormsPage() {
         <State label={t.checkbox.indeterminate} note={t.checkbox.indeterminateNote}>
           <IndeterminateDemo />
         </State>
-        <State label={t.checkbox.error} note={t.checkbox.errorNote}>
-          <Checkbox label={t.checkbox.consent} error={t.checkbox.consentError} />
+        <State label={t.checkbox.disabled} note={t.checkbox.disabledNote}>
+          <div className="w-full">
+            <Checkbox label={t.checkbox.accepted} hint={t.checkbox.acceptedHint} defaultChecked disabled />
+            <Checkbox label={t.checkbox.partners} hint={t.checkbox.partnersHint} disabled />
+          </div>
         </State>
+        <PieceNote paragraphs={t.checkbox.explain} />
       </Piece>
 
       <Piece id="checkbox-card">
         <State label={t.checkboxCard.label} note={t.checkboxCard.note} wide>
           <Fieldset legend={t.checkboxCard.legend}>
-            <div className="grid gap-3 sm:grid-cols-3">
-              <CheckboxCard name="addons" value="support" icon={Headset} label={t.checkboxCard.support} description={t.checkboxCard.supportDescription} defaultChecked />
-              <CheckboxCard name="addons" value="backups" icon={DatabaseBackup} label={t.checkboxCard.backups} description={t.checkboxCard.backupsDescription} />
-              <CheckboxCard name="addons" value="domain" icon={Globe} label={t.checkboxCard.domain} description={t.checkboxCard.domainDescription} disabled />
+            <div className={CARD_GRID}>
+              <CheckboxCard name="payment" value="card" icon={CreditCard} label={t.checkboxCard.card} description={t.checkboxCard.cardDescription} defaultChecked />
+              <CheckboxCard name="payment" value="transfer" icon={Landmark} label={t.checkboxCard.transfer} description={t.checkboxCard.transferDescription} defaultChecked />
+              <CheckboxCard name="payment" value="invoice" icon={FileText} label={t.checkboxCard.invoice} description={t.checkboxCard.invoiceDescription} />
             </div>
           </Fieldset>
         </State>
-        <State label={t.checkboxCard.error} note={t.checkboxCard.errorNote} wide>
-          <Fieldset legend={t.checkboxCard.legend} error={t.checkboxCard.errorMessage}>
-            <div className="grid gap-3 sm:grid-cols-3">
-              <CheckboxCard icon={Headset} label={t.checkboxCard.support} description={t.checkboxCard.supportDescription} />
-              <CheckboxCard icon={DatabaseBackup} label={t.checkboxCard.backups} description={t.checkboxCard.backupsDescription} />
+        <State label={t.checkboxCard.error} note={t.checkboxCard.errorNote}>
+          <Fieldset legend={t.checkboxCard.addons} error={t.checkboxCard.errorMessage}>
+            <div className={CARD_GRID}>
+              <CheckboxCard icon={Headset} label={t.checkboxCard.support} />
+              <CheckboxCard icon={DatabaseBackup} label={t.checkboxCard.backups} />
+              <CheckboxCard icon={KeyRound} label={t.checkboxCard.sso} />
             </div>
           </Fieldset>
         </State>
+        <State label={t.checkboxCard.disabled} note={t.checkboxCard.disabledNote}>
+          <Fieldset legend={t.checkboxCard.extras}>
+            <div className={CARD_GRID}>
+              <CheckboxCard icon={Download} label={t.checkboxCard.exports} defaultChecked />
+              <CheckboxCard icon={Globe} label={t.checkboxCard.domain} description={t.checkboxCard.domainDescription} disabled />
+            </div>
+          </Fieldset>
+        </State>
+        <PieceNote paragraphs={t.checkboxCard.explain} />
       </Piece>
 
       <Piece id="checkbox-list">
@@ -328,17 +397,39 @@ export function FormsPage() {
             collapseAfter={5}
             clearable
             defaultValue={["seattle"]}
+            className="max-w-md"
           />
         </State>
         <State label={t.checkboxList.limit} note={t.checkboxList.limitNote}>
-          <CheckboxList legend={t.checkboxList.topics} hint={t.checkboxList.topicsHint} options={t.checkboxList.topicOptions} max={2} defaultValue={["product"]} />
+          <CheckboxList
+            legend={t.checkboxList.topics}
+            hint={t.checkboxList.topicsHint}
+            options={t.checkboxList.topicOptions}
+            max={2}
+            defaultValue={["product"]}
+            className="max-w-md"
+          />
+        </State>
+        <State label={t.checkboxList.facet} note={t.checkboxList.facetNote}>
+          <CheckboxList legend={t.checkboxList.category} options={t.checkboxList.categoryOptions} clearable defaultValue={["design", "sales"]} className="max-w-xs" />
+        </State>
+        <State label={t.checkboxList.disabled} note={t.checkboxList.disabledNote}>
+          <CheckboxList
+            legend={t.checkboxList.lockedLegend}
+            hint={t.checkboxList.lockedHint}
+            options={toOptions(t.checkboxList.languageOptions)}
+            disabled
+            defaultValue={["english"]}
+            className="max-w-md"
+          />
         </State>
         <State label={t.checkboxList.columns} note={t.checkboxList.columnsNote}>
           <CheckboxList legend={t.checkboxList.days} options={toOptions(t.checkboxList.dayOptions)} columns={3} defaultValue={["monday", "tuesday", "wednesday", "thursday", "friday"]} />
         </State>
-        <State label={t.checkboxList.disabled} note={t.checkboxList.disabledNote}>
-          <CheckboxList legend={t.checkboxList.lockedLegend} hint={t.checkboxList.lockedHint} options={toOptions(t.checkboxList.languageOptions)} disabled defaultValue={["english"]} />
+        <State label={t.checkboxList.error} note={t.checkboxList.errorNote}>
+          <CheckboxList legend={t.checkboxList.topics} options={t.checkboxList.topicOptions} error={t.checkboxList.topicsError} className="max-w-md" />
         </State>
+        <PieceNote paragraphs={t.checkboxList.explain} />
       </Piece>
 
       <Piece id="radio-group">
@@ -346,57 +437,79 @@ export function FormsPage() {
           <RadioGroup legend={t.radioGroup.delivery} name="delivery" defaultValue="standard">
             <Radio value="standard" label={t.radioGroup.standard} description={t.radioGroup.standardDescription} />
             <Radio value="express" label={t.radioGroup.express} description={t.radioGroup.expressDescription} />
-            <Radio value="pickup" label={t.radioGroup.pickup} description={t.radioGroup.pickupDescription} disabled />
+            <Radio value="pickup" label={t.radioGroup.pickup} />
+          </RadioGroup>
+        </State>
+        <State label={t.radioGroup.withDisabled} note={t.radioGroup.withDisabledNote}>
+          <RadioGroup legend={t.radioGroup.plan} name="plan" defaultValue="basic">
+            <Radio value="basic" label={t.radioGroup.basic} description={t.radioGroup.basicDescription} />
+            <Radio value="pro" label={t.radioGroup.pro} description={t.radioGroup.proDescription} disabled />
           </RadioGroup>
         </State>
         <State label={t.radioGroup.horizontal} note={t.radioGroup.horizontalNote}>
-          <RadioGroup legend={t.radioGroup.size} name="size" orientation="horizontal" defaultValue="medium">
-            {toOptions(t.radioGroup.sizes).map((o) => (
-              <Radio key={o.value} value={o.value} label={o.label} />
-            ))}
+          <RadioGroup legend={t.radioGroup.sameAddress} name="same-address" orientation="horizontal" error={t.radioGroup.sameError}>
+            <Radio value="yes" label={t.radioGroup.yes} />
+            <Radio value="no" label={t.radioGroup.no} />
           </RadioGroup>
         </State>
-        <State label={t.radioGroup.error} note={t.radioGroup.errorNote}>
-          <RadioGroup legend={t.radioGroup.contact} name="contact" error={t.radioGroup.contactError}>
-            {toOptions(t.radioGroup.contactOptions).map((o) => (
-              <Radio key={o.value} value={o.value} label={o.label} />
-            ))}
+        <State label={t.radioGroup.disabled} note={t.radioGroup.disabledNote}>
+          <RadioGroup legend={t.radioGroup.locked} name="currency" hint={t.radioGroup.lockedHint} defaultValue="usd" disabled>
+            <Radio value="usd" label={t.radioGroup.usd} />
+            <Radio value="eur" label={t.radioGroup.eur} />
           </RadioGroup>
         </State>
+        <PieceNote paragraphs={t.radioGroup.explain} />
       </Piece>
 
       <Piece id="switch">
-        <State label={t.switch.saves} note={t.switch.savesNote}>
-          <SavingSwitchDemo />
+        <State label={t.switch.offOn} note={t.switch.offOnNote}>
+          <div className="w-full">
+            <Switch label={t.switch.requests} />
+            <Switch label={t.switch.showPhone} defaultChecked />
+          </div>
         </State>
-        <State label={t.switch.fails} note={t.switch.failsNote}>
-          <SavingSwitchDemo fails />
+        <State label={t.switch.described} note={t.switch.describedNote}>
+          <div className="w-full">
+            <Switch label={t.switch.mentions} description={t.switch.mentionsDescription} defaultChecked />
+            <Switch label={t.switch.digest} hint={t.switch.digestHint} />
+          </div>
         </State>
-        <State label={t.switch.description} note={t.switch.descriptionNote}>
-          <Switch label={t.switch.compactLayout} description={t.switch.compactLayoutDescription} />
+        <State label={t.switch.saving} note={t.switch.savingNote}>
+          <Switch label={t.switch.reminders} checked saving />
+        </State>
+        <State label={t.switch.failed} note={t.switch.failedNote}>
+          <FailedSwitchDemo />
         </State>
         <State label={t.switch.disabled} note={t.switch.disabledNote}>
-          <Switch label={t.switch.sso} hint={t.switch.ssoHint} disabled />
+          <div className="w-full">
+            <Switch label={t.switch.sso} hint={t.switch.ssoHint} disabled />
+            <Switch label={t.switch.locked} hint={t.switch.lockedHint} defaultChecked disabled />
+          </div>
         </State>
+        <State label={t.switch.list} note={t.switch.listNote}>
+          <PreferencesDemo />
+        </State>
+        <PieceNote paragraphs={t.switch.explain} />
       </Piece>
 
       <Piece id="rating-input">
         <State label={t.ratingInput.choosing} note={t.ratingInput.choosingNote}>
           <RatingInput legend={t.ratingInput.legend} name="rating" />
         </State>
-        <State label={t.ratingInput.rated} note={t.ratingInput.ratedNote}>
-          <RatingInput legend={t.ratingInput.legend} name="rated" defaultValue={4} submittedNote={t.ratingInput.submitted} />
-        </State>
         <State label={t.ratingInput.error} note={t.ratingInput.errorNote}>
           <RatingInput legend={t.ratingInput.legend} name="rating-error" error={t.ratingInput.errorMessage} />
         </State>
+        <State label={t.ratingInput.rated} note={t.ratingInput.ratedNote}>
+          <RatingInput legend={t.ratingInput.legend} name="rated" defaultValue={4} submittedNote={t.ratingInput.submitted} />
+        </State>
+        <State label={t.ratingInput.disabled} note={t.ratingInput.disabledNote}>
+          <RatingInput legend={t.ratingInput.legend} name="rating-locked" hint={t.ratingInput.disabledHint} disabled />
+        </State>
+        <PieceNote paragraphs={t.ratingInput.explain} />
       </Piece>
 
       <Piece id="segmented-control">
         <State label={t.segmented.text} note={t.segmented.textNote}>
-          <SegmentedControl legend={t.segmented.period} options={t.segmented.periods} defaultValue="month" />
-        </State>
-        <State label={t.segmented.icons} note={t.segmented.iconsNote}>
           <SegmentedControl
             legend={t.segmented.view}
             options={[
@@ -405,11 +518,18 @@ export function FormsPage() {
             ]}
           />
         </State>
+        <State label={t.segmented.four} note={t.segmented.fourNote}>
+          <SegmentedControl legend={t.segmented.range} options={t.segmented.ranges} defaultValue="week" />
+        </State>
+        <State label={t.segmented.hidden} note={t.segmented.hiddenNote} wide>
+          <SegmentedControl legend={t.segmented.sort} hiddenLegend options={t.segmented.sorts} />
+        </State>
+        <PieceNote paragraphs={t.segmented.explain} />
       </Piece>
 
       <Piece id="slider">
         <State label={t.slider.readout} note={t.slider.readoutNote}>
-          <Slider label={t.slider.distance} min={0} max={100} step={5} defaultValue={25} formatValue={t.slider.miles} showBounds />
+          <SliderSubmittedDemo />
         </State>
         <State label={t.slider.steps} note={t.slider.stepsNote}>
           <Slider
@@ -426,12 +546,19 @@ export function FormsPage() {
             increaseLabel={t.slider.zoomIn}
           />
         </State>
+        <State label={t.slider.noButtons} note={t.slider.noButtonsNote}>
+          <Slider label={t.slider.minRating} min={0} max={5} step={0.5} defaultValue={3.5} formatValue={t.slider.stars} buttons={false} />
+        </State>
+        <State label={t.slider.atLimit} note={t.slider.atLimitNote}>
+          <Slider label={t.slider.volume} min={0} max={10} defaultValue={10} />
+        </State>
         <State label={t.slider.disabled} note={t.slider.disabledNote}>
           <Slider label={t.slider.radius} hint={t.slider.radiusHint} defaultValue={10} formatValue={t.slider.miles} disabled />
         </State>
         <State label={t.slider.error} note={t.slider.errorNote}>
           <Slider label={t.slider.budget} min={0} max={5000} step={100} defaultValue={300} formatValue={(v) => `$${formatInteger(v)}`} error={t.slider.budgetError} />
         </State>
+        <PieceNote paragraphs={t.slider.explain} />
       </Piece>
 
       <Piece id="date-picker">
