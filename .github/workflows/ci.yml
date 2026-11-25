@@ -1,11 +1,8 @@
 # Runs the project's checks on every pull request and on every push to main.
 #
-# The blocklist guard reads its terms from the BLOCKLIST repository secret
-# (Settings → Secrets and variables → Actions) — the same terms as the local,
-# git-ignored `.blocklist`. Without the secret the guard fails closed on
-# purpose: a guard that silently checks nothing only looks like protection.
-# Pull requests from forks receive no secrets, so they skip the guard step;
-# review them by hand before merging.
+# The blocklist guard is deliberately NOT here. Its list of terms never leaves
+# the machine where the work is done: the guard runs locally, through the git
+# hooks in `.githooks/`, before anything is committed or pushed.
 name: CI
 
 on:
@@ -44,12 +41,6 @@ jobs:
 
       - name: Test
         run: npm test
-
-      - name: Blocklist guard
-        if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
-        env:
-          BLOCKLIST: ${{ secrets.BLOCKLIST }}
-        run: npm run guard
 
       - name: Build
         run: npm run build

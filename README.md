@@ -31,8 +31,9 @@ npm run dev
 | `npm run guard` | Scan the whole working tree against the blocklist |
 | `npm run check` | All of the above except the build |
 
-**CI** (`.github/workflows/ci.yml`) runs type-check, lint, tests, the guard
-and the build on every pull request and on every push to `main`.
+**CI** (`.github/workflows/ci.yml`) runs type-check, lint, tests and the
+build on every pull request and on every push to `main`. The blocklist guard
+is not part of CI on purpose — see below.
 
 ## Layout
 
@@ -99,16 +100,17 @@ message or a branch name. The list of those terms is itself never committed.
 
 - **Where the list lives:** `.blocklist` at the repository root (ignored by
   git), one term per line; or the `BLOCKLIST` environment variable,
-  separated by newlines or commas, for CI. `.blocklist.example` shows the
-  format.
+  separated by newlines or commas, for a shell or git worktree without the
+  file. `.blocklist.example` shows the format.
 - **When it runs:** on every commit (`.githooks/pre-commit` checks the staged
   content, paths and branch name; `.githooks/commit-msg` checks the message),
   and on demand with `npm run guard`. `npm install` sets
   `core.hooksPath` to `.githooks`.
-- **In CI:** the workflow reads the list from the `BLOCKLIST` repository
-  secret (Settings → Secrets and variables → Actions), holding the same terms
-  as the local `.blocklist`. Pull requests from forks get no secrets, so they
-  skip the guard and need a manual review.
+- **Local only, by design:** the list never leaves the machine where the work
+  is done — not even as a CI secret. Everything is checked here, before it is
+  committed or pushed, and CI does not run the guard. A commit made anywhere
+  else (the GitHub web editor, another clone) is not checked, so review those
+  by hand.
 - **Matching:** case- and accent-insensitive, inside longer words too; a space
   in a term also matches `-`, `_`, `.` or nothing.
 - **Fails closed:** with no list, or with `.blocklist` tracked or not ignored,
