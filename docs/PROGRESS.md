@@ -11,10 +11,9 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 
 1. **Inventory** of the components to port — done.
 2. **Repository skeleton**, neutral tokens and the blocklist guard — done.
-3. **Components, group by group** — in progress (see below).
-4. **Workbench and approval flow** — done (moved ahead of the remaining
-   groups, so new groups land directly in their section pages). Still to do
-   here: the Playwright layout ruler and live contrast measurement.
+3. **Components, group by group** — done: every registry piece is built.
+4. **Workbench and approval flow** — done. Still to do here: the Playwright
+   layout ruler and live contrast measurement.
 5. **Brand guide** — how to rebrand the tokens and the logo.
 
 ## Merged so far
@@ -28,50 +27,47 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 | #5 | Workbench: shell, provisional logo, map, section pages, registry, approval flow, `vercel.json` |
 | #6 | Forms 1: Field, Fieldset, PasswordField, MaskedField (US), PhoneField, Select |
 | #7 | This progress file and the working rules |
+| #8 | Forms 2: Checkbox, CheckboxCard, CheckboxList, RadioGroup, Switch, SegmentedControl, Slider, Rating, RatingInput; `lib/format.ts`; demo placeholders and their test |
+| #9 | Dependencies for the remaining groups: react-day-picker, react-easy-crop, @dnd-kit |
+| #10 | Content: Carousel, MapPlaceholder, and the Content page |
+| #11 | Foundation: typography, grid and rhythm, motion and icons pages, every figure measured from the screen |
+| #12 | Forms 3: DatePicker, TimePicker, DateTimePicker; `lib/date-time.ts` (en-US) |
+| #15 | Forms 4: FileUpload, PhotoUpload, ImageCropper, ProfileCover, PhotoGallery, CardForm; file, image and card helpers |
+| #13 | Navigation: Header, Breadcrumb, Footer, Search, Filters, AccountSwitcher; approval tests no longer assume a piece is left to build |
+| #14 | Data: Table, DataTable, Stat, TimeSeries, Columns, Comparison, Ranking, Meter, Period, ChartStates, RadialKpi; chart parts; `lib/chart.ts`, `lib/table.ts`, `lib/report-period.ts`; shared `lib/iso-date.ts` |
 
-In review: **#8, Forms 2 (choices)** — Checkbox, CheckboxCard, CheckboxList,
-RadioGroup, Switch (+ `useSwitchSave`), SegmentedControl, Slider, Rating,
-RatingInput, plus `lib/format.ts` (en-US numbers) and `lib/slider.ts`.
+#10 to #15 were built in parallel by six builder agents, one per group, each
+in its own git worktree. Each group was then integrated one at a time: the
+diff read for leftovers from the source, a rebase onto `main`, the workbench
+checked in the browser, and a draft PR. They were merged in the order listed.
 
-Health on the Forms 2 branch: 328 tests passing, type-check, lint and build
-clean, guard clean.
+Health on `main`: 657 tests passing (one skipped: it only runs while some
+piece is still to build), type-check, lint and build clean, guard clean.
 
 ## Component status
 
-35 of 67 registry pieces are built (counting the Forms 2 branch). The registry
-(`src/workbench/registry.ts`) is the source of truth; this table is a snapshot.
+All 67 registry pieces are built, in all eight sections. The registry
+(`src/workbench/registry.ts`) is the source of truth.
 
-| Section | Built | To build |
-| --- | --- | --- |
-| Foundation | logo, roles | typography, grid, motion, icons |
-| Primitives | button, link, badge, avatar, tabs, tooltip, separator, action-menu, rating | — |
-| Forms | field, fieldset, password-field, masked-field, select, checkbox, checkbox-card, checkbox-list, radio-group, switch, rating-input, segmented-control, slider | date-picker, time-picker, date-time-picker, file-upload, photo-upload, image-cropper, profile-cover, photo-gallery, card-form |
-| Data | — | table, data-table, stat, time-series, columns, comparison, ranking, meter, period, chart-states, radial-kpi |
-| States | empty, loading, error, progress | — |
-| Navigation | app-shell, side-menu | header, breadcrumb, footer, search, filters, account-switcher |
-| Content | — | carousel, map-placeholder |
-| Overlay | overlay, sheet, dialog, full-screen-panel, toast | — |
-
-No piece is approved yet: approving is the reviewer's act, in the workbench.
+**No piece is approved yet.** Approving is the reviewer's act, in the
+workbench: the map shows 0 of 67.
 
 ## Next steps
 
-1. **Forms 2 — choices**: in review as #8; after the merge, close the branch.
-2. **Forms 3 — dates**: date-picker (react-day-picker in en-US, MM/DD/YYYY,
-   week starts on Sunday), time-picker (12-hour display, `HH:mm` submitted),
-   date-time-picker, and the date-time helpers adapted to en-US.
-3. **Forms 4 — files and images**: file-upload, photo-upload, image-cropper,
-   profile-cover, photo-gallery, card-form.
-4. **Navigation**: header (provisional logo, no brand line), breadcrumb,
-   footer (all links and contacts as props), search, filters,
-   account-switcher (generic accounts, no domain roles).
-5. **Content**: carousel, map-placeholder.
-6. **Data**: tables, stat, charts, period (en-US month names and number
-   formats), chart-states, radial-kpi.
-7. **Foundation**: typography, grid, motion and icons pages.
-8. **Block 4 leftovers**: the Playwright layout ruler (375 / 768 / 1280 /
-   1920) and live contrast measurement on the Roles page.
-9. **Block 5**: the brand guide.
+1. **General review in the workbench**, piece by piece, with approvals.
+   Points already noted for it:
+   - the newsletter field's placeholder is cut off at 375px;
+   - the footer's thick gradient edge from the source became a plain top
+     border, the same kind of decoration as the dropped brand line —
+     restore it or keep it plain.
+2. **Fix `usePendingFocus`** (`action-menu.tsx`): when an action keeps its
+   menu item on screen ("Make main" in the photo gallery), focus moves while
+   the menu is still closing and ends up on `body`. The gallery works around
+   it locally; the fix belongs in the hook.
+3. **Block 4 leftovers**: the Playwright layout ruler (375 / 768 / 1280 /
+   1920), from the source's `measure-workbench`, `measure-touch` and the
+   shared ruler library, and live contrast measurement on the Roles page.
+4. **Block 5**: the brand guide.
 
 Optional, waiting for a decision: require the CI `Check` status in the `main`
 ruleset so a red PR cannot be merged.
@@ -92,11 +88,11 @@ ruleset so a red PR cannot be merged.
 - **Register and show it**: a registry row per component (the file name is the
   id), the section marked `built: true` once it has a page, and each built
   piece rendered with `<Piece id>` on its section page. The registry test
-  enforces all three. A test that needs a piece still "to build" takes one
-  from the registry, never by name — a named one breaks when its group lands.
+  enforces all three. Tests about the "to build" state make up their own
+  piece instead of relying on the registry having one left.
 - **Every demo text input has a placeholder** — an example of what goes in
   (dots for passwords). `pages/placeholders.test.tsx` renders every section
-  page and fails on a text input without one.
+  page and fails on a text input without one (file inputs excepted).
 - **Tests**: behavior tests per component (Testing Library + jsdom; use
   `installDomStubs()` from `src/test/dom.ts` for popovers and lists).
 - **Verify before the PR**: `npm run check`, `npm run build`, and the
@@ -106,3 +102,19 @@ ruleset so a red PR cannot be merged.
   publishing. The term list never leaves the local `.blocklist`.
 - **Approvals are never made on someone's behalf.** The seal is the
   reviewer's.
+
+## When groups are built in parallel
+
+- **Dependencies first**, in one PR of their own, so no group branch touches
+  `package.json` or the lockfile.
+- **One git worktree per group.** A worktree has no `.blocklist`, so the
+  hooks there read the terms through the `BLOCKLIST` environment variable,
+  filled from the main checkout's file in the local shell only.
+- **Shared files are appended at the end**: `ui.ts`, `workbench.ts`, the
+  section page and the registry. Each merge then leaves only an
+  "appended at the same end" conflict on the next branch: keep both blocks,
+  close the first one.
+- **Integrate one at a time**: read the diff, rebase onto `main`, run the
+  checks, look at the workbench, then open the PR; after each merge, rebase
+  the next. A helper both groups need is ported by one group, and any
+  duplicate is folded into one shared module when the second group lands.
