@@ -1,5 +1,7 @@
 import { locale, messages } from "@/messages";
 
+import { dayExists, pad, parseIsoDate, toIsoDate } from "./iso-date";
+
 /**
  * Dates and times for the form pickers — what is typed, what is shown and
  * what is submitted (en-US).
@@ -21,61 +23,37 @@ import { locale, messages } from "@/messages";
  * Pure functions: the three pickers read from here, and so do the tests.
  */
 
-type Ymd = { y: number; m: number; d: number };
-
 /** The first and last accepted dates, both `yyyy-mm-dd` and both inclusive. */
 export type DateBounds = { min?: string; max?: string };
 
 const m = messages.ui.datePicker;
 
-const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 const DISPLAY_DATE = /^(\d{2})\/(\d{2})\/(\d{4})$/;
 const HHMM = /^([01]\d|2[0-3]):([0-5]\d)$/;
-
-function pad(n: number, size = 2): string {
-  return String(n).padStart(size, "0");
-}
-
-/** Does the day exist? February 31 never does; February 29 only in a leap year. */
-function exists({ y, m, d }: Ymd): boolean {
-  if (y < 1 || m < 1 || m > 12 || d < 1) return false;
-  return d <= new Date(y, m, 0).getDate();
-}
-
-function parseIso(iso: string): Ymd | null {
-  const r = ISO_DATE.exec(iso);
-  if (!r) return null;
-  const ymd = { y: Number(r[1]), m: Number(r[2]), d: Number(r[3]) };
-  return exists(ymd) ? ymd : null;
-}
-
-function toIso({ y, m, d }: Ymd): string {
-  return `${pad(y, 4)}-${pad(m)}-${pad(d)}`;
-}
 
 /** `09/17/2026` → `2026-09-17`. Incomplete or nonexistent → `null`. */
 export function displayToIso(text: string): string | null {
   const r = DISPLAY_DATE.exec(text);
   if (!r) return null;
   const ymd = { y: Number(r[3]), m: Number(r[1]), d: Number(r[2]) };
-  return exists(ymd) ? toIso(ymd) : null;
+  return dayExists(ymd) ? toIsoDate(ymd) : null;
 }
 
 /** `2026-09-17` → `09/17/2026`. Invalid → empty text. */
 export function isoToDisplay(iso: string): string {
-  const ymd = parseIso(iso);
+  const ymd = parseIsoDate(iso);
   return ymd ? `${pad(ymd.m)}/${pad(ymd.d)}/${pad(ymd.y, 4)}` : "";
 }
 
 /** The local `Date`, at midnight, that the calendar works with. */
 export function isoToDate(iso: string): Date | undefined {
-  const ymd = parseIso(iso);
+  const ymd = parseIsoDate(iso);
   return ymd ? new Date(ymd.y, ymd.m - 1, ymd.d) : undefined;
 }
 
 /** The calendar's `Date` back to `yyyy-mm-dd`, by its local day. */
 export function dateToIso(date: Date): string {
-  return toIso({ y: date.getFullYear(), m: date.getMonth() + 1, d: date.getDate() });
+  return toIsoDate({ y: date.getFullYear(), m: date.getMonth() + 1, d: date.getDate() });
 }
 
 /**
@@ -133,14 +111,14 @@ export function formatTime(hhmm: string): string {
 
 /** Date and time together in the submitted format; one missing, no value. */
 export function joinDateTime(date: string, time: string): string {
-  return parseIso(date) && HHMM.test(time) ? `${date}T${time}` : "";
+  return parseIsoDate(date) && HHMM.test(time) ? `${date}T${time}` : "";
 }
 
 /** The reverse: `2026-09-17T14:30` → both parts, each dropped if invalid. */
 export function splitDateTime(value: string): { date: string; time: string } {
   const [date = "", time = ""] = value.split("T");
   return {
-    date: parseIso(date) ? date : "",
+    date: parseIsoDate(date) ? date : "",
     time: HHMM.test(time) ? time : "",
   };
 }

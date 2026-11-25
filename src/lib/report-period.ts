@@ -1,5 +1,7 @@
 import { locale, messages } from "@/messages";
 
+import { daysInMonth, parseIsoDate, toIsoDate, type Ymd } from "./iso-date";
+
 /**
  * Dates as reports and charts write them — the axis label, the reading of a
  * point, the month of a column — and the reporting periods with their
@@ -15,31 +17,7 @@ import { locale, messages } from "@/messages";
  * messages, like every other string on screen.
  */
 
-type Ymd = { y: number; m: number; d: number };
-
-const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 const ISO_MONTH = /^(\d{4})-(\d{2})$/;
-
-function pad(n: number, size = 2): string {
-  return String(n).padStart(size, "0");
-}
-
-/** Does the day exist? February 31 does not; February 29 only in a leap year. */
-function exists({ y, m, d }: Ymd): boolean {
-  if (y < 1 || m < 1 || m > 12 || d < 1) return false;
-  return d <= lastDayOfMonth(y, m);
-}
-
-function parseIso(iso: string): Ymd | null {
-  const r = ISO_DATE.exec(iso);
-  if (!r) return null;
-  const ymd = { y: Number(r[1]), m: Number(r[2]), d: Number(r[3]) };
-  return exists(ymd) ? ymd : null;
-}
-
-function toIso({ y, m, d }: Ymd): string {
-  return `${pad(y, 4)}-${pad(m)}-${pad(d)}`;
-}
 
 function utc({ y, m, d }: Ymd): Date {
   return new Date(Date.UTC(y, m - 1, d));
@@ -60,13 +38,13 @@ const monthYearFormat = format({ month: "long", year: "numeric" });
  * its neighbors.
  */
 export function isoToAxisLabel(iso: string): string {
-  const ymd = parseIso(iso);
+  const ymd = parseIsoDate(iso);
   return ymd ? axisFormat.format(utc(ymd)) : "";
 }
 
 /** The date in full, for the reading of a point: "September 12". */
 export function isoToLongLabel(iso: string): string {
-  const ymd = parseIso(iso);
+  const ymd = parseIsoDate(iso);
   return ymd ? dayFormat.format(utc(ymd)) : "";
 }
 
@@ -99,10 +77,6 @@ function shiftDays({ y, m, d }: Ymd, n: number): Ymd {
   return { y: t.getUTCFullYear(), m: t.getUTCMonth() + 1, d: t.getUTCDate() };
 }
 
-function lastDayOfMonth(y: number, m: number): number {
-  return new Date(Date.UTC(y, m, 0)).getUTCDate();
-}
-
 /** Month `m` (which may fall outside 1–12) normalized, with its year. */
 function monthOf(y: number, m: number): { y: number; m: number } {
   const i = y * 12 + (m - 1);
@@ -123,15 +97,15 @@ function monthOf(y: number, m: number): { y: number; m: number } {
  * an invalid one returns `null`.
  */
 export function reportRanges(period: ReportPeriod, today: string): { current: DateRange; previous: DateRange } | null {
-  const now = parseIso(today);
+  const now = parseIsoDate(today);
   if (!now) return null;
 
   if (period === "12m") {
     const end = monthOf(now.y, now.m - 1);
     const start = monthOf(end.y, end.m - 11);
     const range = (yearsBack: number): DateRange => ({
-      from: toIso({ y: start.y - yearsBack, m: start.m, d: 1 }),
-      to: toIso({ y: end.y - yearsBack, m: end.m, d: lastDayOfMonth(end.y - yearsBack, end.m) }),
+      from: toIsoDate({ y: start.y - yearsBack, m: start.m, d: 1 }),
+      to: toIsoDate({ y: end.y - yearsBack, m: end.m, d: daysInMonth(end.y - yearsBack, end.m) }),
     });
     return { current: range(0), previous: range(1) };
   }
@@ -141,8 +115,8 @@ export function reportRanges(period: ReportPeriod, today: string): { current: Da
   const start = shiftDays(end, -(n - 1));
   const previousEnd = shiftDays(start, -1);
   return {
-    current: { from: toIso(start), to: toIso(end) },
-    previous: { from: toIso(shiftDays(previousEnd, -(n - 1))), to: toIso(previousEnd) },
+    current: { from: toIsoDate(start), to: toIsoDate(end) },
+    previous: { from: toIsoDate(shiftDays(previousEnd, -(n - 1))), to: toIsoDate(previousEnd) },
   };
 }
 
@@ -154,9 +128,9 @@ export function reportRanges(period: ReportPeriod, today: string): { current: Da
  * "October 2025 – September 2026".
  */
 export function rangeLabel(range: DateRange, today: string, months = false): string {
-  const a = parseIso(range.from);
-  const b = parseIso(range.to);
-  const now = parseIso(today);
+  const a = parseIsoDate(range.from);
+  const b = parseIsoDate(range.to);
+  const now = parseIsoDate(today);
   if (!a || !b || !now) return "";
   const t = messages.ui.period;
 
