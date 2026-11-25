@@ -96,6 +96,26 @@
    * Text on it uses the `--text-on-feature*` roles, never `--text-primary`. */
   --surface-feature: var(--neutral-950);
 
+  /* The stage: soft light behind a page, spread over four points so it does
+   * not die in the middle. Dark only — in light every glow is transparent and
+   * the page stays flat. Made from the accent, so a rebrand relights it. */
+  --stage-light:
+    radial-gradient(820px 460px at 22% -6%, light-dark(transparent, color-mix(in srgb, var(--accent-400) 22%, transparent)), transparent 68%),
+    radial-gradient(900px 520px at 96% -12%, light-dark(transparent, color-mix(in srgb, var(--accent-600) 30%, transparent)), transparent 70%),
+    radial-gradient(700px 520px at 88% 58%, light-dark(transparent, color-mix(in srgb, var(--accent-700) 22%, transparent)), transparent 68%),
+    radial-gradient(760px 460px at 8% 96%, light-dark(transparent, color-mix(in srgb, var(--accent-400) 14%, transparent)), transparent 70%);
+  /* Glass: a card over the stage. In light it is the opaque card; in dark it
+   * lets the stage through, blurred (the `glass` utility), and an edge of
+   * light separates it — the blur alone would not. It ends darker than the
+   * opaque card, so text on it keeps at least the contrast it has there. */
+  --surface-glass: light-dark(var(--surface), color-mix(in srgb, var(--neutral-900) 58%, transparent));
+  --glass-edge: light-dark(transparent, color-mix(in srgb, var(--neutral-0) 6%, transparent));
+  /* A card rests on the page: a soft shadow in light, a longer and denser one
+   * in dark, where it only shows over another card. */
+  --card-shadow:
+    0 1px 2px light-dark(color-mix(in srgb, var(--neutral-950) 5%, transparent), transparent),
+    0 8px 24px -8px light-dark(color-mix(in srgb, var(--neutral-950) 12%, transparent), color-mix(in srgb, var(--neutral-950) 55%, transparent));
+
   /* text */
   --text-primary: light-dark(var(--neutral-900), var(--neutral-100));
   --text-secondary: light-dark(var(--neutral-700), var(--neutral-350));

@@ -86,7 +86,7 @@ export function Home() {
             </>
           );
 
-          const base = "block rounded-lg border border-border bg-surface p-4 transition-colors duration-[var(--motion-fast)]";
+          const base = "glass block rounded-lg border border-border p-4 transition-colors duration-[var(--motion-fast)]";
 
           return section.built ? (
             <Link key={section.id} to={`/${section.id}`} className={cn(base, "hover:border-accent")}>
@@ -100,7 +100,7 @@ export function Home() {
         })}
       </section>
 
-      <section className="rounded-lg border border-border bg-surface p-4">
+      <section className="glass rounded-lg border border-border p-4">
         <h2 className="font-medium">{m.sealTitle}</h2>
         <ul className="mt-3 space-y-2 text-sm text-secondary">
           {(["approved", "in-review", "to-build"] as const).map((state) => (
