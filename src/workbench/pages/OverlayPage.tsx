@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { Check, Pencil, Share2, Sparkles, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Field } from "@/components/ui/field";
 import { Overlay, OverlayContent, OverlayTrigger } from "@/components/ui/overlay";
 import { FullScreenPanel } from "@/components/ui/overlay/full-screen-panel";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { toast } from "@/components/ui/toast";
+import { normalize } from "@/lib/normalize";
 import { messages } from "@/messages";
 
 import { Piece, State } from "../Piece";
@@ -14,19 +17,72 @@ import { SectionPage } from "./SectionPage";
 
 const t = messages.workbench.demos;
 
+/**
+ * The panel as a picker uses it: a search field that takes focus on opening,
+ * a list that narrows as the person types, and focus back on the trigger when
+ * the panel has gone — the panel leaves both jobs to whoever opens it.
+ */
 function FullScreenDemo() {
   const [open, setOpen] = useState(false);
+  const [term, setTerm] = useState("");
+  const [chosen, setChosen] = useState("");
+  const trigger = useRef<HTMLButtonElement>(null);
+  const search = useRef<HTMLInputElement>(null);
+  const cities = t.select.timezoneOptions.filter((city) => normalize(city).includes(normalize(term.trim())));
+
+  function openPanel() {
+    // Synchronous, inside the tap: outside it, iOS does not open the keyboard.
+    flushSync(() => setOpen(true));
+    search.current?.focus();
+  }
+
   return (
-    <>
-      <Button variant="secondary" onClick={() => setOpen(true)}>
-        {t.fullScreen.open}
+    <div className="flex flex-col gap-2">
+      <Button ref={trigger} variant="secondary" onClick={openPanel}>
+        {chosen || t.fullScreen.open}
       </Button>
       {open ? (
-        <FullScreenPanel title={t.fullScreen.heading} onClose={() => setOpen(false)}>
-          <p className="p-4 text-sm text-secondary">{t.fullScreen.body}</p>
+        <FullScreenPanel
+          title={t.fullScreen.heading}
+          onClose={() => setOpen(false)}
+          onClosed={() => {
+            setTerm("");
+            trigger.current?.focus();
+          }}
+        >
+          <div className="border-b border-border p-3">
+            <Field
+              ref={search}
+              label={t.fullScreen.heading}
+              hiddenLabel
+              type="search"
+              icon="search"
+              autoComplete="off"
+              placeholder={t.fullScreen.searchPlaceholder}
+              value={term}
+              onChange={(e) => setTerm(e.currentTarget.value)}
+            />
+          </div>
+          <ul className="flex-1 overflow-y-auto">
+            {cities.map((city) => (
+              <li key={city}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setChosen(city);
+                    setOpen(false);
+                  }}
+                  className="flex w-full items-center border-b border-border px-4 text-left text-sm text-primary hover:bg-surface-hover"
+                  style={{ minHeight: "var(--tap-target)" }}
+                >
+                  {city}
+                </button>
+              </li>
+            ))}
+          </ul>
         </FullScreenPanel>
       ) : null}
-    </>
+    </div>
   );
 }
 
@@ -96,7 +152,7 @@ export function OverlayPage() {
       </Piece>
 
       <Piece id="dialog">
-        <State label={t.dialog.plain}>
+        <State label={t.dialog.plain} note={t.dialog.plainNote}>
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="secondary">
@@ -105,8 +161,14 @@ export function OverlayPage() {
               </Button>
             </DialogTrigger>
             <DialogContent title={t.dialog.heading} description={t.dialog.description}>
-              <div className="mt-2 flex justify-end">
-                <Button>{t.dialog.save}</Button>
+              <Field label={t.dialog.name} defaultValue={t.dialog.nameValue} placeholder={t.dialog.namePlaceholder} />
+              <div className="mt-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                <DialogClose asChild>
+                  <Button variant="secondary">{t.dialog.cancel}</Button>
+                </DialogClose>
+                <DialogClose asChild>
+                  <Button onClick={() => toast.success(t.dialog.saved)}>{t.dialog.save}</Button>
+                </DialogClose>
               </div>
             </DialogContent>
           </Dialog>
@@ -128,7 +190,11 @@ export function OverlayPage() {
                 </span>
               }
             >
-              <Button className="w-full">{t.dialog.celebrateDone}</Button>
+              <DialogClose asChild>
+                <Button size="lg" className="w-full">
+                  {t.dialog.celebrateDone}
+                </Button>
+              </DialogClose>
             </DialogContent>
           </Dialog>
         </State>

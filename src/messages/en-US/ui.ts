@@ -329,7 +329,8 @@ export const ui = {
   footer: {
     /** The newsletter field's label, hidden but read. */
     email: "Email",
-    emailPlaceholder: "name@example.com",
+    /** Short on purpose: the field shares a phone-width row with the button. */
+    emailPlaceholder: "me@email.com",
     subscribe: "Subscribe",
     contacts: "Contact",
     legal: "Legal",

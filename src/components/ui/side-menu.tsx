@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { FocusScope } from "@radix-ui/react-focus-scope";
 import { hideOthers } from "aria-hidden";
 import { X } from "lucide-react";
@@ -84,9 +85,12 @@ export function SideMenu({
     };
   }, [open, onOpenChange]);
 
-  if (!mounted) return null;
+  if (!mounted || typeof document === "undefined") return null;
 
-  return (
+  // At the end of `<body>`, like every dialog: inside an element with a
+  // `transform` or `translate`, `position: fixed` would be relative to that
+  // element and the drawer would open inside it, not over the screen.
+  return createPortal(
     <div className="fixed inset-0 z-40 md:hidden" data-state={open ? "open" : "closed"}>
       <button
         type="button"
@@ -131,6 +135,7 @@ export function SideMenu({
           {children}
         </div>
       </FocusScope>
-    </div>
+    </div>,
+    document.body,
   );
 }

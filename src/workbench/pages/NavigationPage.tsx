@@ -48,6 +48,8 @@ function SideMenuDemo() {
         <Menu size={18} aria-hidden />
         {t.sideMenu.open}
       </Button>
+      {/* The drawer only exists on phones: from 768px there is nothing to open. */}
+      <p className="text-sm text-secondary max-md:hidden">{t.sideMenu.desktopHint}</p>
       <SideMenu open={open} onOpenChange={setOpen} label={t.sideMenu.title} title={<span className="font-bold">{t.sideMenu.title}</span>}>
         <nav aria-label={t.sideMenu.title} className="flex flex-col p-2">
           {t.sideMenu.items.map((item) => (
@@ -184,7 +186,9 @@ function FooterDemo() {
             title: d.newsletterTitle,
             error,
             onEdit: () => setError(undefined),
-            onLeave: (value) => setError(value && !EMAIL.test(value) ? d.emailError : undefined),
+            // The error says what is missing: the @, or the domain after it.
+            onLeave: (value) =>
+              setError(value && !EMAIL.test(value) ? (value.includes("@") ? d.emailNoDomain : d.emailError) : undefined),
             consent: (
               <>
                 {d.consentBefore}

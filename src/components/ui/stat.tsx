@@ -112,8 +112,8 @@ export function StatDelta({ current, comparison }: { current: number; comparison
 
   if (delta.kind === "flat") {
     return (
-      <span className="inline-flex items-center gap-1 text-secondary">
-        <Minus size={16} aria-hidden className="shrink-0" />
+      <span className="text-secondary">
+        <Minus size={16} aria-hidden className={DELTA_ICON} />
         {m.flat(comparison.to)}
       </span>
     );
@@ -124,12 +124,19 @@ export function StatDelta({ current, comparison }: { current: number; comparison
   const Icon = up ? TrendingUp : TrendingDown;
   const percent = formatPercent(delta.ratio);
   return (
-    <span className={cn("inline-flex items-center gap-1", good ? "text-success" : "text-error")}>
-      <Icon size={16} aria-hidden className="shrink-0" />
+    <span className={good ? "text-success" : "text-error"}>
+      <Icon size={16} aria-hidden className={DELTA_ICON} />
       {up ? m.up(percent, comparison.to) : m.down(percent, comparison.to)}
     </span>
   );
 }
+
+/**
+ * The trend glyph sits in the line of text, not in a flex box beside it: when
+ * the phrase wraps — a narrow card, a centered readout — the glyph stays at the
+ * start of the first line instead of being stranded at the container's edge.
+ */
+const DELTA_ICON = "mr-1 inline-block align-[-0.2em]";
 
 export function Stat({
   label,

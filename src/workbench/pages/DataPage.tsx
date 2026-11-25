@@ -218,12 +218,12 @@ export function DataPage() {
           <State label={t.meter.goal} note={t.meter.goalNote}>
             <div className="w-full space-y-5">
               <Meter label={t.meter.signups} value={96} target={120} unit={units.signups} />
-              <Meter label={t.meter.trials} value={239} target={240} unit={units.signups} />
+              <Meter label={t.meter.trials} value={239} target={240} unit={units.trials} />
             </div>
           </State>
           <State label={t.meter.past} note={t.meter.pastNote}>
             <div className="w-full space-y-5">
-              <Meter label={t.meter.reached} value={132} target={120} unit={units.signups} />
+              <Meter label={t.meter.reached} value={132} target={120} unit={units.upgrades} />
             </div>
           </State>
           <State label={t.meter.limit} note={t.meter.limitNote}>
@@ -256,7 +256,7 @@ export function DataPage() {
               description={t.radialKpi.upgradesDescription}
               value={60}
               target={45}
-              unit={units.signups}
+              unit={units.upgrades}
               className="max-w-sm"
             />
           </State>

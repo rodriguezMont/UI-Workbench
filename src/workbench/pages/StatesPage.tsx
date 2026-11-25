@@ -26,7 +26,9 @@ function RouteBarDemo() {
   return (
     <div className="flex w-full flex-col gap-2">
       <div className="relative h-12 overflow-hidden rounded-md border border-border bg-surface-sunken">
-        <RouteProgress active={navigating} embedded />
+        {/* At rest the bar shows mid-run, so the piece is never an empty box;
+            the button plays a whole navigation, start to finish. */}
+        <RouteProgress active={navigating} forceVisible={!navigating} embedded />
       </div>
       <div>
         <Button variant="secondary" size="sm" onClick={() => setNavigating(true)} disabled={navigating}>
@@ -95,12 +97,18 @@ export function StatesPage() {
           </div>
         </State>
         <State label={t.progress.spinners} note={t.progress.spinnersNote}>
-          <Button disabled>
-            <Spinner size={16} />
-            {t.progress.saving}
-          </Button>
-          <PageSpinner label={t.progress.page} />
-          <PageSpinner size={24} label={t.progress.pageSmall} />
+          <div className="flex w-full flex-col items-start gap-5">
+            {/* Busy, not disabled: the action keeps its full strength while it
+                runs, and says so — `aria-busy`, and no second click. */}
+            <Button aria-busy aria-disabled onClick={(e) => e.preventDefault()}>
+              <Spinner size={16} />
+              {t.progress.saving}
+            </Button>
+            <div className="flex flex-wrap items-center gap-6">
+              <PageSpinner label={t.progress.page} />
+              <PageSpinner size={24} label={t.progress.pageSmall} />
+            </div>
+          </div>
         </State>
         <State label={t.progress.route} note={t.progress.routeNote} wide>
           <RouteBarDemo />
