@@ -13,6 +13,7 @@ import { Search } from "@/components/ui/search";
 import { SideMenu } from "@/components/ui/side-menu";
 import { messages } from "@/messages";
 
+import { Outcome } from "../Outcome";
 import { Piece, PieceNote, State } from "../Piece";
 import { useShell } from "../Shell";
 import { SectionPage } from "./SectionPage";
@@ -65,15 +66,6 @@ function SideMenuDemo() {
         </nav>
       </SideMenu>
     </>
-  );
-}
-
-/** What a demo did, written under it. */
-function Outcome({ label, value }: { label: string; value: string }) {
-  return (
-    <p className="w-full text-xs text-secondary">
-      {label}: <code className="font-mono text-primary">{value || t.header.nothing}</code>
-    </p>
   );
 }
 

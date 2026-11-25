@@ -50,6 +50,16 @@ export const SAMPLE_LOGO =
     `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 64 64"><rect width="64" height="64" fill="#1f2937"/><circle cx="32" cy="27" r="13" fill="#fbbf24"/><path d="M14 50 L32 34 L50 50Z" fill="#f9fafb"/></svg>`,
   );
 
+/**
+ * A head-and-shoulders picture for avatars and "on a photo" demos. Mid tones,
+ * so it neither glares on a dark page nor disappears on a white one.
+ */
+export const SAMPLE_PORTRAIT =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 80 80"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b7a99"/><stop offset="1" stop-color="#8c6f8f"/></linearGradient></defs><rect width="80" height="80" fill="url(#g)"/><circle cx="40" cy="31" r="13" fill="#e8c9a9"/><path d="M14 80 Q14 52 40 52 Q66 52 66 80Z" fill="#2f3b4a"/></svg>`,
+  );
+
 /** Four 4:3 photos for the gallery. */
 export const SAMPLE_PHOTOS = [
   landscape(1600, 1200, DAY),
