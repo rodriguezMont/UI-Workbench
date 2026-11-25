@@ -21,12 +21,20 @@
     "prepare": "node scripts/setup-hooks.ts"
   },
   "dependencies": {
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "lucide-react": "1.80.0",
+    "radix-ui": "1.8.1",
     "react": "19.3.1",
-    "react-dom": "19.3.1"
+    "react-dom": "19.3.1",
+    "tailwind-merge": "3.7.1"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@tailwindcss/vite": "4.3.5",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.13",
     "@types/node": "22.20.7",
     "@types/react": "19.3.3",
     "@types/react-dom": "19.3.0",
@@ -34,6 +42,7 @@
     "eslint": "10.15.0",
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "17.14.0",
+    "jsdom": "31.0.1",
     "tailwindcss": "4.3.5",
     "typescript": "5.9.3",
     "typescript-eslint": "8.74.0",
