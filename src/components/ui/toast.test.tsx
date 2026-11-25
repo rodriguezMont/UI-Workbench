@@ -2,21 +2,9 @@
 import { act, cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { dismissToast, toast, Toaster } from "./toast";
+import { stubMatchMedia as stubWidth } from "@/test/match-media";
 
-/** jsdom has no `matchMedia`: answer the overlay query with a fixed width. */
-function stubWidth(wide: boolean) {
-  window.matchMedia = ((query: string) => ({
-    matches: wide,
-    media: query,
-    onchange: null,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    addListener: () => {},
-    removeListener: () => {},
-    dispatchEvent: () => false,
-  })) as typeof window.matchMedia;
-}
+import { dismissToast, toast, Toaster } from "./toast";
 
 const pushed: number[] = [];
 const push = (id: number) => {
