@@ -154,7 +154,11 @@
    * survive grayscale and color-vision deficiency. A third series does not
    * get a color: it becomes its own small chart. */
   --chart-1: var(--accent);
-  --chart-2: light-dark(var(--neutral-800), var(--neutral-300));
+  /* A mid gray that stays lighter than the accent in light and darker than it
+   * in dark: series 2 never outweighs series 1, and the rest of a comparison
+   * never outweighs its highlight. Ink dark (or near-white) read as text, and
+   * pulled the eye away from the series that mattered. */
+  --chart-2: light-dark(var(--neutral-450), var(--neutral-600));
   /* Series 1 receded behind a highlighted bar. */
   --chart-1-soft: color-mix(in srgb, var(--chart-1) 40%, var(--surface));
 

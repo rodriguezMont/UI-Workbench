@@ -64,11 +64,14 @@ export function ContentPage() {
           <MapPlaceholder className="max-w-sm" />
         </State>
         <State label={t.mapPlaceholder.custom} note={t.mapPlaceholder.customNote}>
-          <MapPlaceholder
-            label={t.mapPlaceholder.customLabel}
-            caption={t.mapPlaceholder.customCaption}
-            className="max-w-sm"
-          />
+          {/* The address as text is what informs; the drawing only sits beside it. */}
+          <address className="flex w-full max-w-sm flex-col gap-3 not-italic">
+            <span className="text-sm text-primary">
+              <span className="block font-medium">{t.mapPlaceholder.addressName}</span>
+              <span className="block text-secondary">{t.mapPlaceholder.addressLine}</span>
+            </span>
+            <MapPlaceholder label={t.mapPlaceholder.customLabel} caption={t.mapPlaceholder.customCaption} />
+          </address>
         </State>
         <PieceNote>
           {t.mapPlaceholder.explain.map((paragraph) => (

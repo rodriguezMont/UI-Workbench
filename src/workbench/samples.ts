@@ -31,6 +31,8 @@ const DAY: Palette = { sky: ["#bfdbfe", "#eff6ff"], far: "#94a3b8", near: "#6474
 const DUSK: Palette = { sky: ["#fecaca", "#fef3c7"], far: "#a8a29e", near: "#78716c", sun: "#fdba74" };
 const NIGHT: Palette = { sky: ["#1e293b", "#475569"], far: "#334155", near: "#0f172a", sun: "#e2e8f0" };
 const MIST: Palette = { sky: ["#e2e8f0", "#f8fafc"], far: "#cbd5e1", near: "#94a3b8", sun: "#ffffff" };
+/** Mid tones: reads as a photo on a white page and does not glare on a dark one. */
+const HARBOR: Palette = { sky: ["#3b5b7a", "#9fb7cc"], far: "#4b6a63", near: "#2f4a44", sun: "#f6c768" };
 
 /** Large enough for every format. */
 export const SAMPLE_LANDSCAPE = landscape(2400, 1600, DAY);
@@ -39,7 +41,7 @@ export const SAMPLE_LANDSCAPE = landscape(2400, 1600, DAY);
 export const SAMPLE_SMALL = landscape(480, 320, DUSK, 40);
 
 /** A wide band for a profile cover. */
-export const SAMPLE_COVER = landscape(1600, 400, MIST, 120, 46);
+export const SAMPLE_COVER = landscape(1600, 400, HARBOR, 120, 46);
 
 /** A simple geometric mark for a logo. */
 export const SAMPLE_LOGO =

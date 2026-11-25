@@ -27,6 +27,20 @@ describe("SideMenu", () => {
     expect(dialog.getAttribute("aria-modal")).toBe("true");
   });
 
+  it("renders at the end of the body, out of any transformed ancestor", () => {
+    stubMatchMedia(false);
+    const { container } = render(
+      <div style={{ transform: "translateY(0)" }}>
+        <SideMenu open onOpenChange={vi.fn()} label="Sections" title={<span>Workbench</span>}>
+          <a href="#a">First section</a>
+        </SideMenu>
+      </div>,
+    );
+    const dialog = screen.getByRole("dialog", { name: "Sections" });
+    expect(container.contains(dialog)).toBe(false);
+    expect(dialog.closest("body > *")?.parentElement).toBe(document.body);
+  });
+
   it("closes on Escape and from its close button", async () => {
     const { onOpenChange } = renderMenu(true);
     await userEvent.keyboard("{Escape}");
