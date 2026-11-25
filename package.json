@@ -21,6 +21,9 @@
     "prepare": "node scripts/setup-hooks.ts"
   },
   "dependencies": {
+    "@dnd-kit/core": "6.3.1",
+    "@dnd-kit/sortable": "10.0.0",
+    "@dnd-kit/utilities": "3.2.2",
     "@radix-ui/react-focus-scope": "1.3.1",
     "aria-hidden": "1.2.6",
     "class-variance-authority": "0.7.1",
@@ -29,7 +32,9 @@
     "lucide-react": "1.80.0",
     "radix-ui": "1.8.1",
     "react": "19.3.1",
+    "react-day-picker": "10.0.1",
     "react-dom": "19.3.1",
+    "react-easy-crop": "6.2.3",
     "react-router": "8.5.3",
     "tailwind-merge": "3.7.1",
     "vaul": "1.1.2"
