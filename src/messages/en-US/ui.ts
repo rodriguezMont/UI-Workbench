@@ -70,6 +70,45 @@ export const ui = {
     selected: (count: number) => (count === 1 ? "1 selected" : `${count} selected`),
     clear: "Clear",
   },
+  format: {
+    /** A count in thousands, rounded down: "69K+". Gets the formatted thousands. */
+    thousandsFloor: (thousands: string) => `${thousands}K+`,
+  },
+  checkboxList: {
+    search: "Search",
+    searchIn: (legend: string) => `Search ${legend}`,
+    nothingFound: (term: string, legend: string) => `Nothing in ${legend} matches “${term}”.`,
+    limit: (count: number, max: number) => `Choose up to ${max} — ${count} of ${max}.`,
+    limitReached: (max: number) => `Limit of ${max} reached — uncheck one to swap.`,
+    showAll: (total: number) => `Show all (${total})`,
+    showLess: "Show less",
+    /** The count is in the name: "Clear" alone does not say how much is lost. */
+    clear: (count: number) => `Clear (${count})`,
+  },
+  switch: {
+    saving: "Saving…",
+    /** What the supporting line says when the switch goes back. */
+    saveFailed: "Couldn't save, so the switch went back. Try again.",
+  },
+  slider: {
+    decrease: (label: string) => `Decrease ${label}`,
+    increase: (label: string) => `Increase ${label}`,
+  },
+  rating: {
+    /** The whole row's accessible name: "Rated 4.3 out of 5, 128 reviews". */
+    label: (score: string, max: number, reviews: string) => `Rated ${score} out of ${max}, ${reviews}`,
+    /** Gets the formatted count and the number, for the plural. */
+    reviews: (formatted: string, count: number) => `${formatted} ${count === 1 ? "review" : "reviews"}`,
+  },
+  ratingInput: {
+    /** One word per star, from 1 to 5: the stars alone do not say whether 3 is fine or poor. */
+    words: ["Terrible", "Poor", "Okay", "Good", "Excellent"],
+    none: "No rating",
+    star: (n: number, max: number, word: string) => `${n} out of ${max}, ${word}`,
+    /** The read-only row once the rating was sent. */
+    summary: (legend: string, n: number, max: number, word: string) => `${legend}: ${n} out of ${max}, ${word}`,
+    change: "Change rating",
+  },
   phone: {
     countryCodeOf: (label: string) => `Country code for ${label}`,
     countrySearch: "Country or code",
