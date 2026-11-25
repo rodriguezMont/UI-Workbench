@@ -37,7 +37,7 @@ const SECTION_ORDER: readonly { id: SectionId; built: boolean }[] = [
   { id: "data", built: false },
   { id: "states", built: true },
   { id: "navigation", built: true },
-  { id: "content", built: false },
+  { id: "content", built: true },
   { id: "overlay", built: true },
 ];
 
@@ -141,8 +141,8 @@ const ROWS: readonly Row[] = [
   { id: "account-switcher", section: "navigation", built: false },
 
   // content
-  { id: "carousel", section: "content", built: false },
-  { id: "map-placeholder", section: "content", built: false },
+  { id: "carousel", section: "content" },
+  { id: "map-placeholder", section: "content" },
 
   // overlay
   { id: "overlay", section: "overlay" },

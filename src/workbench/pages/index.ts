@@ -14,5 +14,6 @@ export const PAGES: Partial<Record<SectionId, React.LazyExoticComponent<() => Re
   forms: lazy(() => import("./FormsPage").then((m) => ({ default: m.FormsPage }))),
   states: lazy(() => import("./StatesPage").then((m) => ({ default: m.StatesPage }))),
   navigation: lazy(() => import("./NavigationPage").then((m) => ({ default: m.NavigationPage }))),
+  content: lazy(() => import("./ContentPage").then((m) => ({ default: m.ContentPage }))),
   overlay: lazy(() => import("./OverlayPage").then((m) => ({ default: m.OverlayPage }))),
 };
