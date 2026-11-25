@@ -6,8 +6,9 @@ its own source tree and owns them from then on. There is no npm package.
 
 > **Status:** design tokens, the blocklist guard, the workbench (shell, map,
 > section pages and approval flow) and the first component groups —
-> primitives, states and overlays. Forms, data, content and the rest of
-> navigation are on the map as "to build".
+> primitives, states, overlays and the form basics (field, fieldset,
+> password, masked fields for US formats, phone with country, select). The
+> rest of forms, data, content and navigation are on the map as "to build".
 
 ## Stack
 
@@ -121,7 +122,8 @@ Copy what you need and keep the paths:
    its line in `en-US/index.ts` — that copy is the workbench's). Runtime dependencies: `radix-ui`, `lucide-react`,
    `class-variance-authority`, `clsx`, `tailwind-merge`; the sheet and the
    side menu also need `vaul`, `@radix-ui/react-focus-scope` and
-   `aria-hidden`.
+   `aria-hidden`; the phone field with a country picker needs
+   `libphonenumber-js`.
 3. Map the `@/` alias to your source folder (Vite `resolve.alias` and
    `tsconfig` `paths`).
 4. Mount `TooltipProvider` and `Toaster` once at the root of the app. On

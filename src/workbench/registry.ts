@@ -33,7 +33,7 @@ export type Section = {
 const SECTION_ORDER: readonly { id: SectionId; built: boolean }[] = [
   { id: "foundation", built: true },
   { id: "primitives", built: true },
-  { id: "forms", built: false },
+  { id: "forms", built: true },
   { id: "data", built: false },
   { id: "states", built: true },
   { id: "navigation", built: true },
@@ -88,11 +88,11 @@ const ROWS: readonly Row[] = [
   { id: "rating", section: "primitives", built: false },
 
   // forms
-  { id: "field", section: "forms", built: false },
-  { id: "password-field", section: "forms", built: false },
-  { id: "masked-field", section: "forms", built: false },
-  { id: "select", section: "forms", built: false },
-  { id: "fieldset", section: "forms", built: false },
+  { id: "field", section: "forms" },
+  { id: "password-field", section: "forms" },
+  { id: "masked-field", section: "forms" },
+  { id: "select", section: "forms" },
+  { id: "fieldset", section: "forms" },
   { id: "checkbox", section: "forms", built: false },
   { id: "checkbox-card", section: "forms", built: false },
   { id: "checkbox-list", section: "forms", built: false },

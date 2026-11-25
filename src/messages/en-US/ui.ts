@@ -44,4 +44,40 @@ export const ui = {
     /** Announced while the route bar is running. */
     loadingPage: "Loading the page",
   },
+  field: {
+    /** Announced when a field starts processing its value. */
+    processing: "Processing…",
+    /** Announced when a field's value is confirmed. */
+    confirmed: "Confirmed",
+    /** The limit of a text area, read once with its description. */
+    upTo: (max: number) => `Up to ${max} characters.`,
+  },
+  password: {
+    show: "Show password",
+    hide: "Hide password",
+    minimum: (min: number) => `At least ${min} characters`,
+    met: ", met",
+    notMet: ", not met yet",
+  },
+  select: {
+    placeholder: "Choose an option",
+    search: "Search",
+    searchIn: (label: string) => `Search ${label}`,
+    nothingFound: (term: string) => `Nothing found for “${term}”.`,
+    /** The closed field of a multiple select: "Oil change and 2 more". */
+    summary: (first: string, more: number) => `${first} and ${more} more`,
+    noneSelected: "None selected",
+    selected: (count: number) => (count === 1 ? "1 selected" : `${count} selected`),
+    clear: "Clear",
+  },
+  phone: {
+    countryCodeOf: (label: string) => `Country code for ${label}`,
+    countrySearch: "Country or code",
+    incomplete: (example: string) => `The number is incomplete. An example with this code: ${example}.`,
+    tooLong: (example: string) => `Too many digits for this code. An example: ${example}.`,
+    invalidLength: (example: string) => `No number of this length exists with this code. An example: ${example}.`,
+    /** The advice that solves the usual US mistake. */
+    notInUS: "This number doesn't exist in the US. Check the area code.",
+    notInCountry: (callingCode: string) => `This number doesn't exist with the code +${callingCode}. Check the digits.`,
+  },
 } as const;
