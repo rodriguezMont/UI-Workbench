@@ -4,7 +4,7 @@ A brand-neutral library of React components, with a workbench to review them.
 Components are **distributed by copy**: an app takes the files it needs into
 its own source tree and owns them from then on. There is no npm package.
 
-> **Status:** every piece on the map is built — 70 of 70, across foundation,
+> **Status:** every piece on the map is built — 71 of 71, across foundation,
 > primitives, forms, data, states, navigation, content and overlay — and is
 > waiting for review in the workbench; none is approved yet. Still to come:
 > the Playwright layout ruler, live contrast measurement and the brand guide.

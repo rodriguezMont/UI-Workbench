@@ -29,6 +29,7 @@ import { messages } from "@/messages";
 
 import { Piece, PieceNote, State } from "../Piece";
 import { SectionPage } from "./SectionPage";
+import { ContrastTable, StateFills, StateInAForm, StateInks, StateValues } from "./foundation-demos";
 
 const t = messages.workbench.demos;
 
@@ -75,6 +76,7 @@ const readTouch = (el: Element) =>
     Math.round(el.getBoundingClientRect().height),
     Math.round(Number.parseFloat(getComputedStyle(el, "::after").height)),
   );
+const readHeight = (el: Element) => px(String(el.getBoundingClientRect().height));
 const tokenReader = (name: string) => (el: Element) => getComputedStyle(el).getPropertyValue(name).trim();
 
 /** A measured figure, set apart from the prose around it. */
@@ -128,14 +130,14 @@ function Ink({ name }: { name: string }) {
   );
 }
 
-function Group({ title, note, children }: { title: string; note?: string; children: React.ReactNode }) {
+function Group({ title, note, wide = false, children }: { title: string; note?: string; wide?: boolean; children: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-3">
       <h3 className="text-xs font-medium uppercase tracking-wide text-subtle">
         {title}
         {note ? <span className="ml-2 normal-case tracking-normal text-secondary">{note}</span> : null}
       </h3>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">{children}</div>
+      {wide ? children : <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">{children}</div>}
     </section>
   );
 }
@@ -200,9 +202,25 @@ function Roles() {
             <span className="text-accent">{t.roles.sample}</span>
           </div>
         </Group>
-        <PieceNote paragraphs={[t.roles.note]} />
+        <Group title={t.roles.contrastTitle} note={t.roles.contrastNote} wide>
+          <ContrastTable />
+        </Group>
+        <PieceNote paragraphs={t.roles.explain} />
       </div>
     </Piece>
+  );
+}
+
+/** A logo with its rendered height under it, read from the screen. */
+function LogoSample({ variant, height }: { variant: "full" | "mark"; height: number }) {
+  const [ref, value] = useMeasured<HTMLSpanElement>(readHeight);
+  return (
+    <span className="inline-flex flex-col items-center gap-1.5">
+      <span ref={ref} className="inline-flex">
+        <Logo variant={variant} height={height} />
+      </span>
+      <Readout>{value}</Readout>
+    </span>
   );
 }
 
@@ -279,7 +297,7 @@ function Typography() {
   return (
     <Piece id="typography">
       <State label={ty.scale} note={ty.scaleNote} wide>
-        <ul className="w-full divide-y divide-border">
+        <ul className="w-full divide-y divide-border rounded-lg border border-border bg-surface px-4">
           {TYPE_SCALE.map((s) => (
             <TypeStep key={s.step} {...s} />
           ))}
@@ -600,21 +618,37 @@ export function FoundationPage() {
     <SectionPage id="foundation">
       <Piece id="logo">
         <State label={t.logo.full} note={t.logo.fullNote}>
-          <Logo height={32} />
+          <LogoSample variant="full" height={32} />
+          <LogoSample variant="full" height={24} />
         </State>
         <State label={t.logo.mark} note={t.logo.markNote}>
-          <Logo variant="mark" height={32} />
-          <Logo variant="mark" height={20} />
-          <Logo variant="mark" height={16} />
+          <LogoSample variant="mark" height={32} />
+          <LogoSample variant="mark" height={20} />
+          <LogoSample variant="mark" height={16} />
         </State>
         <State label={t.logo.onFeature} note={t.logo.onFeatureNote} wide>
-          <div className="rounded-lg bg-surface-feature px-5 py-4 text-on-feature">
+          <div className="rounded-lg border border-border bg-surface-feature px-5 py-4 text-on-feature">
             <Logo height={28} />
           </div>
         </State>
         <PieceNote paragraphs={[t.logo.note]} />
       </Piece>
       <Roles />
+      <Piece id="state-colors">
+        <State label={t.stateColors.ink} note={t.stateColors.inkNote}>
+          <StateInks />
+        </State>
+        <State label={t.stateColors.fill} note={t.stateColors.fillNote}>
+          <StateFills />
+        </State>
+        <State label={t.stateColors.form} note={t.stateColors.formNote}>
+          <StateInAForm />
+        </State>
+        <State label={t.stateColors.values} note={t.stateColors.valuesNote}>
+          <StateValues />
+        </State>
+        <PieceNote paragraphs={t.stateColors.explain} />
+      </Piece>
       <Typography />
       <Grid />
       <Motion />

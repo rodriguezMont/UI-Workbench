@@ -45,22 +45,23 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 | #23 | Polish 7: States and Overlay — states and explanations for 9 pieces; live demos in `state-demos.tsx` and `overlay-demos.tsx` |
 | #24 | Tests for Escape in the overlay's sheet frame; a false sheet bug from #23 withdrawn, and the rule that caught it |
 | #25 | Polish 8: Navigation — states and explanations for 8 pieces; shell sketches, a sticky header, filters in context with live counts; live demos in `nav-demos.tsx` |
+| #26 | Polish 9: Foundation — a State colors piece; a contrast table on Roles measured from the painted page; logo heights measured; the WCAG math moved to `lib/contrast.ts` |
 
 #10 to #15 were built in parallel by six builder agents, one per group, each
 in its own git worktree. Each group was then integrated one at a time: the
 diff read for leftovers from the source, a rebase onto `main`, the workbench
 checked in the browser, and a draft PR. They were merged in the order listed.
 
-Health on `main`: 664 tests passing (one skipped: it only runs while some
+Health on `main`: 667 tests passing (one skipped: it only runs while some
 piece is still to build), type-check, lint and build clean, guard clean.
 
 ## Component status
 
-All 70 registry pieces are built, in all eight sections. The registry
+All 71 registry pieces are built, in all eight sections. The registry
 (`src/workbench/registry.ts`) is the source of truth.
 
 **No piece is approved yet.** Approving is the reviewer's act, in the
-workbench: the map shows 0 of 70.
+workbench: the map shows 0 of 71.
 
 ## Next steps
 
@@ -81,8 +82,12 @@ workbench: the map shows 0 of 70.
       2026 and made the demo numbers add up across pieces), States and
       Overlay (#23), Navigation (#25; Content already met the standard —
       only the map drawing's rounded blocks and pin on the plaza remain, a
-      component change). Still to do: Foundation (a "State colors" piece and a measured contrast table on
-      Roles).
+      component change), and Foundation (#26, which added the State colors
+      piece and a contrast table measured from the painted page). The
+      section-by-section pass is complete; left over are two small component
+      touches noted for the general review — the map drawing above, and the
+      logo's usage rules (sizes, clear space, don'ts), which wait for the
+      brand guide in Block 5.
 2. **General review in the workbench**, piece by piece, with approvals.
    Still noted for it: the footer's thick gradient edge from the source
    became a plain top border — restore it or keep it plain.
