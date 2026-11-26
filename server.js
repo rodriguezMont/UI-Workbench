@@ -125,9 +125,11 @@ export function createHandler(root) {
   };
 }
 
-const isEntry = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
-
-if (isEntry) {
+// Listen on load, unconditionally: Hostinger's Node.js hosting loads this file
+// through its own runner, so a "run only when it is the entry" check never
+// passes there and the app is killed for not listening within 3 seconds.
+// Only the tests import it without a server (Vitest sets VITEST).
+if (!process.env.VITEST) {
   const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "dist");
   const port = Number(process.env.PORT) || 3000;
   const server = createServer(createHandler(root));
