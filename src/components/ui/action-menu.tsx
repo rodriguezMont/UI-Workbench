@@ -123,6 +123,13 @@ export function usePendingFocus() {
   useEffect(() => {
     const next = target.current;
     if (!next) return;
+    // The menu survived the action and is still closing: its focus trap would
+    // pull focus straight back, and lose it when the menu goes (focus briefly
+    // sits on `body` in between, so where focus is says nothing). Leave the
+    // target to `onCloseAutoFocus`, which runs once the trap is gone. When the
+    // action took the menu away with its row, there is no menu left, and the
+    // target is applied here.
+    if (document.querySelector('[role="menu"]')) return;
     target.current = null;
     const el = next();
     if (!el) return;

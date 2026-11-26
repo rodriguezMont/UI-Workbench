@@ -144,26 +144,13 @@ export function PhotoGallery({
     focus.focusLater(() => (target ? handles.current.get(target) : addButton.current));
   }
 
-  // The photo whose handle takes focus once its menu has fully closed.
-  const focusOnClose = useRef<string | null>(null);
-
   function makeMain(index: number) {
     const photo = current[index]!;
     change(arrayMove(current, index, 0));
     setAnnouncement(m.nowMain(index + 1));
     // The menu would return focus to its own button, which moved with the
     // photo; the handle is the more useful place to go on arranging from.
-    // Not through `focusLater`: this menu survives the action, and while it
-    // is still closing its focus trap would pull focus straight back.
-    focusOnClose.current = photo.id;
-  }
-
-  function onMenuClose(event: Event) {
-    const id = focusOnClose.current;
-    if (!id) return focus.onCloseAutoFocus(event);
-    focusOnClose.current = null;
-    event.preventDefault();
-    handles.current.get(id)?.focus();
+    focus.focusLater(() => handles.current.get(photo.id));
   }
 
   const sensors = useSensors(
@@ -221,7 +208,7 @@ export function PhotoGallery({
                 handles={handles}
                 onRemove={() => remove(i)}
                 onMakeMain={() => makeMain(i)}
-                onMenuClose={onMenuClose}
+                onMenuClose={focus.onCloseAutoFocus}
               />
             ))}
             {editable && !full ? (
