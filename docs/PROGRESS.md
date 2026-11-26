@@ -44,6 +44,7 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 | #22 | Polish 6: Data — states and explanations for 12 pieces; `stat-group` split from `stat`; a Dashboard sector; one demo world in `data-demo.ts`, with "today" pinned and totals that agree |
 | #23 | Polish 7: States and Overlay — states and explanations for 9 pieces; live demos in `state-demos.tsx` and `overlay-demos.tsx` |
 | #24 | Tests for Escape in the overlay's sheet frame; a false sheet bug from #23 withdrawn, and the rule that caught it |
+| #25 | Polish 8: Navigation — states and explanations for 8 pieces; shell sketches, a sticky header, filters in context with live counts; live demos in `nav-demos.tsx` |
 
 #10 to #15 were built in parallel by six builder agents, one per group, each
 in its own git worktree. Each group was then integrated one at a time: the
@@ -78,8 +79,9 @@ workbench: the map shows 0 of 70.
       images (#21), Data (#22, which also split `stat` into `stat` and
       `stat-group`, added a Dashboard sector, pinned "today" to October 1,
       2026 and made the demo numbers add up across pieces), States and
-      Overlay (#23). Still to do, in order: Navigation and Content;
-      Foundation (a "State colors" piece and a measured contrast table on
+      Overlay (#23), Navigation (#25; Content already met the standard —
+      only the map drawing's rounded blocks and pin on the plaza remain, a
+      component change). Still to do: Foundation (a "State colors" piece and a measured contrast table on
       Roles).
 2. **General review in the workbench**, piece by piece, with approvals.
    Still noted for it: the footer's thick gradient edge from the source
