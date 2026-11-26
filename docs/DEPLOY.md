@@ -38,7 +38,7 @@ repository owner in hPanel.
 
    | Field | Value |
    | --- | --- |
-   | Framework preset | **Other** (or Express) — not Vite: the entry is `server.js` |
+   | Framework preset | **Express** — not Vite: the entry is `server.js` |
    | Node.js version | **24** |
    | Root directory | `./` |
    | Build command | `npm run build` |
@@ -48,6 +48,12 @@ repository owner in hPanel.
 3. **Environment variables:** add `NPM_CONFIG_PRODUCTION` = `false`. Without
    it the platform may install production dependencies only, and the build
    fails: TypeScript, Vite and Tailwind are development dependencies.
+   hPanel detects **Vite** from `package.json` and, with that preset, shows no
+   entry field: the site is then published as static files, `server.js`
+   never runs, and a section opened directly answers 404. Pick Express so the
+   entry field appears. If the app was already created as Vite, change it in
+   the app's build settings (or through Hostinger's API: `app_type` `express`,
+   `entry_file` `server.js`) and build again.
 4. **Deploy** and wait for the build to finish. The app gets a temporary
    domain; it is fine to keep it.
 
@@ -65,6 +71,12 @@ Merge to `main`. Changing an environment variable in hPanel needs a new
 deploy to take effect.
 
 ## Known pitfalls
+
+- **503, and the runtime log says "App did not call listen() within 3
+  seconds":** the platform loads the entry through its own runner, so an entry
+  that only listens when it is run directly (`require.main === module`, or
+  comparing `process.argv[1]` with the file) never starts. `server.js`
+  listens on load; only Vitest imports it without a server.
 
 - **Build fails on `tsc` or `vite` not found:** development dependencies were
   not installed — check `NPM_CONFIG_PRODUCTION=false`.
