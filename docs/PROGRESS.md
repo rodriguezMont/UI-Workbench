@@ -3,7 +3,7 @@
 Where the library stands, how the work is done, and what comes next. Update
 this file at the end of every work session.
 
-_Last updated: 2026-11-25._
+_Last updated: 2026-11-26._
 
 ## Plan
 
@@ -12,8 +12,9 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 1. **Inventory** of the components to port — done.
 2. **Repository skeleton**, neutral tokens and the blocklist guard — done.
 3. **Components, group by group** — done: every registry piece is built.
-4. **Workbench and approval flow** — done, with live contrast (#26). Still
-   to do here: the Playwright layout ruler.
+4. **Workbench and approval flow** — done: live contrast (#26), the
+   Playwright layout and touch rulers (#32), and approvals on the published
+   workbench, kept in each visitor's browser (#40).
 5. **Brand guide** — how to rebrand the tokens and the logo.
 
 ## Merged so far
@@ -50,22 +51,45 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 | #28 | Review: the Logo piece laid out by forms, sizes in use, measured grounds, one ink, minimum, clear space and don'ts; a stacked form and a one-ink version of the logo; Button states paired |
 | #29 | Review: form data validated by its kind — date, ZIP, card and expiry masks refuse impossible input; a name rule and tighter ceilings; live error demos; a wider country list |
 | #30 | Review: the route bar shown between sections (section imports tracked); equal heights for paired cards (`State` `fill` and `action`); a stat with no data keeps its shape; aligned search, filters, header frames and map |
+| #31 | This file records the general review and what is left |
+| #32 | The Playwright rulers: `npm run measure` (every section at 375, 768, 1280 and 1920, the side panel, drawer, route bar, contrast and a 44px touch probe) and `npm run measure:touch` (simulated iPhone and Pixel taps) |
+| #33 | The frame in dark: header, side panel and page share one deep blue (`--accent-950`), and the panel's edge and the header's foot are each one gradient end to end, with a glow (`--frame-rule-from/via/to`); no rule under the panel logo |
+| #34 | The README becomes the project's home page — what, why, how, what's inside, screenshots — with a Portuguese twin, `README.pt-BR.md`; the reference material moves to `docs/GUIDE.md` |
+| #35 | `server.js`, a dependency-free production entry for Hostinger's managed Node.js (client routes fall back to `index.html`, `noindex` header, cached assets), `npm start`, and `docs/DEPLOY.md` |
+| #36 | The first approvals in the ledger: Logo, Roles and State colors |
+| #37 | The live workbench linked from both READMEs; the blocklist moves from the run steps to a note on committing |
+| #38 | `server.js` listens on load: Hostinger's runner never passed the "run directly" check, and the site answered 503 |
+| #39 | The logo's mark as the favicon, following the browser's color scheme |
+| #40 | Approving on the published workbench: each visitor's review in their browser's `localStorage`, starting from the committed ledger, with a reset on the map; the dev server still writes `approvals.json` |
+| #41 | The favicon made valid XML (a `--` in a comment broke it), with a test |
 
 #10 to #15 were built in parallel by six builder agents, one per group, each
 in its own git worktree. Each group was then integrated one at a time: the
 diff read for leftovers from the source, a rebase onto `main`, the workbench
 checked in the browser, and a draft PR. They were merged in the order listed.
 
-Health on `main`: 673 tests passing (one skipped: it only runs while some
+Health on `main`: 703 tests passing (one skipped: it only runs while some
 piece is still to build), type-check, lint and build clean, guard clean.
+
+## Published
+
+The workbench is live at
+**https://glad-bisque-gnu-01.hostingersite.com/** (a temporary Hostinger
+domain), on Hostinger's managed Node.js: app type **Express**, entry
+`server.js`, Node 24, build `npm run build`, output `dist`. Every merge to
+`main` builds and publishes on its own, in about two minutes. Settings,
+checks and the pitfalls already met are in [DEPLOY.md](DEPLOY.md).
 
 ## Component status
 
 All 71 registry pieces are built, in all eight sections. The registry
 (`src/workbench/registry.ts`) is the source of truth.
 
-**No piece is approved yet.** Approving is the reviewer's act, in the
-workbench: the map shows 0 of 71.
+**3 of 71 approved** in the project's ledger (#36): Logo, Roles and State
+colors. Approving is the reviewer's act: on the dev server it writes
+`src/workbench/approvals.json`, which is then committed. On the published
+workbench, visitors approve on their own copy in their browser, which never
+changes the project's ledger.
 
 ## Next steps
 
@@ -74,17 +98,17 @@ workbench: the map shows 0 of 71.
    missing, a note on every state and an explanation on every piece.
 2. **General review in the workbench** — the review rounds are done: Logo and
    Button (#28), form data rules (#29), Data, States, Navigation and Content
-   (#30). **The approval ledger is still empty on `main`** (2026-11-25):
-   approving happens on the dev server (`npm run dev`), which writes
-   `src/workbench/approvals.json`; that file is then committed. Still open for
+   (#30). The first approvals are in (#36); the rest of the pieces wait for
+   the reviewer, on the dev server. Still open for
    a decision: the footer's thick gradient edge from the source became a plain
    top border — restore it or keep it plain. Two small component touches wait
    too: the map drawing's rounded blocks and a pin on the plaza, and the logo's
    final usage rules, which come with the brand guide.
-3. **Block 4 leftover**: the Playwright layout ruler (375 / 768 / 1280 /
-   1920), from the source's `measure-workbench`, `measure-touch` and the
-   shared ruler library. Live contrast on the Roles page is done (#26).
-4. **Block 5**: the brand guide.
+3. **Block 5**: the brand guide — how to rebrand the tokens, the logo and the
+   favicon (`public/favicon.svg` copies two pairs of scale colors, since a
+   favicon cannot read CSS tokens).
+4. **A real domain** for the published workbench, when there is one: attach it
+   to the Hostinger app and update the link in both READMEs and here.
 
 Optional, waiting for a decision: require the CI `Check` status in the `main`
 ruleset so a red PR cannot be merged.
@@ -129,7 +153,13 @@ ruleset so a red PR cannot be merged.
   `node scripts/guard.ts --message <file>` on every PR title and body before
   publishing. The term list never leaves the local `.blocklist`.
 - **Approvals are never made on someone's behalf.** The seal is the
-  reviewer's.
+  reviewer's. Testing the seal on the published build is fine — it only
+  touches that browser — and ends with a reset to the project's approvals.
+- **Both READMEs change together.** `README.pt-BR.md` says the same as
+  `README.md`, section by section.
+- **Deploys are checked live.** After a merge, wait for the Hostinger build
+  and check the published site: a section opened directly, the `noindex`
+  header, and whatever the change touched.
 
 ## When groups are built in parallel
 
