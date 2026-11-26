@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- The logo's mark (src/components/brand/logo.tsx), as a static file the
+       browser tab can load. A favicon cannot read the CSS tokens, so the two
+       inks are copied from the scales: --accent and --text-on-accent in light
+       and in dark. A rebrand replaces this file along with the logo. -->
+  <style>
+    .square { fill: #2563eb; }
+    .blocks { fill: #ffffff; }
+    @media (prefers-color-scheme: dark) {
+      .square { fill: #60a5fa; }
+      .blocks { fill: #0c0c0e; }
+    }
+  </style>
+  <rect class="square" width="32" height="32" rx="8" />
+  <g class="blocks">
+    <rect x="8" y="8" width="7" height="7" rx="1.5" />
+    <rect x="17" y="17" width="7" height="7" rx="1.5" />
+    <rect x="17" y="8" width="7" height="7" rx="1.5" opacity="0.45" />
+    <rect x="8" y="17" width="7" height="7" rx="1.5" opacity="0.45" />
+  </g>
+</svg>
