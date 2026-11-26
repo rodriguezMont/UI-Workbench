@@ -50,7 +50,7 @@ export function PrimitivesPage() {
   return (
     <SectionPage id="primitives">
       <Piece id="button">
-        <State label={t.button.variants} note={t.button.variantsNote} wide>
+        <State label={t.button.variants} note={t.button.variantsNote}>
           <Button>{t.button.primary}</Button>
           <Button variant="alternate">{t.button.alternate}</Button>
           <Button variant="secondary">{t.button.secondary}</Button>

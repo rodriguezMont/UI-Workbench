@@ -22,7 +22,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { messages } from "@/messages";
@@ -30,6 +29,7 @@ import { messages } from "@/messages";
 import { Piece, PieceNote, State } from "../Piece";
 import { SectionPage } from "./SectionPage";
 import { ContrastTable, StateFills, StateInAForm, StateInks, StateValues } from "./foundation-demos";
+import { LogoClearSpace, LogoDonts, LogoForms, LogoGrounds, LogoMinimum, LogoOneInk, LogoSizes } from "./logo-demos";
 
 const t = messages.workbench.demos;
 
@@ -76,7 +76,6 @@ const readTouch = (el: Element) =>
     Math.round(el.getBoundingClientRect().height),
     Math.round(Number.parseFloat(getComputedStyle(el, "::after").height)),
   );
-const readHeight = (el: Element) => px(String(el.getBoundingClientRect().height));
 const tokenReader = (name: string) => (el: Element) => getComputedStyle(el).getPropertyValue(name).trim();
 
 /** A measured figure, set apart from the prose around it. */
@@ -208,19 +207,6 @@ function Roles() {
         <PieceNote paragraphs={t.roles.explain} />
       </div>
     </Piece>
-  );
-}
-
-/** A logo with its rendered height under it, read from the screen. */
-function LogoSample({ variant, height }: { variant: "full" | "mark"; height: number }) {
-  const [ref, value] = useMeasured<HTMLSpanElement>(readHeight);
-  return (
-    <span className="inline-flex flex-col items-center gap-1.5">
-      <span ref={ref} className="inline-flex">
-        <Logo variant={variant} height={height} />
-      </span>
-      <Readout>{value}</Readout>
-    </span>
   );
 }
 
@@ -617,21 +603,28 @@ export function FoundationPage() {
   return (
     <SectionPage id="foundation">
       <Piece id="logo">
-        <State label={t.logo.full} note={t.logo.fullNote}>
-          <LogoSample variant="full" height={32} />
-          <LogoSample variant="full" height={24} />
+        <State label={t.logo.formsLabel} note={t.logo.formsNote} wide>
+          <LogoForms />
         </State>
-        <State label={t.logo.mark} note={t.logo.markNote}>
-          <LogoSample variant="mark" height={32} />
-          <LogoSample variant="mark" height={20} />
-          <LogoSample variant="mark" height={16} />
+        <State label={t.logo.sizesLabel} note={t.logo.sizesNote} wide>
+          <LogoSizes />
         </State>
-        <State label={t.logo.onFeature} note={t.logo.onFeatureNote} wide>
-          <div className="rounded-lg border border-border bg-surface-feature px-5 py-4 text-on-feature">
-            <Logo height={28} />
-          </div>
+        <State label={t.logo.groundsLabel} note={t.logo.groundsNote} wide>
+          <LogoGrounds />
         </State>
-        <PieceNote paragraphs={[t.logo.note]} />
+        <State label={t.logo.inkLabel} note={t.logo.inkNote}>
+          <LogoOneInk />
+        </State>
+        <State label={t.logo.minLabel} note={t.logo.minNote}>
+          <LogoMinimum />
+        </State>
+        <State label={t.logo.spaceLabel} note={t.logo.spaceNote}>
+          <LogoClearSpace />
+        </State>
+        <State label={t.logo.dontsLabel} note={t.logo.dontsNote} wide>
+          <LogoDonts />
+        </State>
+        <PieceNote paragraphs={t.logo.explain} />
       </Piece>
       <Roles />
       <Piece id="state-colors">
