@@ -142,7 +142,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <div className="flex h-full flex-col overflow-hidden">
             <NavLink
               to="/"
-              className="flex h-16 shrink-0 items-center border-b border-border md:h-20"
+              // No rule under the logo: the header's rule ends at the panel's
+              // border, and a second one here sat a pixel off it, crossing it.
+              className="flex h-16 shrink-0 items-center md:h-20"
               style={{ paddingInline: railOpen ? "1rem" : "0", justifyContent: railOpen ? "flex-start" : "center" }}
             >
               {railOpen ? <Logo height={28} /> : <Logo variant="mark" height={28} />}
