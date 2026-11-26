@@ -46,3 +46,19 @@ function isFreeText(type: string): type is TextInputType {
 export function defaultMaxLength(type: string = "text"): number | undefined {
   return isFreeText(type) ? TEXT_LIMITS[type] : undefined;
 }
+
+/**
+ * A person's or a place's name: letters of any script (with their accents),
+ * spaces, apostrophes, hyphens and periods — "Anne-Marie O'Neil Jr.",
+ * "São Paulo". No digits, no symbols: a name with "<" or "3" in it is a typo
+ * or an attempt, never a name.
+ *
+ * Like the ceilings above, **a courtesy in the browser**: the server checks
+ * the same rule, and escapes what it stores either way.
+ */
+export const NAME_LIMIT = 100;
+
+const NOT_NAME = /[^\p{L}\p{M}\s'’.-]/gu;
+
+/** Drops every character a name cannot have, and the double space a dropped one leaves. */
+export const keepNameCharacters = (s: string) => s.replace(NOT_NAME, "").replace(/\s{2,}/g, " ");

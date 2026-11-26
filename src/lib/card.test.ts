@@ -56,6 +56,19 @@ describe("the masks", () => {
   });
 });
 
+describe("the masks stop where the card does", () => {
+  it("16 digits for most cards, 15 for American Express", () => {
+    expect(applyMask(CARD_MASK, "41111111111111111234")).toBe("4111 1111 1111 1111");
+    expect(applyMask(CARD_MASK, "378282246310005999")).toBe("3782 822463 10005");
+  });
+
+  it("the expiry takes a month from 01 to 12 only", () => {
+    expect(applyMask(EXPIRY_MASK, "13")).toBe("1");
+    expect(applyMask(EXPIRY_MASK, "00")).toBe("0");
+    expect(applyMask(EXPIRY_MASK, "1228")).toBe("12/28");
+  });
+});
+
 describe("checking the number", () => {
   it("empty is not an error; a test number passes", () => {
     expect(checkCardNumber("")).toBeNull();

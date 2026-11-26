@@ -60,17 +60,27 @@ function group(digits: string): string {
 
 const DIGIT = /^[0-9]$/;
 
-/** The number's mask: digits only, up to 19, in groups. */
+/**
+ * The number's mask: digits only, in groups, up to the brand's length — 15 for
+ * American Express, 16 for the rest. Cards of 17 to 19 digits exist (some
+ * debit networks), but a US checkout rarely meets them, and a field that keeps
+ * taking digits past 16 looked broken to whoever typed into it.
+ */
 export const CARD_MASK: MaskSpec = {
-  max: 19,
-  accepts: (ch) => DIGIT.test(ch),
+  max: 16,
+  accepts: (ch, i, before) => DIGIT.test(ch) && i < (cardBrand(before) === "amex" ? 15 : 16),
   format: group,
 };
 
-/** The expiration date's mask: `MM/YY`. */
+/** The expiration date's mask: `MM/YY`, with a month from 01 to 12. */
 export const EXPIRY_MASK: MaskSpec = {
   max: 4,
-  accepts: (ch) => DIGIT.test(ch),
+  accepts: (ch, i, before) => {
+    if (!DIGIT.test(ch)) return false;
+    if (i === 0) return ch <= "1";
+    if (i === 1) return before[0] === "0" ? ch >= "1" : ch <= "2";
+    return true;
+  },
   format: (sig) => (sig.length > 2 ? `${sig.slice(0, 2)}/${sig.slice(2)}` : sig),
 };
 
