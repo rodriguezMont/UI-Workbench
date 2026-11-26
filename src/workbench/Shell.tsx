@@ -109,6 +109,40 @@ function ThemeToggle() {
   );
 }
 
+/** The rule's colors, from the frame's corner outward. */
+const STOPS = "var(--frame-rule-from) 0%, var(--frame-rule-via) 45%, var(--frame-rule-to) 100%";
+
+const RULES = {
+  // Down the panel's edge, top to bottom.
+  vertical: {
+    line: `linear-gradient(to bottom, ${STOPS})`,
+    className: "inset-y-0 right-0 w-px",
+    haloClassName: "inset-y-0 -right-px w-[3px]",
+  },
+  // Along the header's foot, left to right: it starts where the panel's rule starts.
+  horizontal: {
+    line: `linear-gradient(to right, ${STOPS})`,
+    className: "inset-x-0 bottom-0 h-px",
+    haloClassName: "inset-x-0 -bottom-px h-[3px]",
+  },
+} as const;
+
+/**
+ * The frame's two rules — the panel's edge and the header's foot. Each one is
+ * a single gradient over its whole length, starting light at the corner where
+ * they meet, with a blurred copy behind it as a glow. Decoration only, so
+ * hidden from assistive tech.
+ */
+function ChromeRule({ edge }: { edge: keyof typeof RULES }) {
+  const rule = RULES[edge];
+  return (
+    <>
+      <span aria-hidden className={cn("pointer-events-none absolute opacity-55 blur-[3px]", rule.haloClassName)} style={{ background: rule.line }} />
+      <span aria-hidden data-chrome-rule={edge} className={cn("pointer-events-none absolute", rule.className)} style={{ background: rule.line }} />
+    </>
+  );
+}
+
 export function Shell({ children }: { children: React.ReactNode }) {
   const [railOpen, setRailOpen] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -134,15 +168,18 @@ export function Shell({ children }: { children: React.ReactNode }) {
             from 768px — below, the panel is the drawer and the logo moves to
             the header. */}
         <aside
-          className="sticky top-0 z-20 hidden h-screen shrink-0 border-r border-border bg-surface-chrome transition-[width] ease-[var(--motion-ease)] md:block"
+          className="sticky top-0 z-20 hidden h-screen shrink-0 bg-surface-chrome transition-[width] ease-[var(--motion-ease)] md:block"
           style={{ width: railOpen ? RAIL_OPEN : RAIL_CLOSED, transitionDuration: "var(--motion-base)" }}
         >
+          <ChromeRule edge="vertical" />
           {/* `overflow-hidden` inside, not on the panel: the label comes back
               before the width finishes growing and would spill for a moment. */}
           <div className="flex h-full flex-col overflow-hidden">
             <NavLink
               to="/"
-              className="flex h-16 shrink-0 items-center border-b border-border md:h-20"
+              // No rule under the logo: the header's rule ends at the panel's
+              // border, and a second one here sat a pixel off it, crossing it.
+              className="flex h-16 shrink-0 items-center md:h-20"
               style={{ paddingInline: railOpen ? "1rem" : "0", justifyContent: railOpen ? "flex-start" : "center" }}
             >
               {railOpen ? <Logo height={28} /> : <Logo variant="mark" height={28} />}
@@ -169,7 +206,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <div className="flex min-h-screen min-w-0 flex-1 flex-col">
           {/* 64px on phones, 80px from 768 so the title block lines up with
               the logo block at the top of the panel. */}
-          <header className="sticky top-0 z-30 border-b border-border bg-surface-chrome">
+          <header className="sticky top-0 z-30 bg-surface-chrome">
+            <ChromeRule edge="horizontal" />
             <div className="flex h-16 items-center gap-3 px-4 sm:px-6 md:h-20">
               <button
                 type="button"
