@@ -116,7 +116,7 @@ offers its numbers as a table.
 
 ## Try it
 
-**Live workbench:** _link coming soon_
+**Live workbench:** **[glad-bisque-gnu-01.hostingersite.com](https://glad-bisque-gnu-01.hostingersite.com/)** — read-only: the seals show what is committed.
 
 Or run it locally:
 
@@ -124,7 +124,6 @@ Or run it locally:
 git clone https://github.com/rodriguezMont/UI-Workbench.git
 cd UI-Workbench
 npm install
-cp .blocklist.example .blocklist
 npm run dev
 ```
 
@@ -143,6 +142,12 @@ browse the sections. Approving a piece works here, on the dev server.
    and `messages/`. Requires Tailwind CSS v4. No component imports a router —
    links come in through `asChild`.
 
+**Committing in your copy:** `npm install` turns on a git hook that blocks
+chosen terms from ever being committed, and it refuses to pass without a
+list. Copy `.blocklist.example` to `.blocklist` and put your own terms in it
+(or keep the examples). The [guide](docs/GUIDE.md#the-blocklist-guard) has
+the details.
+
 The step-by-step, with the dependencies each component needs, is in the
 [guide](docs/GUIDE.md#using-the-library-in-an-app).
 
@@ -160,6 +165,8 @@ above.
 - **[Guide](docs/GUIDE.md)** — scripts, project layout, the workbench and its
   approval flow, design tokens, copying the library into an app, the
   blocklist guard.
+- **[Deploy](docs/DEPLOY.md)** — how the live workbench is published on
+  Hostinger's managed Node.js hosting.
 - **[Progress](docs/PROGRESS.md)** — what has been delivered, pull request by
   pull request, and what comes next (the brand guide).
 
