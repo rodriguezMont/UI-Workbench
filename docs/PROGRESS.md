@@ -42,6 +42,7 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 | #20 | Polish 4: Forms, fields and choices — states and explanations for 13 pieces; `select` split into single, search and multiple |
 | #21 | Polish 5: Forms, dates, files and images — states and explanations for 9 pieces; one cropper demo with a slot per format; numbered gallery samples |
 | #22 | Polish 6: Data — states and explanations for 12 pieces; `stat-group` split from `stat`; a Dashboard sector; one demo world in `data-demo.ts`, with "today" pinned and totals that agree |
+| #23 | Polish 7: States and Overlay — states and explanations for 9 pieces; live demos in `state-demos.tsx` and `overlay-demos.tsx` |
 
 #10 to #15 were built in parallel by six builder agents, one per group, each
 in its own git worktree. Each group was then integrated one at a time: the
@@ -75,9 +76,10 @@ workbench: the map shows 0 of 70.
       `select` into single, search and multiple), Forms dates, files and
       images (#21), Data (#22, which also split `stat` into `stat` and
       `stat-group`, added a Dashboard sector, pinned "today" to October 1,
-      2026 and made the demo numbers add up across pieces). Still to do, in
-      order: States and Overlay; Navigation and Content; Foundation (a
-      "State colors" piece and a measured contrast table on Roles).
+      2026 and made the demo numbers add up across pieces), States and
+      Overlay (#23). Still to do, in order: Navigation and Content;
+      Foundation (a "State colors" piece and a measured contrast table on
+      Roles).
 2. **General review in the workbench**, piece by piece, with approvals.
    Still noted for it: the footer's thick gradient edge from the source
    became a plain top border — restore it or keep it plain.
@@ -85,10 +87,16 @@ workbench: the map shows 0 of 70.
    menu item on screen ("Make main" in the photo gallery), focus moves while
    the menu is still closing and ends up on `body`. The gallery works around
    it locally; the fix belongs in the hook.
-4. **Block 4 leftovers**: the Playwright layout ruler (375 / 768 / 1280 /
+4. **Fix Escape on the sheet** (`sheet.tsx`): in a real browser, Escape does
+   not close the sheet — nor the overlay in its sheet frame — while the
+   dialog closes. The code matches the source, where Escape works; what
+   differs is the installed `@radix-ui/react-dialog` that Vaul 1.1.2 runs on
+   (1.3.1 here, 1.1.23 in the source). Found during #23; it was already on
+   `main`.
+5. **Block 4 leftovers**: the Playwright layout ruler (375 / 768 / 1280 /
    1920), from the source's `measure-workbench`, `measure-touch` and the
    shared ruler library, and live contrast measurement on the Roles page.
-5. **Block 5**: the brand guide.
+6. **Block 5**: the brand guide.
 
 Optional, waiting for a decision: require the CI `Check` status in the `main`
 ruleset so a red PR cannot be merged.
