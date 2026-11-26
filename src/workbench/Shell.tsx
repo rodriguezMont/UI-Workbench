@@ -109,6 +109,44 @@ function ThemeToggle() {
   );
 }
 
+/** Where the two rules meet: the bottom of the header, 64px on phones and 80 from 768. */
+const CORNER = "80px";
+const RULE_LIT = "var(--accent)";
+const HALO = "light-dark(transparent, color-mix(in srgb, var(--accent) 65%, transparent))";
+
+const RULES = {
+  // Down the panel's edge: lit where the header meets it, fading below.
+  vertical: {
+    line: `linear-gradient(to bottom, var(--border) 0, ${RULE_LIT} ${CORNER}, var(--border) 55%, transparent 100%)`,
+    halo: `linear-gradient(to bottom, transparent 0, ${HALO} ${CORNER}, transparent 45%)`,
+    className: "inset-y-0 right-0 w-px",
+    haloClassName: "inset-y-0 -right-1 w-2",
+  },
+  // Along the header's foot: lit at the corner, fading to the right.
+  horizontal: {
+    line: `linear-gradient(to right, ${RULE_LIT} 0, var(--border) 45%, color-mix(in srgb, var(--border) 40%, transparent) 100%)`,
+    halo: `linear-gradient(to right, ${HALO} 0, transparent 40%)`,
+    className: "inset-x-0 bottom-0 h-px",
+    haloClassName: "inset-x-0 -bottom-1 h-2",
+  },
+} as const;
+
+/**
+ * The frame's two rules — the panel's edge and the header's foot — as one
+ * line bending at the corner: lit with the accent where they meet, fading
+ * away from it. In dark a soft halo follows the lit part (the halo color is
+ * transparent in light). Decoration only, so hidden from assistive tech.
+ */
+function ChromeRule({ edge }: { edge: keyof typeof RULES }) {
+  const rule = RULES[edge];
+  return (
+    <>
+      <span aria-hidden data-chrome-rule={edge} className={cn("pointer-events-none absolute", rule.className)} style={{ background: rule.line }} />
+      <span aria-hidden className={cn("pointer-events-none absolute blur-[3px]", rule.haloClassName)} style={{ background: rule.halo }} />
+    </>
+  );
+}
+
 export function Shell({ children }: { children: React.ReactNode }) {
   const [railOpen, setRailOpen] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -134,9 +172,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
             from 768px — below, the panel is the drawer and the logo moves to
             the header. */}
         <aside
-          className="sticky top-0 z-20 hidden h-screen shrink-0 border-r border-border bg-surface-chrome transition-[width] ease-[var(--motion-ease)] md:block"
+          className="sticky top-0 z-20 hidden h-screen shrink-0 bg-surface-chrome transition-[width] ease-[var(--motion-ease)] md:block"
           style={{ width: railOpen ? RAIL_OPEN : RAIL_CLOSED, transitionDuration: "var(--motion-base)" }}
         >
+          <ChromeRule edge="vertical" />
           {/* `overflow-hidden` inside, not on the panel: the label comes back
               before the width finishes growing and would spill for a moment. */}
           <div className="flex h-full flex-col overflow-hidden">
@@ -171,7 +210,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <div className="flex min-h-screen min-w-0 flex-1 flex-col">
           {/* 64px on phones, 80px from 768 so the title block lines up with
               the logo block at the top of the panel. */}
-          <header className="sticky top-0 z-30 border-b border-border bg-surface-chrome">
+          <header className="sticky top-0 z-30 bg-surface-chrome">
+            <ChromeRule edge="horizontal" />
             <div className="flex h-16 items-center gap-3 px-4 sm:px-6 md:h-20">
               <button
                 type="button"

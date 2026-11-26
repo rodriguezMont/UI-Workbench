@@ -152,6 +152,13 @@ const PAIRS: [string, string, number][] = [
     ["--focus-ring", bg, UI],
   ]),
   ["--text-secondary", "--surface-emblem", TEXT],
+  // The header and side panel: the chrome is tinted in dark, so it is measured on its own.
+  ["--text-primary", "--surface-chrome", TEXT],
+  ["--text-secondary", "--surface-chrome", TEXT],
+  ["--text-subtle", "--surface-chrome", TEXT],
+  ["--accent", "--surface-chrome", TEXT],
+  ["--border-strong", "--surface-chrome", UI],
+  ["--focus-ring", "--surface-chrome", UI],
   ["--text-on-accent", "--accent", TEXT],
   ["--action-text", "--action", TEXT],
   ["--text-inverse", "--action-alt", TEXT],

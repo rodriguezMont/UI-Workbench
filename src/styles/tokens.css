@@ -77,7 +77,10 @@
   --surface: light-dark(var(--neutral-0), var(--neutral-900)); /* card, default */
   --surface-raised: light-dark(var(--neutral-0), var(--neutral-850)); /* popover, menu, list */
   --surface-sunken: light-dark(var(--neutral-100), var(--neutral-950)); /* page background */
-  --surface-chrome: light-dark(var(--neutral-0), var(--neutral-950)); /* header, side nav */
+  /* Header, side nav. In dark, a deep navy made from the accent rather than a
+   * neutral black: the chrome belongs to the same light as the stage behind
+   * the page, and a rebrand recolors it with the accent. */
+  --surface-chrome: light-dark(var(--neutral-0), color-mix(in srgb, var(--accent-700) 16%, var(--neutral-950)));
   --surface-hover: light-dark(var(--neutral-100), var(--neutral-850)); /* hover, active item */
   /* The option under the pointer or the arrow keys, inside something that
    * floats. A tint of the accent, so the accent text written on it still
