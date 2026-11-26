@@ -133,6 +133,13 @@ browse the sections. Approving a piece works here, on the dev server.
 
 ## Make it yours
 
+This template stays neutral on purpose: fork it or copy it into your project,
+and put your brand on it there. **Working with an AI coding assistant?**
+Point it at [AGENTS.md](AGENTS.md) (Claude Code reads it through
+`CLAUDE.md`): it explains the project, asks you for your brand — name, logo,
+colors, typeface, locale — and applies it following
+[docs/BRAND.md](docs/BRAND.md).
+
 1. **Rebrand the scales** in `src/styles/tokens.css` — the neutral grays and
    the accent. Every component follows; the contrast tests tell you if a new
    color breaks a pair.
@@ -149,7 +156,8 @@ list. Copy `.blocklist.example` to `.blocklist` and put your own terms in it
 (or keep the examples). The [guide](docs/GUIDE.md#the-blocklist-guard) has
 the details.
 
-The step-by-step, with the dependencies each component needs, is in the
+The rebrand, step by step, is in [docs/BRAND.md](docs/BRAND.md); copying
+into an app, with the dependencies each component needs, is in the
 [guide](docs/GUIDE.md#using-the-library-in-an-app).
 
 ## Built with
@@ -163,13 +171,17 @@ above.
 
 ## Learn more
 
+- **[AGENTS.md](AGENTS.md)** — the brief for AI coding assistants: what the
+  project is, what to ask before a rebrand, the rules that must hold.
+- **[Rebranding](docs/BRAND.md)** — every place a brand lives: colors, logo,
+  favicon, name, typeface, shape, locale, and how to verify.
 - **[Guide](docs/GUIDE.md)** — scripts, project layout, the workbench and its
   approval flow, design tokens, copying the library into an app, the
   blocklist guard.
 - **[Deploy](docs/DEPLOY.md)** — how the live workbench is published on
   Hostinger's managed Node.js hosting.
 - **[Progress](docs/PROGRESS.md)** — what has been delivered, pull request by
-  pull request, and what comes next (the brand guide).
+  pull request, and what comes next.
 
 ## License
 
