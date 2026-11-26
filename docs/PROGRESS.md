@@ -41,6 +41,7 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 | #19 | Polish 3: Primitives — every piece with its states and explanation |
 | #20 | Polish 4: Forms, fields and choices — states and explanations for 13 pieces; `select` split into single, search and multiple |
 | #21 | Polish 5: Forms, dates, files and images — states and explanations for 9 pieces; one cropper demo with a slot per format; numbered gallery samples |
+| #22 | Polish 6: Data — states and explanations for 12 pieces; `stat-group` split from `stat`; a Dashboard sector; one demo world in `data-demo.ts`, with "today" pinned and totals that agree |
 
 #10 to #15 were built in parallel by six builder agents, one per group, each
 in its own git worktree. Each group was then integrated one at a time: the
@@ -52,11 +53,11 @@ piece is still to build), type-check, lint and build clean, guard clean.
 
 ## Component status
 
-All 69 registry pieces are built, in all eight sections. The registry
+All 70 registry pieces are built, in all eight sections. The registry
 (`src/workbench/registry.ts`) is the source of truth.
 
 **No piece is approved yet.** Approving is the reviewer's act, in the
-workbench: the map shows 0 of 69.
+workbench: the map shows 0 of 70.
 
 ## Next steps
 
@@ -72,10 +73,11 @@ workbench: the map shows 0 of 69.
       a note on every state; the missing states (about half of the source's).
       Done: Primitives (#19), Forms fields and choices (#20, which also split
       `select` into single, search and multiple), Forms dates, files and
-      images (#21). Still to do, in order: Data (split `stat` into cases and group, a "Dashboard" sector, coherent demo
-      numbers and a pinned "today"); States and Overlay; Navigation and
-      Content; Foundation (a "State colors" piece and a measured contrast
-      table on Roles).
+      images (#21), Data (#22, which also split `stat` into `stat` and
+      `stat-group`, added a Dashboard sector, pinned "today" to October 1,
+      2026 and made the demo numbers add up across pieces). Still to do, in
+      order: States and Overlay; Navigation and Content; Foundation (a
+      "State colors" piece and a measured contrast table on Roles).
 2. **General review in the workbench**, piece by piece, with approvals.
    Still noted for it: the footer's thick gradient edge from the source
    became a plain top border — restore it or keep it plain.
