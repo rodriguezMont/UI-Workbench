@@ -121,7 +121,7 @@ A interface da bancada e da biblioteca é em inglês (en-US).
 
 ## Experimente
 
-**Bancada publicada:** _link em breve_
+**Bancada publicada:** **[glad-bisque-gnu-01.hostingersite.com](https://glad-bisque-gnu-01.hostingersite.com/)** — só leitura: os selos mostram o que está commitado.
 
 Ou rode localmente:
 
@@ -129,7 +129,6 @@ Ou rode localmente:
 git clone https://github.com/rodriguezMont/UI-Workbench.git
 cd UI-Workbench
 npm install
-cp .blocklist.example .blocklist
 npm run dev
 ```
 
@@ -149,6 +148,12 @@ desenvolvimento.
    e `messages/`. Requer Tailwind CSS v4. Nenhum componente importa um router —
    os links entram por `asChild`.
 
+**Para commitar na sua cópia:** o `npm install` liga um hook do git que
+impede termos escolhidos de entrarem num commit, e ele se recusa a passar sem
+uma lista. Copie o `.blocklist.example` para `.blocklist` e coloque os seus
+termos (ou mantenha os de exemplo). Os detalhes estão no
+[guia](docs/GUIDE.md#the-blocklist-guard) (em inglês).
+
 O passo a passo, com as dependências de cada componente, está no
 [guia](docs/GUIDE.md#using-the-library-in-an-app) (em inglês).
 
@@ -167,6 +172,8 @@ testes acima.
 - **[Guia](docs/GUIDE.md)** (em inglês) — scripts, estrutura do projeto, a
   bancada e o fluxo de aprovação, design tokens, como copiar a biblioteca para
   um app, o guard da blocklist.
+- **[Deploy](docs/DEPLOY.md)** (em inglês) — como a bancada é publicada no
+  Node.js gerenciado da Hostinger.
 - **[Progresso](docs/PROGRESS.md)** (em inglês) — o que foi entregue, pull
   request por pull request, e o que vem a seguir (o guia de marca).
 
