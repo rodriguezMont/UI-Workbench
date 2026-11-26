@@ -79,7 +79,7 @@ function MeasuredLogo({ variant, height }: { variant: Form; height: number }) {
 
 export function LogoSizes() {
   return (
-    <ul className="grid w-full gap-x-8 sm:grid-cols-2">
+    <ul className="grid w-full gap-x-8 lg:grid-cols-2">
       {LOGO_USES.map(({ variant, height, where }) => (
         <li key={where} className="flex min-h-14 items-center justify-between gap-4 border-b border-border py-2">
           <MeasuredLogo variant={variant} height={height} />

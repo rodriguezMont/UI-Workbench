@@ -33,10 +33,17 @@ npm run dev
 | `npm test` | Vitest: token contrast, component, convention and guard tests |
 | `npm run guard` | Scan the whole working tree against the blocklist |
 | `npm run check` | All of the above except the build |
+| `npm run measure` | The layout ruler, against a running dev server: every section at 375, 768, 1280 and 1920 (light) and 1280 (dark) — no sideways scroll, no errors — plus the side panel, the drawer, the route bar, the measured contrast and a 44px touch probe on every control |
+| `npm run measure:touch` | The finger ruler: a simulated iPhone (WebKit) and Pixel (Chromium) tap the select, the search, a field and the overlay. Needs `npx playwright install webkit` once |
 
 **CI** (`.github/workflows/ci.yml`) runs type-check, lint, tests and the
 build on every pull request and on every push to `main`. The blocklist guard
 is not part of CI on purpose — see below.
+
+The two rulers are not in CI either: they need a dev server and a real,
+foreground browser. Run them before calling a visual change done
+(`TARGET=http://localhost:5181` points them at another port). Neither can
+approve anything: a run that changes `approvals.json` fails.
 
 ## Layout
 
