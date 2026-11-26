@@ -84,8 +84,13 @@ state, its real states side by side, and the approval seal.
   `src/workbench/approvals.json`, refusing cross-site requests and automated
   browsers. The file is versioned on purpose — a mass approval would show up
   in the pull request as one changed line per piece.
-- **The deployed build is read-only**: the endpoint does not exist outside
-  `vite dev`, so the seal shows the committed state without a button.
+- **On the deployed build, approvals stay in the visitor's browser**: the
+  endpoint does not exist outside `vite dev`, so each visitor reviews on their
+  own copy (`src/workbench/browser-ledger.ts`). It starts from the committed
+  ledger, every click is kept in `localStorage` under
+  `ui-workbench-approvals`, and "Reset to the project's approvals" on the map
+  drops it. Nothing is sent to the server, and the committed file never
+  changes.
   `vercel.json` serves every route from `index.html` and marks the site
   `noindex`.
 

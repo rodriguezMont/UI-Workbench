@@ -27,11 +27,12 @@ function dayAndMonth(iso: string): string {
  * click **does**, not what it shows — a keyboard user hears "Approve Button",
  * not "approved".
  *
- * In a production build there is nothing to write to: the seal shows the
- * state, without a button.
+ * It is a button everywhere: under the dev server a click writes the project's
+ * ledger; on the published build it is kept in the visitor's browser
+ * (`ledger.tsx`).
  */
 function ApprovalSeal({ entry, approved }: { entry: ComponentEntry; approved: boolean }) {
-  const { ledger, editable, setApproved } = useLedger();
+  const { ledger, setApproved } = useLedger();
   const [busy, setBusy] = useState(false);
   const on = approvedOn(entry, ledger);
   const text = approved && on ? m.seal.approvedOn(dayAndMonth(on)) : m.seal.approve;
@@ -47,22 +48,6 @@ function ApprovalSeal({ entry, approved }: { entry: ComponentEntry; approved: bo
       {approved ? <Check size={12} strokeWidth={3} /> : null}
     </span>
   );
-
-  if (!editable) {
-    return approved ? (
-      <span
-        className="inline-flex items-center gap-2 rounded-md border border-signal px-3 text-sm font-medium text-signal-label"
-        style={{ minHeight: "var(--tap-target)" }}
-      >
-        {box}
-        {text}
-      </span>
-    ) : (
-      <span className="sm:hidden">
-        <StatusBadge state="in-review" />
-      </span>
-    );
-  }
 
   return (
     <button

@@ -5,38 +5,59 @@ import { messages } from "@/messages";
 
 import { parseLedger, type Ledger } from "./approvals";
 import committed from "./approvals.json";
+import {
+  approveInBrowser,
+  browserStorage,
+  loadBrowserLedger,
+  localToday,
+  resetBrowserLedger,
+  sameLedger,
+} from "./browser-ledger";
 
 /**
- * The approval ledger, shared by every page of the workbench.
+ * The approval ledger, shared by every page of the workbench. The seal works
+ * in both places; what changes is where a click is kept.
  *
- * - **In development** it starts from the committed file and then reads the
- *   current one from the dev server; the seal writes through it
- *   (`approvals-plugin.ts`) and the response is the new ledger.
- * - **In a production build** it is the committed file, read-only: there is no
- *   endpoint to write to, and the seal shows the state without a button.
+ * - **In development** (`"file"`) it starts from the committed file and then
+ *   reads the current one from the dev server; the seal writes through it
+ *   (`approvals-plugin.ts`) and the response is the new ledger. This is how
+ *   the project's own approvals are made, and they are committed.
+ * - **In a production build** (`"browser"`) there is no endpoint: each visitor
+ *   reviews on their own copy, kept in their browser (`browser-ledger.ts`),
+ *   starting from the committed file, and can reset to it.
  */
 
 const ENDPOINT = "/__workbench/approvals";
 
+const PROJECT: Ledger = parseLedger(committed);
+
 type LedgerState = {
   ledger: Ledger;
-  /** Whether approving is possible here: only under the dev server. */
-  editable: boolean;
+  /** Where a click is kept: the project's file, or this visitor's browser. */
+  savedIn: "file" | "browser";
+  /** In the browser: whether this visitor's review differs from the project's. */
+  changed: boolean;
   setApproved: (id: string, approved: boolean) => Promise<void>;
+  /** In the browser: drop this visitor's review and show the project's ledger. */
+  resetToProject: () => void;
 };
 
 const LedgerContext = createContext<LedgerState>({
-  ledger: parseLedger(committed),
-  editable: false,
+  ledger: PROJECT,
+  savedIn: "browser",
+  changed: false,
   setApproved: async () => {},
+  resetToProject: () => {},
 });
 
 export function LedgerProvider({ children }: { children: React.ReactNode }) {
-  const editable = import.meta.env.DEV;
-  const [ledger, setLedger] = useState<Ledger>(() => parseLedger(committed));
+  const savedIn = import.meta.env.DEV ? "file" : "browser";
+  const [ledger, setLedger] = useState<Ledger>(() =>
+    savedIn === "browser" ? loadBrowserLedger(browserStorage(), PROJECT) : PROJECT,
+  );
 
   useEffect(() => {
-    if (!editable) return;
+    if (savedIn !== "file") return;
     let current = true;
     fetch(ENDPOINT)
       .then((r) => (r.ok ? r.json() : null))
@@ -49,9 +70,13 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
     return () => {
       current = false;
     };
-  }, [editable]);
+  }, [savedIn]);
 
   async function setApproved(id: string, approved: boolean) {
+    if (savedIn === "browser") {
+      setLedger((now) => approveInBrowser(browserStorage(), now, id, approved, localToday()));
+      return;
+    }
     try {
       const response = await fetch(ENDPOINT, {
         method: "POST",
@@ -65,7 +90,15 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  return <LedgerContext value={{ ledger, editable, setApproved }}>{children}</LedgerContext>;
+  function resetToProject() {
+    setLedger(resetBrowserLedger(browserStorage(), PROJECT));
+  }
+
+  const changed = savedIn === "browser" && !sameLedger(ledger, PROJECT);
+
+  return (
+    <LedgerContext value={{ ledger, savedIn, changed, setApproved, resetToProject }}>{children}</LedgerContext>
+  );
 }
 
 export function useLedger(): LedgerState {

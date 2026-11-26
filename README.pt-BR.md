@@ -94,9 +94,11 @@ flowchart LR
 3. **Toda peça no mapa.** Um registro lista todas as seções e peças; os testes
    falham se um componente não tiver entrada ou se uma peça construída faltar
    na sua página.
-4. **Aprovar é um clique no selo** — só no servidor de desenvolvimento local.
-   Ele grava uma linha por peça em `src/workbench/approvals.json`, que é
-   commitado junto com o trabalho. A bancada publicada é só leitura.
+4. **Aprovar é um clique no selo.** No servidor de desenvolvimento local, ele
+   grava uma linha por peça em `src/workbench/approvals.json`, que é commitado
+   junto com o trabalho. Na bancada publicada, cada visitante revisa a própria
+   cópia, salva só no navegador dele, e volta às aprovações do projeto com um
+   clique.
 5. **Proteções em toda mudança.** Verificação de tipos, lint, toda a suíte de
    testes e o build rodam no CI a cada pull request; as réguas de layout e de
    toque rodam num navegador real.
@@ -121,7 +123,7 @@ A interface da bancada e da biblioteca é em inglês (en-US).
 
 ## Experimente
 
-**Bancada publicada:** **[glad-bisque-gnu-01.hostingersite.com](https://glad-bisque-gnu-01.hostingersite.com/)** — só leitura: os selos mostram o que está commitado.
+**Bancada publicada:** **[glad-bisque-gnu-01.hostingersite.com](https://glad-bisque-gnu-01.hostingersite.com/)** — aprove e desfaça à vontade: a sua revisão fica no seu navegador, e as aprovações do projeto não mudam.
 
 Ou rode localmente:
 

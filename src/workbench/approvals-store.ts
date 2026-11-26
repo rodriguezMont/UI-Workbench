@@ -1,7 +1,8 @@
 /**
  * The only place that reads and writes `approvals.json` on disk. It runs in
  * the dev server (see `approvals-plugin.ts`), never in the browser and never
- * in a production build — the deployed workbench is read-only by construction.
+ * in a production build — there, approvals live in the visitor's browser
+ * (`browser-ledger.ts`) and the committed file is never written.
  *
  * **The id never becomes part of a path.** The file is one fixed file; the id
  * is a key in an object, and only after it is found in the registry. There is
@@ -12,7 +13,7 @@
  */
 import { readFileSync, writeFileSync } from "node:fs";
 
-import { parseLedger, sortLedger, type Ledger } from "./approvals";
+import { applyApproval, parseLedger, type Ledger } from "./approvals";
 import { findComponent } from "./registry";
 
 export class ApprovalError extends Error {
@@ -122,12 +123,7 @@ export function setApproval(path: string, id: string, approved: boolean, today: 
   // `readLedgerFile`, not `readLedgerForDisplay`: here the error must surface.
   // Writing over a ledger that could not be read is the one way this screen
   // could destroy work.
-  const ledger = readLedgerFile(path);
-
-  if (approved) ledger[id] = { on: today };
-  else delete ledger[id];
-
-  const sorted = sortLedger(ledger);
+  const sorted = applyApproval(readLedgerFile(path), id, approved, today);
   writeFileSync(path, `${JSON.stringify(sorted, null, 2)}\n`, "utf8");
   return sorted;
 }

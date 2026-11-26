@@ -1,6 +1,7 @@
-import { Check } from "lucide-react";
+import { Check, RotateCcw } from "lucide-react";
 import { Link } from "react-router";
 
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { messages } from "@/messages";
 
@@ -13,7 +14,7 @@ const m = messages.workbench.home;
 
 /** The map: every section, what each holds, and how much of it is approved. */
 export function Home() {
-  const { ledger } = useLedger();
+  const { ledger, savedIn, changed, resetToProject } = useLedger();
   const all = tallyOfAll(ledger);
 
   return (
@@ -111,6 +112,22 @@ export function Home() {
           ))}
         </ul>
         <p className="mt-3 max-w-[var(--measure)] text-sm text-subtle">{m.sealText}</p>
+
+        {/* On the published build each visitor reviews on their own copy, so
+            the box says where it lives and how to go back to the project's. */}
+        {savedIn === "browser" ? (
+          <div className="mt-4 border-t border-border pt-4">
+            <h3 className="text-sm font-medium">{m.browserTitle}</h3>
+            <p className="mt-1 max-w-[var(--measure)] text-sm text-secondary">{m.browserText}</p>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <Button variant="secondary" size="sm" onClick={resetToProject} disabled={!changed}>
+                <RotateCcw size={16} aria-hidden />
+                {m.resetToProject}
+              </Button>
+              {changed ? <span className="text-sm text-subtle">{m.browserChanged}</span> : null}
+            </div>
+          </div>
+        ) : null}
       </section>
     </div>
   );

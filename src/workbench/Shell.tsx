@@ -146,7 +146,7 @@ function ChromeRule({ edge }: { edge: keyof typeof RULES }) {
 export function Shell({ children }: { children: React.ReactNode }) {
   const [railOpen, setRailOpen] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const { editable } = useLedger();
+  const { savedIn } = useLedger();
 
   // `data-hydrated` tells the layout ruler the page responds: a click before
   // hydration is lost.
@@ -238,7 +238,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
                   {m.shell.noindex}
                 </span>
                 <span className="hidden rounded-full border border-accent px-3 py-1 text-xs text-accent-label lg:inline">
-                  {editable ? m.shell.localApprovals : m.shell.readOnly}
+                  {savedIn === "file" ? m.shell.fileApprovals : m.shell.browserApprovals}
                 </span>
               </div>
             </div>

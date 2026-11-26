@@ -114,3 +114,15 @@ export function tallyOfAll(ledger: Ledger): Tally {
 export function sortLedger(ledger: Ledger): Ledger {
   return Object.fromEntries(Object.entries(ledger).sort(([a], [b]) => a.localeCompare(b)));
 }
+
+/**
+ * The ledger after one click: the piece approved today, or its entry removed.
+ * Returns a new, sorted ledger and never touches the one it was given — the
+ * dev-server file and the browser's copy both go through here.
+ */
+export function applyApproval(ledger: Ledger, id: string, approved: boolean, today: string): Ledger {
+  const next = { ...ledger };
+  if (approved) next[id] = { on: today };
+  else delete next[id];
+  return sortLedger(next);
+}
