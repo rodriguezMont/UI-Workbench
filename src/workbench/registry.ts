@@ -120,14 +120,15 @@ const ROWS: readonly Row[] = [
   { id: "table", section: "data" },
   { id: "data-table", section: "data" },
   { id: "stat", section: "data" },
+  { id: "stat-group", section: "data" },
   { id: "time-series", section: "data" },
   { id: "columns", section: "data" },
   { id: "comparison", section: "data" },
   { id: "ranking", section: "data" },
-  { id: "meter", section: "data" },
   { id: "period", section: "data" },
-  { id: "chart-states", section: "data" },
+  { id: "meter", section: "data" },
   { id: "radial-kpi", section: "data" },
+  { id: "chart-states", section: "data" },
 
   // states
   { id: "empty", section: "states" },
