@@ -109,40 +109,36 @@ function ThemeToggle() {
   );
 }
 
-/** Where the two rules meet: the bottom of the header, 64px on phones and 80 from 768. */
-const CORNER = "80px";
-const RULE_LIT = "var(--accent)";
-const HALO = "light-dark(transparent, color-mix(in srgb, var(--accent) 65%, transparent))";
+/** The rule's colors, from the frame's corner outward. */
+const STOPS = "var(--frame-rule-from) 0%, var(--frame-rule-via) 45%, var(--frame-rule-to) 100%";
 
 const RULES = {
-  // Down the panel's edge: lit where the header meets it, fading below.
+  // Down the panel's edge, top to bottom.
   vertical: {
-    line: `linear-gradient(to bottom, var(--border) 0, ${RULE_LIT} ${CORNER}, var(--border) 55%, transparent 100%)`,
-    halo: `linear-gradient(to bottom, transparent 0, ${HALO} ${CORNER}, transparent 45%)`,
+    line: `linear-gradient(to bottom, ${STOPS})`,
     className: "inset-y-0 right-0 w-px",
-    haloClassName: "inset-y-0 -right-1 w-2",
+    haloClassName: "inset-y-0 -right-px w-[3px]",
   },
-  // Along the header's foot: lit at the corner, fading to the right.
+  // Along the header's foot, left to right: it starts where the panel's rule starts.
   horizontal: {
-    line: `linear-gradient(to right, ${RULE_LIT} 0, var(--border) 45%, color-mix(in srgb, var(--border) 40%, transparent) 100%)`,
-    halo: `linear-gradient(to right, ${HALO} 0, transparent 40%)`,
+    line: `linear-gradient(to right, ${STOPS})`,
     className: "inset-x-0 bottom-0 h-px",
-    haloClassName: "inset-x-0 -bottom-1 h-2",
+    haloClassName: "inset-x-0 -bottom-px h-[3px]",
   },
 } as const;
 
 /**
- * The frame's two rules — the panel's edge and the header's foot — as one
- * line bending at the corner: lit with the accent where they meet, fading
- * away from it. In dark a soft halo follows the lit part (the halo color is
- * transparent in light). Decoration only, so hidden from assistive tech.
+ * The frame's two rules — the panel's edge and the header's foot. Each one is
+ * a single gradient over its whole length, starting light at the corner where
+ * they meet, with a blurred copy behind it as a glow. Decoration only, so
+ * hidden from assistive tech.
  */
 function ChromeRule({ edge }: { edge: keyof typeof RULES }) {
   const rule = RULES[edge];
   return (
     <>
+      <span aria-hidden className={cn("pointer-events-none absolute opacity-55 blur-[3px]", rule.haloClassName)} style={{ background: rule.line }} />
       <span aria-hidden data-chrome-rule={edge} className={cn("pointer-events-none absolute", rule.className)} style={{ background: rule.line }} />
-      <span aria-hidden className={cn("pointer-events-none absolute blur-[3px]", rule.haloClassName)} style={{ background: rule.halo }} />
     </>
   );
 }

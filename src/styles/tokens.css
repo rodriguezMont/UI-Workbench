@@ -67,6 +67,8 @@
   --accent-400: #60a5fa;
   --accent-600: #2563eb;
   --accent-700: #1d4ed8;
+  /* Almost black, still blue: the dark page and its frame. */
+  --accent-950: #050a1e;
 }
 
 /* ── 2. Roles ───────────────────────────────────────────────────────────────
@@ -76,11 +78,17 @@
   /* surface */
   --surface: light-dark(var(--neutral-0), var(--neutral-900)); /* card, default */
   --surface-raised: light-dark(var(--neutral-0), var(--neutral-850)); /* popover, menu, list */
-  --surface-sunken: light-dark(var(--neutral-100), var(--neutral-950)); /* page background */
-  /* Header, side nav. In dark, a deep navy made from the accent rather than a
-   * neutral black: the chrome belongs to the same light as the stage behind
-   * the page, and a rebrand recolors it with the accent. */
-  --surface-chrome: light-dark(var(--neutral-0), color-mix(in srgb, var(--accent-700) 16%, var(--neutral-950)));
+  /* Page background. In dark it is the accent's deepest step, not a neutral
+   * black: the frame (below) is the same color, so header, side nav and page
+   * read as one dark field and only the lit rules and the stage mark it. */
+  --surface-sunken: light-dark(var(--neutral-100), var(--accent-950));
+  /* Header, side nav: white in light, the page's own deep blue in dark. */
+  --surface-chrome: light-dark(var(--neutral-0), var(--accent-950));
+  /* The frame's lit rules, the side nav's edge and the header's foot: three
+   * stops, light to deep, laid along each rule's whole length. */
+  --frame-rule-from: light-dark(var(--accent-400), var(--accent-300));
+  --frame-rule-via: light-dark(var(--accent-600), var(--accent-400));
+  --frame-rule-to: light-dark(var(--accent-700), var(--accent-600));
   --surface-hover: light-dark(var(--neutral-100), var(--neutral-850)); /* hover, active item */
   /* The option under the pointer or the arrow keys, inside something that
    * floats. A tint of the accent, so the accent text written on it still
