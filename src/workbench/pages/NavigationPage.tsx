@@ -17,6 +17,7 @@ import {
   ShellPhoneDemo,
   SideMenuDemo,
   StickyHeaderDemo,
+  ZeroFilterDemo,
 } from "./nav-demos";
 
 const t = messages.workbench.demos;
@@ -80,16 +81,16 @@ export function NavigationPage() {
       </Piece>
 
       <Piece id="search">
-        <State label={t.search.floating} note={t.search.floatingNote}>
+        <State label={t.search.floating} note={t.search.floatingNote} fill>
           <SearchDemo variant="floating" />
         </State>
-        <State label={t.search.inline} note={t.search.inlineNote}>
+        <State label={t.search.inline} note={t.search.inlineNote} fill>
           <SearchDemo variant="inline" />
         </State>
-        <State label={t.search.large} note={t.search.largeNote}>
+        <State label={t.search.large} note={t.search.largeNote} fill>
           <SearchDemo variant="large" />
         </State>
-        <State label={t.search.fullScreen} note={t.search.fullScreenNote}>
+        <State label={t.search.fullScreen} note={t.search.fullScreenNote} fill>
           <SearchDemo variant="full-screen" />
         </State>
         <PieceNote paragraphs={t.search.explain} />
@@ -103,7 +104,7 @@ export function NavigationPage() {
           <FiltersDemo initial={{ category: ["backpacks"], color: ["black", "navy"] }} />
         </State>
         <State label={t.filters.zero} note={t.filters.zeroNote}>
-          <FiltersDemo initial={{ category: ["wallets"] }} />
+          <ZeroFilterDemo />
         </State>
         <PieceNote paragraphs={t.filters.explain} />
       </Piece>

@@ -12,7 +12,7 @@ import { SectionPage } from "./SectionPage";
 import {
   CardSkeletonDemo,
   EmptySearchDemo,
-  LoadedCardsDemo,
+  LoadedCardsState,
   LooseSkeletonDemo,
   RouteBarDemo,
   UploadBar,
@@ -43,9 +43,7 @@ export function StatesPage() {
         <State label={t.loading.card} note={t.loading.cardNote}>
           <CardSkeletonDemo />
         </State>
-        <State label={t.loading.data} note={t.loading.dataNote}>
-          <LoadedCardsDemo />
-        </State>
+        <LoadedCardsState label={t.loading.data} note={t.loading.dataNote} />
         <State label={t.loading.loose} note={t.loading.looseNote} wide>
           <LooseSkeletonDemo />
         </State>

@@ -219,9 +219,11 @@ export function StickyHeaderDemo() {
 
 export function DarkHeaderDemo() {
   return (
-    <div className="w-full overflow-hidden rounded-md border border-border">
+    <div className="flex h-64 w-full flex-col overflow-hidden rounded-md border border-border">
       <Header homeLink={<Link to="/navigation#header" />} forceDark />
-      <PageStrip lines={2} />
+      <div className="flex-1 bg-surface-sunken">
+        <PageStrip lines={3} />
+      </div>
     </div>
   );
 }
@@ -232,9 +234,13 @@ export function SearchDemo({ variant }: { variant: "floating" | "inline" | "larg
   const [searched, setSearched] = useState("");
   const common = { suggestions: t.search.terms, onSubmit: setSearched, placeholder: t.search.placeholder };
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className="flex h-full w-full flex-col gap-2">
       {variant === "full-screen" ? (
         <div>
+          {/* A label like the large search's, so the two controls line up. */}
+          <span aria-hidden className="mb-1.5 block text-sm font-medium text-primary">
+            {t.search.fullScreenLabel}
+          </span>
           <Search
             {...common}
             context={t.search.context}
@@ -255,7 +261,7 @@ export function SearchDemo({ variant }: { variant: "floating" | "inline" | "larg
           label={variant === "large" ? t.search.label : undefined}
         />
       )}
-      <Outcome label={t.search.searched} value={searched} />
+      <Outcome label={t.search.searched} value={searched} className="mt-auto" />
     </div>
   );
 }
@@ -355,7 +361,7 @@ export function FiltersInContextDemo() {
 
   return (
     <div className="flex w-full flex-col gap-3">
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-2">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-2 sm:grid-cols-[minmax(0,1fr)_auto_auto]">
         <Field
           label={f.searchLabel}
           hiddenLabel
@@ -383,12 +389,6 @@ export function FiltersInContextDemo() {
             <Filters {...filterProps} showActive={false} />
           </OverlayContent>
         </Overlay>
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p role="status" className="text-sm font-medium text-primary">
-          {f.results(shown.length)}
-        </p>
         <Select
           label={f.sortLabel}
           hiddenLabel
@@ -399,10 +399,16 @@ export function FiltersInContextDemo() {
             { value: "name", label: f.sorts[1]! },
             { value: "price", label: f.sorts[2]! },
           ]}
-          className="w-48"
+          className="col-span-2 sm:col-span-1 sm:w-48"
         />
       </div>
-      <ActiveFilters {...filterProps} />
+
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <p role="status" className="text-sm font-medium text-primary">
+          {f.results(shown.length)}
+        </p>
+        <ActiveFilters {...filterProps} />
+      </div>
 
       {sorted.length ? (
         <ul className="divide-y divide-border rounded-md border border-border">
@@ -431,5 +437,37 @@ export function FiltersDemo({ initial }: { initial: FilterSelection }) {
       onClear={() => setSelected({})}
       className="w-full"
     />
+  );
+}
+
+/**
+ * One option at zero, checked: it stays only because it is checked. Uncheck it
+ * and it leaves the list — the sentence under it says which case is showing.
+ */
+export function ZeroFilterDemo() {
+  const f = t.filters;
+  const category = f.groups[0]!;
+  const [selected, setSelected] = useState<FilterSelection>({ category: ["wallets"] });
+  const checked = (selected.category ?? []).includes("wallets");
+  return (
+    <div className="flex w-full flex-col gap-3">
+      <Filters
+        groups={[category]}
+        selected={selected}
+        onToggle={(group, value) => setSelected((current) => toggleFilterValue(current, group, value))}
+        onClear={() => setSelected({})}
+        className="w-full"
+      />
+      <p role="status" className="text-sm text-secondary">
+        {checked ? f.zeroChecked : f.zeroGone}
+      </p>
+      {checked ? null : (
+        <div>
+          <Button variant="secondary" size="sm" onClick={() => setSelected({ category: ["wallets"] })}>
+            {f.zeroReset}
+          </Button>
+        </div>
+      )}
+    </div>
   );
 }

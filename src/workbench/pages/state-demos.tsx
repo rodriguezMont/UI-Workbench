@@ -9,6 +9,8 @@ import { ProgressBar, RouteProgress } from "@/components/ui/progress";
 import { cn } from "@/lib/cn";
 import { messages } from "@/messages";
 
+import { State } from "../Piece";
+
 /**
  * The live demos of the States section, kept apart from the section page so
  * the page stays a list of pieces and states.
@@ -77,8 +79,11 @@ export function CardSkeletonDemo() {
   );
 }
 
-/** The same list with data — and a button that loads it again, to watch the swap. */
-export function LoadedCardsDemo() {
+/**
+ * The same list with data — and "Load again" beside the state's label, to
+ * watch the swap without the button taking a line under the cards.
+ */
+export function LoadedCardsState({ label, note }: { label: string; note: string }) {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (!loading) return;
@@ -87,22 +92,25 @@ export function LoadedCardsDemo() {
   }, [loading]);
 
   return (
-    <div className="flex w-full flex-col gap-3">
+    <State
+      label={label}
+      note={note}
+      action={
+        <Button variant="secondary" size="sm" onClick={() => setLoading(true)} disabled={loading}>
+          {t.loading.again}
+        </Button>
+      }
+    >
       {loading ? (
         <CardSkeletonDemo />
       ) : (
-        <div className="space-y-3">
+        <div className="w-full space-y-3">
           {t.loading.projects.map((p) => (
             <ProjectCard key={p.name} {...p} />
           ))}
         </div>
       )}
-      <div>
-        <Button variant="secondary" size="sm" onClick={() => setLoading(true)} disabled={loading}>
-          {t.loading.again}
-        </Button>
-      </div>
-    </div>
+    </State>
   );
 }
 
