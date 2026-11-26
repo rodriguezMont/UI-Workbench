@@ -350,30 +350,47 @@ export function State({
   label,
   note,
   wide,
+  fill,
+  action,
   children,
 }: {
   label: string;
   note?: string;
   wide?: boolean;
+  /**
+   * The demo takes the row's full height. For panels side by side — two error
+   * states, two stat cards — so neighbors end on the same line.
+   */
+  fill?: boolean;
+  /**
+   * A control that drives the demo — "Load again" — set beside the label, so
+   * it takes no line of its own under the demo.
+   */
+  action?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const hasNotes = useContext(NotesContext);
   return (
     // `min-w-0`: a wide child — a full-width input, a long file name — would
     // burst the grid column without it.
-    <div className={cn("min-w-0", wide && "lg:col-span-2")}>
-      <div className="mb-2.5">
-        <span className="block truncate text-xs font-medium uppercase leading-4 tracking-wide text-subtle">
-          {label}
-        </span>
-        {hasNotes ? (
-          // `data-note`: prose ABOUT the demo, kept apart from the demo itself.
-          <span data-note className="mt-0.5 block h-4 truncate text-xs leading-4 text-secondary">
-            {note}
+    <div className={cn("min-w-0", wide && "lg:col-span-2", fill && "flex flex-col")}>
+      <div className="mb-2.5 flex items-end justify-between gap-3">
+        <div className="min-w-0">
+          <span className="block truncate text-xs font-medium uppercase leading-4 tracking-wide text-subtle">
+            {label}
           </span>
-        ) : null}
+          {hasNotes ? (
+            // `data-note`: prose ABOUT the demo, kept apart from the demo itself.
+            <span data-note className="mt-0.5 block h-4 truncate text-xs leading-4 text-secondary">
+              {note}
+            </span>
+          ) : null}
+        </div>
+        {/* Negative margins: the button is taller than the label and note, and
+            must not push the demo below its neighbors. */}
+        {action ? <div className="-my-1.5 shrink-0">{action}</div> : null}
       </div>
-      <div className="flex flex-wrap items-center gap-3">{children}</div>
+      <div className={cn("flex flex-wrap gap-3", fill ? "flex-1 items-stretch" : "items-center")}>{children}</div>
     </div>
   );
 }

@@ -95,7 +95,8 @@ export function ChartState(props: ChartStateProps) {
     shape === "plot" ? "min-h-[270px] justify-center py-6 sm:min-h-[318px]" : shape === "meter" ? "py-5" : undefined;
 
   return (
-    <figure className={cn("w-full", className)}>
+    // A column, so a panel stretched by its row grows under its title.
+    <figure className={cn("flex w-full flex-col", className)}>
       <figcaption className="text-sm font-medium text-primary">{title}</figcaption>
 
       {props.state === "loading" ? (
@@ -107,7 +108,7 @@ export function ChartState(props: ChartStateProps) {
           title={props.message}
           description={props.description}
           icon={props.icon ?? ChartNoAxesColumn}
-          className={cn("mt-3", panel)}
+          className={cn("mt-3 flex-1 justify-center", panel)}
         >
           {props.children}
         </Empty>
@@ -118,7 +119,7 @@ export function ChartState(props: ChartStateProps) {
           onRetry={props.onRetry}
           code={props.code}
           alive={props.alive}
-          className={cn("mt-3", panel)}
+          className={cn("mt-3 flex-1", panel)}
         />
       )}
     </figure>

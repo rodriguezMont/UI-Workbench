@@ -58,7 +58,7 @@ export function Empty({
         // `w-full` because this is a PANEL that takes the place of a whole
         // list. Without it, as a flex child, it shrinks to its content and
         // sits against one edge with half the screen empty beside it.
-        "flex w-full flex-col items-center rounded-lg border border-dashed border-border-strong bg-surface px-6 py-10 text-center text-secondary",
+        "flex w-full flex-col items-center justify-center rounded-lg border border-dashed border-border-strong bg-surface px-6 py-10 text-center text-secondary",
         className,
       )}
     >

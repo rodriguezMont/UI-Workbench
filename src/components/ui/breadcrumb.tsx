@@ -38,7 +38,9 @@ export type Crumb = {
 export function Breadcrumb({ items, className }: { items: readonly Crumb[]; className?: string }) {
   return (
     <nav aria-label={messages.ui.breadcrumb.label} className={className}>
-      <ol className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1 text-sm text-secondary">
+      {/* A wrapped trail gets air between its rows: tight, the second row
+          read as the first one's underline. */}
+      <ol className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-2.5 text-sm text-secondary">
         {items.map((crumb, i) => {
           const current = i === items.length - 1;
           return (
