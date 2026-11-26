@@ -26,7 +26,7 @@ let canvas: CanvasRenderingContext2D | null | undefined;
  * CSS color the browser computes (`oklch()`, `color-mix()`, a translucent
  * ink) comes out as sRGB, already composited. `null` where there is no canvas.
  */
-function paint(...layers: string[]): Rgba | null {
+export function paint(...layers: string[]): Rgba | null {
   if (canvas === undefined) {
     canvas = typeof document === "undefined" ? null : (document.createElement("canvas").getContext("2d", { willReadFrequently: true }) ?? null);
   }
