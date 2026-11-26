@@ -12,8 +12,8 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 1. **Inventory** of the components to port — done.
 2. **Repository skeleton**, neutral tokens and the blocklist guard — done.
 3. **Components, group by group** — done: every registry piece is built.
-4. **Workbench and approval flow** — done. Still to do here: the Playwright
-   layout ruler and live contrast measurement.
+4. **Workbench and approval flow** — done, with live contrast (#26). Still
+   to do here: the Playwright layout ruler.
 5. **Brand guide** — how to rebrand the tokens and the logo.
 
 ## Merged so far
@@ -47,13 +47,16 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 | #25 | Polish 8: Navigation — states and explanations for 8 pieces; shell sketches, a sticky header, filters in context with live counts; live demos in `nav-demos.tsx` |
 | #26 | Polish 9: Foundation — a State colors piece; a contrast table on Roles measured from the painted page; logo heights measured; the WCAG math moved to `lib/contrast.ts` |
 | #27 | `usePendingFocus` keeps the target while a surviving menu closes; the photo gallery drops its local workaround |
+| #28 | Review: the Logo piece laid out by forms, sizes in use, measured grounds, one ink, minimum, clear space and don'ts; a stacked form and a one-ink version of the logo; Button states paired |
+| #29 | Review: form data validated by its kind — date, ZIP, card and expiry masks refuse impossible input; a name rule and tighter ceilings; live error demos; a wider country list |
+| #30 | Review: the route bar shown between sections (section imports tracked); equal heights for paired cards (`State` `fill` and `action`); a stat with no data keeps its shape; aligned search, filters, header frames and map |
 
 #10 to #15 were built in parallel by six builder agents, one per group, each
 in its own git worktree. Each group was then integrated one at a time: the
 diff read for leftovers from the source, a rebase onto `main`, the workbench
 checked in the browser, and a draft PR. They were merged in the order listed.
 
-Health on `main`: 667 tests passing (one skipped: it only runs while some
+Health on `main`: 673 tests passing (one skipped: it only runs while some
 piece is still to build), type-check, lint and build clean, guard clean.
 
 ## Component status
@@ -66,35 +69,21 @@ workbench: the map shows 0 of 71.
 
 ## Next steps
 
-1. **Polish pass**, from a side-by-side review against the source library
-   (every page, piece and state at 1280 light, 1280 dark and 375). The
-   components were ported faithfully; what fell short is the workbench layer:
-   explanation, states, staging and finish. In order:
-   1. Bugs in the demos and three component defects (#17). Done.
-   2. The frame: section intros, explanation boxes with bold leads, the
-      stage light and glass cards in dark, more air between pieces (#18).
-      Done.
-   3. Section by section, one PR each: an explanation box on every piece and
-      a note on every state; the missing states (about half of the source's).
-      Done: Primitives (#19), Forms fields and choices (#20, which also split
-      `select` into single, search and multiple), Forms dates, files and
-      images (#21), Data (#22, which also split `stat` into `stat` and
-      `stat-group`, added a Dashboard sector, pinned "today" to October 1,
-      2026 and made the demo numbers add up across pieces), States and
-      Overlay (#23), Navigation (#25; Content already met the standard —
-      only the map drawing's rounded blocks and pin on the plaza remain, a
-      component change), and Foundation (#26, which added the State colors
-      piece and a contrast table measured from the painted page). The
-      section-by-section pass is complete; left over are two small component
-      touches noted for the general review — the map drawing above, and the
-      logo's usage rules (sizes, clear space, don'ts), which wait for the
-      brand guide in Block 5.
-2. **General review in the workbench**, piece by piece, with approvals.
-   Still noted for it: the footer's thick gradient edge from the source
-   became a plain top border — restore it or keep it plain.
-3. **Block 4 leftovers**: the Playwright layout ruler (375 / 768 / 1280 /
+1. **Polish pass** against the source library — done: bugs (#17), the frame
+   (#18), and one PR per section (#19–#26), with the states the review found
+   missing, a note on every state and an explanation on every piece.
+2. **General review in the workbench** — the review rounds are done: Logo and
+   Button (#28), form data rules (#29), Data, States, Navigation and Content
+   (#30). **The approval ledger is still empty on `main`** (2026-11-25):
+   approving happens on the dev server (`npm run dev`), which writes
+   `src/workbench/approvals.json`; that file is then committed. Still open for
+   a decision: the footer's thick gradient edge from the source became a plain
+   top border — restore it or keep it plain. Two small component touches wait
+   too: the map drawing's rounded blocks and a pin on the plaza, and the logo's
+   final usage rules, which come with the brand guide.
+3. **Block 4 leftover**: the Playwright layout ruler (375 / 768 / 1280 /
    1920), from the source's `measure-workbench`, `measure-touch` and the
-   shared ruler library, and live contrast measurement on the Roles page.
+   shared ruler library. Live contrast on the Roles page is done (#26).
 4. **Block 5**: the brand guide.
 
 Optional, waiting for a decision: require the CI `Check` status in the `main`
