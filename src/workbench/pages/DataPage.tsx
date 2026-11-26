@@ -217,7 +217,7 @@ export function DataPage() {
           <State label={t.stat.flat} note={t.stat.flatNote}>
             <Stat className="w-full" label={t.stat.upgrades} value={TOTALS.upgrades.september} comparison={vsAugust(TOTALS.upgrades.august)} trend={UPGRADES_TREND} />
           </State>
-          <State label={t.stat.noBase} note={t.stat.noBaseNote}>
+          <State label={t.stat.noBase} note={t.stat.noBaseNote} fill>
             <Stat
               className="w-full"
               label={t.stat.demoRequests}
@@ -226,8 +226,8 @@ export function DataPage() {
               trend={DEMO_TREND}
             />
           </State>
-          <State label={t.stat.noData} note={t.stat.noDataNote}>
-            <Stat className="w-full" label={t.stat.refunds} value={null} />
+          <State label={t.stat.noData} note={t.stat.noDataNote} fill>
+            <Stat className="w-full" label={t.stat.refunds} value={null} trend={{ values: [], label: t.stat.refunds }} />
           </State>
           <PieceNote paragraphs={t.stat.explain} />
         </Piece>
@@ -476,7 +476,7 @@ export function DataPage() {
           <State label={t.chartStates.loadingMeter} note={t.chartStates.loadingMeterNote}>
             <ChartState title={t.chartStates.signupsGoal} shape="meter" state="loading" />
           </State>
-          <State label={t.chartStates.empty} note={t.chartStates.emptyNote}>
+          <State label={t.chartStates.empty} note={t.chartStates.emptyNote} fill>
             <ChartState
               title={t.chartStates.signupsDaily}
               shape="plot"
@@ -489,7 +489,7 @@ export function DataPage() {
               </Button>
             </ChartState>
           </State>
-          <State label={t.chartStates.newRegion} note={t.chartStates.newRegionNote}>
+          <State label={t.chartStates.newRegion} note={t.chartStates.newRegionNote} fill>
             <ChartState
               title={t.chartStates.centralVisitors}
               shape="plot"
@@ -498,7 +498,7 @@ export function DataPage() {
               description={t.chartStates.newHint}
             />
           </State>
-          <State label={t.chartStates.error} note={t.chartStates.errorNote}>
+          <State label={t.chartStates.error} note={t.chartStates.errorNote} fill>
             <ChartState
               title={t.chartStates.visitors}
               shape="plot"
@@ -509,7 +509,7 @@ export function DataPage() {
               alive={false}
             />
           </State>
-          <State label={t.chartStates.errorMeter} note={t.chartStates.errorMeterNote}>
+          <State label={t.chartStates.errorMeter} note={t.chartStates.errorMeterNote} fill>
             <ChartState
               title={t.chartStates.signupsGoal}
               shape="meter"

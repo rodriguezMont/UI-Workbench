@@ -25,10 +25,10 @@ export function StatesPage() {
   return (
     <SectionPage id="states">
       <Piece id="empty">
-        <State label={t.empty.search} note={t.empty.searchNote}>
+        <State label={t.empty.search} note={t.empty.searchNote} fill>
           <EmptySearchDemo />
         </State>
-        <State label={t.empty.action} note={t.empty.actionNote}>
+        <State label={t.empty.action} note={t.empty.actionNote} fill>
           <Empty icon={FolderPlus} title={t.empty.withAction} description={t.empty.withActionHint}>
             <div className="flex flex-wrap justify-center gap-2">
               <Button>{t.empty.create}</Button>
@@ -53,7 +53,7 @@ export function StatesPage() {
       </Piece>
 
       <Piece id="error">
-        <State label={t.error.timeout} note={t.error.timeoutNote}>
+        <State label={t.error.timeout} note={t.error.timeoutNote} fill>
           <ErrorState
             alive={false}
             title={t.error.timeoutTitle}
@@ -62,7 +62,7 @@ export function StatesPage() {
             code="req_8f3a21c7"
           />
         </State>
-        <State label={t.error.offline} note={t.error.offlineNote}>
+        <State label={t.error.offline} note={t.error.offlineNote} fill>
           <ErrorState
             alive={false}
             icon={WifiOff}

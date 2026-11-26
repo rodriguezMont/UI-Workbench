@@ -10,6 +10,7 @@ import { LedgerProvider } from "./ledger";
 import { Home } from "./pages/Home";
 import { PAGES } from "./pages";
 import { SECTIONS } from "./registry";
+import { useRouteLoading } from "./route-loading";
 import { Shell } from "./Shell";
 
 /**
@@ -26,21 +27,23 @@ function ScrollToTop() {
   return null;
 }
 
-/**
- * While a section's code arrives: the shape of a section page, and the route
- * bar at the top of the window — the one the Progress piece shows embedded.
- */
+/** While a section's code arrives on the first load: the shape of a section page. */
 function SectionLoading() {
   return (
-    <>
-      <RouteProgress active />
-      <Loading label={messages.workbench.loadingSection}>
-        <Skeleton className="h-9 w-48" />
-        <Skeleton className="h-5 w-80 max-w-full" />
-        <Skeleton className="mt-6 h-40 w-full" />
-      </Loading>
-    </>
+    <Loading label={messages.workbench.loadingSection}>
+      <Skeleton className="h-9 w-48" />
+      <Skeleton className="h-5 w-80 max-w-full" />
+      <Skeleton className="mt-6 h-40 w-full" />
+    </Loading>
   );
+}
+
+/**
+ * The route bar at the top of the window — the one the Progress piece shows
+ * embedded — for as long as a section's code is on its way.
+ */
+function RouteBar() {
+  return <RouteProgress active={useRouteLoading()} />;
 }
 
 function NotFound() {
@@ -62,6 +65,7 @@ export function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <RouteBar />
       <LedgerProvider>
         <TooltipProvider delayDuration={200}>
           <Shell>

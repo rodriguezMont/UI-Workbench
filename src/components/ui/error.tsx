@@ -108,7 +108,7 @@ export function ErrorState({
       className={cn(
         // `w-full`, like `Empty`: a panel that takes the place of the content
         // that failed, not an inline notice.
-        "flex w-full flex-col items-center rounded-lg border-2 border-error bg-surface px-6 py-10 text-center",
+        "flex w-full flex-col items-center justify-center rounded-lg border-2 border-error bg-surface px-6 py-10 text-center",
         className,
       )}
     >

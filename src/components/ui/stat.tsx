@@ -1,4 +1,4 @@
-import { Children, createContext, useContext } from "react";
+import { Children, createContext, useContext, useId } from "react";
 import { Minus, TrendingDown, TrendingUp } from "lucide-react";
 
 import { CHART_COLORS, deltaOf, sparkPoints } from "@/lib/chart";
@@ -95,6 +95,47 @@ function Sparkline({ values, label }: StatTrend) {
 }
 
 /**
+ * The trend's place when there is no data: a dashed line that breaks and
+ * fades at both ends. Decoration only — the sentence above says it.
+ */
+function UnavailableLine() {
+  const id = useId();
+  const W = 120;
+  const H = 32;
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="block h-8 w-full overflow-visible">
+      <defs>
+        <linearGradient id={id} x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stopColor="var(--border-strong)" stopOpacity="0" />
+          <stop offset="0.25" stopColor="var(--border-strong)" />
+          <stop offset="0.75" stopColor="var(--border-strong)" />
+          <stop offset="1" stopColor="var(--border-strong)" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      {/* Two segments with a gap between them: a line that broke. */}
+      <polyline
+        points="0,20 18,14 34,22 50,12"
+        fill="none"
+        stroke={`url(#${id})`}
+        strokeWidth={2}
+        strokeDasharray="4 5"
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+      />
+      <polyline
+        points="68,18 84,24 100,13 120,19"
+        fill="none"
+        stroke={`url(#${id})`}
+        strokeWidth={2}
+        strokeDasharray="4 5"
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}
+
+/**
  * The change said in words — "12% higher than in October" — with the color
  * of good and bad. Exported because the radial KPI says its change the same
  * way: two copies would drift at the first fix.
@@ -157,6 +198,11 @@ export function Stat({
    */
   value: number | null;
   comparison?: StatComparison;
+  /**
+   * The line under the number. **With `value` null, a trend still passed
+   * draws as unavailable** — a broken dashed line in the place of the data —
+   * so the card keeps the height of its neighbors in a row of trends.
+   */
   trend?: StatTrend;
   /** Without it, the surrounding group's; on its own, the panel. */
   variant?: StatVariant;
@@ -201,7 +247,20 @@ export function Stat({
     >
       <dt className="row-start-1 text-sm text-secondary">{label}</dt>
       {value === null ? (
-        <dd className="row-start-2 self-end text-base text-secondary">{m.noData}</dd>
+        <>
+          {/* The four rows stay: a dash where the number goes, the sentence
+              where the change goes, and a broken line where the trend goes —
+              the card says "nothing here yet" in the shape of the data. */}
+          <dd aria-hidden className="row-start-2 text-3xl font-bold text-subtle">
+            —
+          </dd>
+          <dd className="row-start-3 text-sm text-secondary">{m.noData}</dd>
+          {trend ? (
+            <dd aria-hidden className="row-start-4 pt-2">
+              <UnavailableLine />
+            </dd>
+          ) : null}
+        </>
       ) : (
         <>
           {/* Proportional digits: a large number standing alone. `tabular-nums`
