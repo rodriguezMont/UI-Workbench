@@ -10,7 +10,8 @@ import { PhoneField } from "@/components/ui/masked-field/phone-field";
 import { Slider } from "@/components/ui/slider";
 import { Switch, useSwitchSave } from "@/components/ui/switch";
 import { TimePicker } from "@/components/ui/time-picker";
-import { dateToIso, formatTime, isoToDisplay, splitDateTime } from "@/lib/date-time";
+import { checkPhone } from "@/lib/phone";
+import { checkDate, dateToIso, formatTime, isoToDisplay, splitDateTime } from "@/lib/date-time";
 import { messages } from "@/messages";
 
 const t = messages.workbench.demos;
@@ -36,7 +37,7 @@ export function FieldFormDemo() {
   const [error, setError] = useState<string>();
   return (
     <div className="grid w-full gap-3 sm:grid-cols-2">
-      <Field label={f.name} icon="name" placeholder={f.namePlaceholder} autoComplete="name" />
+      <Field label={f.name} icon="name" placeholder={f.namePlaceholder} autoComplete="name" allow="name" />
       <Field
         label={f.email}
         icon="email"
@@ -116,7 +117,7 @@ export function ZipLookupDemo() {
         onBlur={lookUp}
       />
       <div className="grid grid-cols-[1fr_6rem] gap-3">
-        <Field label={m.cityLabel} readOnly value={place?.city ?? ""} placeholder="Springfield" hint={place ? m.filledHint : undefined} />
+        <Field label={m.cityLabel} readOnly allow="name" value={place?.city ?? ""} placeholder="Springfield" hint={place ? m.filledHint : undefined} />
         <Field label={m.stateLabel} readOnly value={place?.state ?? ""} placeholder="IL" />
       </div>
     </div>
@@ -270,5 +271,62 @@ export function PeriodDemo() {
         error={backwards ? d.endsBefore(isoToDisplay(startParts.date), formatTime(startParts.time)) : undefined}
       />
     </div>
+  );
+}
+
+/**
+ * A masked field whose error is checked, not typed: shown at first, cleared
+ * while the person edits, and checked again when they leave the field.
+ */
+function useCheckedValue(initial: string, check: (value: string) => string | null) {
+  const [value, setValue] = useState(initial);
+  const [error, setError] = useState<string | undefined>(() => check(initial) ?? undefined);
+  return {
+    value,
+    error,
+    onValueChange: (next: string) => {
+      setValue(next);
+      setError(undefined);
+    },
+    onBlur: () => setError(check(value) ?? undefined),
+  };
+}
+
+const zipError = (value: string) => {
+  const digits = value.replace(/\D/g, "").length;
+  return digits > 0 && digits < 5 ? t.masked.zipMissing(5 - digits) : null;
+};
+
+/** The ZIP code with its error, checked again whenever the field is left. */
+export function ZipErrorDemo() {
+  const zip = useCheckedValue("9021", zipError);
+  return <MaskedField mask="zip" label={t.masked.zipLabel} icon="zip" placeholder="90210" {...zip} />;
+}
+
+/** The date mask: impossible digits never land, and a day that does not exist is said on leaving. */
+export function DateMaskDemo() {
+  const date = useCheckedValue("", (value) => checkDate(value));
+  return <MaskedField mask="date" label={t.masked.dateLabel} icon="date" placeholder="MM/DD/YYYY" {...date} />;
+}
+
+/** A US number with an area code that does not exist, checked on leaving. */
+export function PhoneErrorDemo() {
+  const phone = useCheckedValue("(123) 456-7890", (value) => (value ? checkPhone(value, "US") : null));
+  return <MaskedField mask="phone" label={t.masked.phoneLabel} icon="phone" placeholder="(213) 373-4253" {...phone} />;
+}
+
+/** Opening hours: two pickers, and the group's error when closing comes first. */
+export function HoursDemo() {
+  const f = t.fieldset;
+  const [opens, setOpens] = useState("18:00");
+  const [closes, setCloses] = useState("09:00");
+  const backwards = Boolean(opens && closes && closes <= opens);
+  return (
+    <Fieldset legend={f.hoursLegend} error={backwards ? f.hoursError : undefined}>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <TimePicker label={f.opens} value={opens} onValueChange={setOpens} />
+        <TimePicker label={f.closes} value={closes} onValueChange={setCloses} />
+      </div>
+    </Fieldset>
   );
 }

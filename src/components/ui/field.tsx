@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { CircleCheck, CircleX } from "lucide-react";
 
 import { cn } from "@/lib/cn";
-import { TEXT_LIMITS, defaultMaxLength } from "@/lib/text-limits";
+import { NAME_LIMIT, TEXT_LIMITS, defaultMaxLength, keepNameCharacters } from "@/lib/text-limits";
 import { messages } from "@/messages";
 
 import { FIELD_ICONS, type FieldIcon } from "./field-icons";
@@ -83,6 +83,12 @@ type Adornments = {
   loadingLabel?: string;
   /** What a screen reader hears when the value is confirmed. */
   validLabel?: string;
+  /**
+   * What the value may hold, enforced as the person types. `name` keeps
+   * letters, spaces, apostrophes, hyphens and periods only, and caps the length
+   * at `NAME_LIMIT` — for people, cities, a name on a card.
+   */
+  allow?: "name";
 };
 
 /** The single-line field's props — the base of the password and masked fields. */
@@ -134,6 +140,7 @@ export function Field(props: InputFieldProps | TextareaProps) {
     status,
     loadingLabel = m.processing,
     validLabel = m.confirmed,
+    allow,
     ...inputRest
   } = as === "textarea" ? ({} as Adornments) : (rest as Adornments);
   const isText = (n: React.ReactNode) => typeof n === "string" || typeof n === "number";
@@ -240,8 +247,21 @@ export function Field(props: InputFieldProps | TextareaProps) {
             // Every free-text field has a ceiling, even when nobody asked.
             maxLength={
               (inputRest as React.ComponentProps<"input">).maxLength ??
-              defaultMaxLength((inputRest as React.ComponentProps<"input">).type)
+              (allow === "name" ? NAME_LIMIT : defaultMaxLength((inputRest as React.ComponentProps<"input">).type))
             }
+            onChange={(event) => {
+              if (allow === "name") {
+                const input = event.currentTarget;
+                const kept = keepNameCharacters(input.value);
+                if (kept !== input.value) {
+                  // Keep the caret where the person was typing, minus what was dropped.
+                  const caret = (input.selectionStart ?? input.value.length) - (input.value.length - kept.length);
+                  input.value = kept;
+                  input.setSelectionRange(caret, caret);
+                }
+              }
+              (inputRest as React.ComponentProps<"input">).onChange?.(event);
+            }}
             aria-invalid={invalid || undefined}
             aria-describedby={describedBy}
             aria-busy={loading || undefined}

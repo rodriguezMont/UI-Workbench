@@ -96,6 +96,12 @@ type SelectProps = (Single | Multiple) & {
   searchable?: boolean;
   /** What the search box says before the person types. */
   searchPlaceholder?: string;
+  /**
+   * A list wider than the field (up to 20rem, never past the screen) — for a
+   * narrow trigger whose options are long, like a country next to a phone
+   * number. By default the list matches the field's width.
+   */
+  wideList?: boolean;
   className?: string;
 };
 
@@ -138,6 +144,7 @@ export function Select(props: SelectProps) {
     icon,
     searchable = false,
     searchPlaceholder = m.search,
+    wideList = false,
     className,
   } = props;
   const base = useId();
@@ -587,7 +594,10 @@ export function Select(props: SelectProps) {
                 returnFocus(trigger.current);
               }}
               className={cn(
-                "z-50 flex w-[var(--radix-popover-trigger-width)] flex-col overflow-hidden",
+                "z-50 flex flex-col overflow-hidden",
+                wideList
+                  ? "w-[max(var(--radix-popover-trigger-width),20rem)] max-w-[calc(100vw-2rem)]"
+                  : "w-[var(--radix-popover-trigger-width)]",
                 "max-h-[min(20rem,var(--radix-popover-content-available-height))]",
                 "rounded-md border border-border bg-surface-raised floating-edge",
                 "animate-[ui-fade-in_var(--motion-fast)_var(--motion-ease-out)]",

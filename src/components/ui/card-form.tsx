@@ -113,6 +113,7 @@ export function CardForm({ legend = m.legend, hint, error, onChange, disabled, c
           label={m.name}
           placeholder={m.namePlaceholder}
           autoComplete="cc-name"
+          allow="name"
           autoCapitalize="characters"
           autoCorrect="off"
           spellCheck={false}

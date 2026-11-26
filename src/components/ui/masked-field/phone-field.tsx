@@ -99,13 +99,14 @@ export function PhoneField({
       {name ? <input type="hidden" name={name} value={toE164(number, country)} /> : null}
       {/* Side by side only with room for both — by the field's own width, not
           the screen's: in a narrow column of a wide form the number would cut,
-          and on a phone the country would truncate. Below 24rem, they stack. */}
-      <div className="grid items-start gap-2 @min-[24rem]:grid-cols-[9.5rem_minmax(0,1fr)]">
+          and on a phone the country would truncate. Below 26rem, they stack. */}
+      <div className="grid items-start gap-2 @min-[26rem]:grid-cols-[11rem_minmax(0,1fr)]">
         <Select
           label={m.countryCodeOf(label)}
           hiddenLabel
           searchable
           searchPlaceholder={m.countrySearch}
+          wideList
           options={options}
           value={country}
           onValueChange={(next) => {

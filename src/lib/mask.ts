@@ -17,8 +17,11 @@ export type MaskKind = "zip" | "phone" | "date" | "currency" | "integer";
 export type MaskSpec = {
   /** How many significant characters fit. */
   max: number;
-  /** Is the character at position `i` (0-based) accepted? It arrives upper-cased. */
-  accepts: (ch: string, i: number) => boolean;
+  /**
+   * Is the character at position `i` (0-based) accepted, after `before` —
+   * the significant characters already kept? It arrives upper-cased.
+   */
+  accepts: (ch: string, i: number, before: string) => boolean;
   /** Turns the significant characters into displayed text. Partial while typing. */
   format: (significant: string) => string;
   /**
@@ -56,12 +59,37 @@ function withSeparators(significant: string, cuts: [number, string][]): string {
   return out;
 }
 
+/**
+ * One digit of MM/DD/YYYY, given the digits before it: months 01–12, days
+ * 01–31, years 1000–2999. Each position only takes a digit that can still
+ * lead to a real date.
+ */
+function acceptsDateDigit(ch: string, i: number, before: string): boolean {
+  if (!DIGIT.test(ch)) return false;
+  const d = Number(ch);
+  switch (i) {
+    case 0: // month, tens
+      return d <= 1;
+    case 1: // month, units: 01–09 or 10–12
+      return before[0] === "0" ? d >= 1 : d <= 2;
+    case 2: // day, tens
+      return d <= 3;
+    case 3: // day, units: 01–09, 10–29, 30–31
+      return before[2] === "0" ? d >= 1 : before[2] === "3" ? d <= 1 : true;
+    case 4: // year, thousands
+      return d === 1 || d === 2;
+    default:
+      return true;
+  }
+}
+
 const SPECS: Record<MaskKind, MaskSpec> = {
-  // 12345 or 12345-6789 (ZIP+4).
+  // 12345. ZIP+4 is left out on purpose: forms ask for five digits, and the
+  // four extra ones looked like a phone number to whoever typed them.
   zip: {
-    max: 9,
+    max: 5,
     accepts: (ch) => DIGIT.test(ch),
-    format: (sig) => withSeparators(sig, [[5, "-"]]),
+    format: (sig) => sig,
   },
   // (213) 373-4253 — a national US number: area code, exchange, line.
   phone: {
@@ -75,10 +103,12 @@ const SPECS: Record<MaskKind, MaskSpec> = {
       return rest.length > 3 ? `(${area}) ${rest.slice(0, 3)}-${rest.slice(3)}` : `(${area}) ${rest}`;
     },
   },
-  // MM/DD/YYYY. Whether the day exists is a date check, not the mask's.
+  // MM/DD/YYYY. The mask refuses what can never be a date as it is typed —
+  // month 13, day 32, year 0999 — so "65/15/6155" cannot appear. Whether a
+  // given day exists in its month (02/30) is the date check's, on leaving.
   date: {
     max: 8,
-    accepts: (ch) => DIGIT.test(ch),
+    accepts: acceptsDateDigit,
     format: (sig) =>
       withSeparators(sig, [
         [2, "/"],
@@ -139,7 +169,7 @@ function collect(mask: Mask, raw: string): { out: string; onlyZeros: boolean } {
       onlyZeros = true;
       continue;
     }
-    if (spec.accepts(ch, out.length)) out += ch;
+    if (spec.accepts(ch, out.length, out)) out += ch;
   }
   return { out, onlyZeros };
 }

@@ -29,6 +29,10 @@ import { SectionPage } from "./SectionPage";
 import { CardFormDemo, FileRowsDemo, FileUploadDemo, ImageCropperDemo } from "./file-demos";
 import {
   DateDemo,
+  DateMaskDemo,
+  HoursDemo,
+  PhoneErrorDemo,
+  ZipErrorDemo,
   DateTimeDemo,
   FailedSwitchDemo,
   FarDateDemo,
@@ -63,7 +67,7 @@ export function FormsPage() {
           <FieldFormDemo />
         </State>
         <State label={t.field.plain} note={t.field.plainNote}>
-          <Field label={t.field.displayName} icon="name" hint={t.field.displayNameHint} placeholder={t.field.displayNamePlaceholder} />
+          <Field label={t.field.displayName} icon="name" allow="name" hint={t.field.displayNameHint} placeholder={t.field.displayNamePlaceholder} />
         </State>
         <State label={t.field.error} note={t.field.errorNote}>
           <Field
@@ -75,33 +79,25 @@ export function FormsPage() {
             error={t.field.emailError}
           />
         </State>
-        <State label={t.field.status} note={t.field.statusNote}>
-          {/* Stacked, not paired: the status sits at the field's end, and a
-              quarter-width field cut the value off under the spinner. */}
-          <div className="grid w-full gap-3">
-            <Field
-              label={t.field.address}
-              icon="address"
-              status="loading"
-              loadingLabel={t.field.looking}
-              placeholder={t.field.addressPlaceholder}
-              defaultValue="1600 Pennsylvania Ave"
-            />
-            <Field
-              label={t.field.verified}
-              icon="website"
-              status="valid"
-              validLabel={t.field.confirmed}
-              placeholder={t.field.websitePlaceholder}
-              defaultValue="example.com"
-            />
-          </div>
+        <State label={t.field.processing} note={t.field.processingNote}>
+          <Field
+            label={t.field.address}
+            icon="address"
+            status="loading"
+            loadingLabel={t.field.looking}
+            placeholder={t.field.addressPlaceholder}
+            defaultValue="1600 Pennsylvania Ave"
+          />
         </State>
-        <State label={t.field.adornments} note={t.field.adornmentsNote}>
-          <div className="grid w-full gap-3 sm:grid-cols-2">
-            <Field label={t.field.price} prefix="$" inputMode="decimal" placeholder={t.field.pricePlaceholder} defaultValue="49.00" />
-            <Field label={t.field.distance} suffix="mi" inputMode="numeric" placeholder={t.field.distancePlaceholder} defaultValue="25" />
-          </div>
+        <State label={t.field.confirmedState} note={t.field.confirmedNote}>
+          <Field
+            label={t.field.verified}
+            icon="website"
+            status="valid"
+            validLabel={t.field.confirmed}
+            placeholder={t.field.websitePlaceholder}
+            defaultValue="example.com"
+          />
         </State>
         <State label={t.field.textarea} note={t.field.textareaNote}>
           <Field as="textarea" label={t.field.about} hint={t.field.aboutHint} placeholder={t.field.aboutPlaceholder} maxLength={280} />
@@ -109,11 +105,17 @@ export function FormsPage() {
         <State label={t.field.disabled} note={t.field.disabledNote}>
           <Field label={t.field.plan} disabled placeholder={t.field.planPlaceholder} defaultValue="Team" hint={t.field.planReason} />
         </State>
+        <State label={t.field.hidden} note={t.field.hiddenNote} wide>
+          <Field label={t.field.search} hiddenLabel type="search" icon="search" placeholder={t.field.searchPlaceholder} />
+        </State>
         <State label={t.field.readOnly} note={t.field.readOnlyNote}>
           <Field label={t.field.accountId} readOnly placeholder={t.field.accountIdPlaceholder} defaultValue={t.field.accountIdValue} hint={t.field.accountIdHint} />
         </State>
-        <State label={t.field.hidden} note={t.field.hiddenNote}>
-          <Field label={t.field.search} hiddenLabel type="search" icon="search" placeholder={t.field.searchPlaceholder} />
+        <State label={t.field.adornments} note={t.field.adornmentsNote}>
+          <div className="grid w-full gap-3 sm:grid-cols-2">
+            <Field label={t.field.price} prefix="$" inputMode="decimal" placeholder={t.field.pricePlaceholder} defaultValue="49.00" maxLength={12} />
+            <Field label={t.field.distance} suffix="mi" inputMode="numeric" placeholder={t.field.distancePlaceholder} defaultValue="25" maxLength={5} />
+          </div>
         </State>
         <PieceNote paragraphs={t.field.explain} />
       </Piece>
@@ -157,7 +159,7 @@ export function FormsPage() {
           <MaskedField mask="phone" label={t.masked.phoneLabel} icon="phone" placeholder="(213) 373-4253" />
         </State>
         <State label={t.masked.date} note={t.masked.dateNote}>
-          <MaskedField mask="date" label={t.masked.dateLabel} icon="date" placeholder="MM/DD/YYYY" />
+          <DateMaskDemo />
         </State>
         <State label={t.masked.money} note={t.masked.moneyNote}>
           <div className="grid w-full gap-3 sm:grid-cols-2">
@@ -178,10 +180,10 @@ export function FormsPage() {
           />
         </State>
         <State label={t.masked.error} note={t.masked.errorNote}>
-          <MaskedField mask="zip" label={t.masked.zipLabel} icon="zip" placeholder="90210" defaultValue="9021" error={t.masked.zipMissing(1)} />
+          <ZipErrorDemo />
         </State>
         <State label={t.masked.notInCountry} note={t.masked.notInCountryNote}>
-          <MaskedField mask="phone" label={t.masked.phoneLabel} icon="phone" placeholder="(213) 373-4253" defaultValue="(123) 456-7890" error={messages.ui.phone.notInUS} />
+          <PhoneErrorDemo />
         </State>
         <State label={t.masked.international} note={t.masked.internationalNote} wide>
           <PhoneDemo />
@@ -263,20 +265,15 @@ export function FormsPage() {
         <State label={t.fieldset.grouping} note={t.fieldset.groupingNote} wide>
           <Fieldset legend={t.fieldset.legend} hint={t.fieldset.hint}>
             <div className="grid gap-3 sm:grid-cols-[2fr_1fr]">
-              <Field label={t.fieldset.street} icon="address" placeholder={t.fieldset.streetPlaceholder} autoComplete="address-line1" />
-              <Field label={t.fieldset.unit} placeholder={t.fieldset.unitPlaceholder} autoComplete="address-line2" />
-              <Field label={t.fieldset.city} placeholder={t.fieldset.cityPlaceholder} autoComplete="address-level2" />
+              <Field label={t.fieldset.street} icon="address" placeholder={t.fieldset.streetPlaceholder} autoComplete="address-line1" maxLength={100} />
+              <Field label={t.fieldset.unit} placeholder={t.fieldset.unitPlaceholder} autoComplete="address-line2" maxLength={20} />
+              <Field label={t.fieldset.city} placeholder={t.fieldset.cityPlaceholder} autoComplete="address-level2" allow="name" />
               <MaskedField mask="zip" label={t.fieldset.zip} icon="zip" placeholder="90210" autoComplete="postal-code" />
             </div>
           </Fieldset>
         </State>
         <State label={t.fieldset.groupError} note={t.fieldset.groupErrorNote}>
-          <Fieldset legend={t.fieldset.hoursLegend} error={t.fieldset.hoursError}>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Field label={t.fieldset.opens} icon="time" placeholder="09:00" defaultValue="18:00" />
-              <Field label={t.fieldset.closes} icon="time" placeholder="17:00" defaultValue="09:00" />
-            </div>
-          </Fieldset>
+          <HoursDemo />
         </State>
         <State label={t.fieldset.disabled} note={t.fieldset.disabledNote}>
           <Fieldset legend={t.fieldset.lockedLegend} hint={t.fieldset.lockedHint} disabled>

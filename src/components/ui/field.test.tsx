@@ -40,6 +40,19 @@ describe("Field", () => {
     expect(Number(screen.getByLabelText("Name").getAttribute("maxlength"))).toBeGreaterThan(0);
   });
 
+  it("a name field keeps letters, accents, spaces, apostrophes, hyphens and periods only", async () => {
+    render(<Field label="Full name" allow="name" />);
+    const input = screen.getByLabelText<HTMLInputElement>("Full name");
+    await userEvent.type(input, "Zoë O'Neil-Smith Jr. 3<script>");
+    expect(input.value).toBe("Zoë O'Neil-Smith Jr. script");
+    expect(Number(input.getAttribute("maxlength"))).toBe(100);
+
+    // A dropped digit leaves no double space behind.
+    await userEvent.clear(input);
+    await userEvent.type(input, "Jane 3 Doe");
+    expect(input.value).toBe("Jane Doe");
+  });
+
   it("keeps a read-only field out of the Tab order", () => {
     render(<Field label="Account ID" readOnly defaultValue="A-1029" />);
     expect(screen.getByLabelText("Account ID").tabIndex).toBe(-1);

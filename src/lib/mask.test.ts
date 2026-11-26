@@ -3,14 +3,14 @@ import { describe, expect, it } from "vitest";
 import { applyMask, maskWithCaret, nationalPhoneDigits } from "./mask";
 
 describe("ZIP code", () => {
-  it("formats five digits and ZIP+4", () => {
+  it("formats five digits, and stops there", () => {
     expect(applyMask("zip", "9021")).toBe("9021");
     expect(applyMask("zip", "90210")).toBe("90210");
-    expect(applyMask("zip", "902101234")).toBe("90210-1234");
+    expect(applyMask("zip", "902101234")).toBe("90210");
   });
 
-  it("drops letters and stops at nine digits", () => {
-    expect(applyMask("zip", "90a210-12345")).toBe("90210-1234");
+  it("drops letters and punctuation", () => {
+    expect(applyMask("zip", "90a2-10")).toBe("90210");
   });
 });
 
@@ -32,6 +32,18 @@ describe("date", () => {
   it("formats MM/DD/YYYY", () => {
     expect(applyMask("date", "1225")).toBe("12/25");
     expect(applyMask("date", "12252026")).toBe("12/25/2026");
+  });
+
+  it("refuses digits that can never make a month, a day or a year", () => {
+    // Typed "65/15/6155": 6 and 5 cannot start a month, 1 can; then 5 cannot
+    // follow a 1 in the month, 1 can — and the 5s and the 6 cannot start a day.
+    expect(applyMask("date", "65156155")).toBe("11");
+    expect(applyMask("date", "13")).toBe("1");
+    expect(applyMask("date", "00")).toBe("0");
+    expect(applyMask("date", "0132")).toBe("01/3");
+    expect(applyMask("date", "0130")).toBe("01/30");
+    expect(applyMask("date", "01310999")).toBe("01/31");
+    expect(applyMask("date", "01311999")).toBe("01/31/1999");
   });
 });
 
