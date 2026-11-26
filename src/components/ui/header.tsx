@@ -113,8 +113,11 @@ export function Header({
           </div>
         ) : null}
 
-        <div className="ml-auto flex min-w-0 items-center gap-1 md:gap-4">
-          {actions}
+        {/* 8px between controls on phones: a 36px box plus 8 is the 44px a
+            touch area needs, so two neighbors' areas never overlap. The actions
+            keep their size; the logo is what gives way. */}
+        <div className="ml-auto flex min-w-0 items-center gap-2 md:gap-4">
+          {actions ? <div className="flex shrink-0 items-center gap-2">{actions}</div> : null}
           {search ? (
             <Search
               {...search}
