@@ -12,6 +12,8 @@
 
 **71 pieces · 8 sections · light and dark · WCAG 2.2 AA, measured by tests**
 
+**English** · [Português](README.pt-BR.md)
+
 </div>
 
 <p align="center">

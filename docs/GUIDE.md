@@ -181,3 +181,6 @@ message or a branch name. The list of those terms is itself never committed.
 
 Everything written in the repository — code, comments, documentation, commit
 messages, branch names — is in English. Commits follow Conventional Commits.
+The one exception is `README.pt-BR.md`, the Portuguese translation of the
+home page: it says the same as `README.md`, and a change to one is made to
+both.
