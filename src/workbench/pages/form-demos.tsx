@@ -1,12 +1,16 @@
 import { useRef, useState } from "react";
 
 import { Checkbox } from "@/components/ui/checkbox";
+import { DatePicker } from "@/components/ui/date-picker";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
 import { Field } from "@/components/ui/field";
 import { Fieldset } from "@/components/ui/fieldset";
 import { MaskedField } from "@/components/ui/masked-field";
 import { PhoneField } from "@/components/ui/masked-field/phone-field";
 import { Slider } from "@/components/ui/slider";
 import { Switch, useSwitchSave } from "@/components/ui/switch";
+import { TimePicker } from "@/components/ui/time-picker";
+import { dateToIso, formatTime, isoToDisplay, splitDateTime } from "@/lib/date-time";
 import { messages } from "@/messages";
 
 const t = messages.workbench.demos;
@@ -205,6 +209,66 @@ export function SliderSubmittedDemo() {
     <div className="flex w-full flex-col gap-2">
       <Slider label={s.distance} name="distance" min={0} max={100} step={5} value={value} onValueChange={setValue} formatValue={s.miles} showBounds />
       <Submitted value={String(value)} />
+    </div>
+  );
+}
+
+/** A date picker with what it would submit under it. */
+export function DateDemo({ initial = "" }: { initial?: string }) {
+  const [value, setValue] = useState(initial);
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <DatePicker label={t.datePicker.start} defaultValue={initial} onValueChange={setValue} />
+      <Submitted value={value} empty={t.datePicker.nothing} />
+    </div>
+  );
+}
+
+/** A date years back, bounded by today: the month title is the way there. */
+export function FarDateDemo() {
+  const [today] = useState(() => dateToIso(new Date()));
+  return <DatePicker label={t.datePicker.founded} hint={t.datePicker.foundedHint} defaultValue="1998-04-12" max={today} />;
+}
+
+export function TimeDemo({ initial = "" }: { initial?: string }) {
+  const [value, setValue] = useState(initial);
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <TimePicker label={t.timePicker.opens} defaultValue={initial || undefined} onValueChange={setValue} />
+      <Submitted value={value} empty={t.timePicker.nothing} />
+    </div>
+  );
+}
+
+export function DateTimeDemo({ initial = "" }: { initial?: string }) {
+  const [value, setValue] = useState(initial);
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <DateTimePicker label={t.dateTimePicker.starts} defaultValue={initial || undefined} onValueChange={setValue} />
+      <Submitted value={value} empty={t.dateTimePicker.nothing} />
+    </div>
+  );
+}
+
+/**
+ * A period: each end checks itself, and only the page, which sees both, can
+ * say the end came first. The error belongs to the end's group.
+ */
+export function PeriodDemo() {
+  const d = t.dateTimePicker;
+  const [start, setStart] = useState("2026-09-20T09:00");
+  const [end, setEnd] = useState("2026-09-18T18:00");
+  const startParts = splitDateTime(start);
+  const backwards = Boolean(start && end && end <= start);
+  return (
+    <div className="grid w-full gap-4 md:grid-cols-2">
+      <DateTimePicker label={d.saleStarts} defaultValue={start} onValueChange={setStart} />
+      <DateTimePicker
+        label={d.saleEnds}
+        defaultValue={end}
+        onValueChange={setEnd}
+        error={backwards ? d.endsBefore(isoToDisplay(startParts.date), formatTime(startParts.time)) : undefined}
+      />
     </div>
   );
 }

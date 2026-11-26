@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { CardForm } from "@/components/ui/card-form";
 import { FileRow, FileUpload, type UploadFn } from "@/components/ui/file-upload";
 import { ImageCropper, useImagePicker } from "@/components/ui/image-cropper";
-import { IMAGE_FORMATS, type ImageFormat, type ImageFormatId, describeOutput } from "@/lib/image-formats";
+import { IMAGE_FORMATS, type ImageFormatId, describeOutput } from "@/lib/image-formats";
+import { cn } from "@/lib/cn";
 import { messages } from "@/messages";
 
 import { SAMPLE_LANDSCAPE, SAMPLE_SMALL } from "../samples";
@@ -51,7 +52,17 @@ function pretendUpload(failFirst: boolean): UploadFn {
     });
 }
 
-export function FileUploadDemo({ maxFiles, failFirst = false, single = false }: { maxFiles?: number; failFirst?: boolean; single?: boolean }) {
+export function FileUploadDemo({
+  maxFiles,
+  maxBytes,
+  failFirst = false,
+  single = false,
+}: {
+  maxFiles?: number;
+  maxBytes?: number;
+  failFirst?: boolean;
+  single?: boolean;
+}) {
   // One pretend server per mounted demo: "already failed" does not leak between states.
   const [upload] = useState(() => pretendUpload(failFirst));
   return (
@@ -60,6 +71,7 @@ export function FileUploadDemo({ maxFiles, failFirst = false, single = false }: 
       hint={single ? undefined : t.fileUpload.hint}
       accept={DOCUMENTS}
       maxFiles={maxFiles}
+      maxBytes={maxBytes}
       upload={upload}
     />
   );
@@ -83,7 +95,7 @@ export function FileRowsDemo() {
   );
 }
 
-type Result = { url: string; text: string; round: boolean };
+type Result = { url: string; text: string };
 
 /** Every address created on an event is noted here and given back on unmount. */
 function useOwnedUrls() {
@@ -105,86 +117,100 @@ function useOwnedUrls() {
   };
 }
 
+const SLOTS: ImageFormatId[] = ["cover", "logo", "photo"];
 const FORMAT_BUTTONS: { id: ImageFormatId; label: string }[] = [
   { id: "cover", label: t.imageCropper.cover },
   { id: "logo", label: t.imageCropper.logo },
   { id: "photo", label: t.imageCropper.photo },
 ];
 
+/** Each slot keeps the shape of its format, so an empty one already shows what will fill it. */
+const SLOT_SHAPE: Record<ImageFormatId, string> = {
+  cover: "aspect-[4/1] w-full",
+  logo: "aspect-square w-24 rounded-full",
+  photo: "aspect-[4/3] w-full",
+};
+
 /**
- * The cropper with the inline sample, in each format, or with an image of the
- * reviewer's own. The result shows the file the crop produced.
+ * The cropper with the inline samples, in each format, or with an image of
+ * the reviewer's own. A line names the source, and each format has its own
+ * slot with the file the crop produced.
  */
-export function ImageCropperDemo({ small = false }: { small?: boolean }) {
-  const [format, setFormat] = useState<ImageFormat>(IMAGE_FORMATS.cover);
+export function ImageCropperDemo() {
+  const c = t.imageCropper;
+  const [formatId, setFormatId] = useState<ImageFormatId>("cover");
+  const [small, setSmall] = useState(false);
+  const [source, setSource] = useState<string>(c.usingLarge);
   const [open, setOpen] = useState(false);
-  const [result, setResult] = useState<Result | null>(null);
+  const [results, setResults] = useState<Partial<Record<ImageFormatId, Result>>>({});
   const urls = useOwnedUrls();
 
-  function show(file: Blob, cropped: ImageFormat) {
-    if (result) urls.release(result.url);
-    setResult({ url: urls.create(file), text: describeOutput(file.size, file.type, cropped), round: cropped.shape === "round" });
+  function show(file: Blob, id: ImageFormatId) {
+    const old = results[id];
+    if (old) urls.release(old.url);
+    setResults((current) => ({ ...current, [id]: { url: urls.create(file), text: describeOutput(file.size, file.type, IMAGE_FORMATS[id]) } }));
   }
 
-  const own = useImagePicker({ format: IMAGE_FORMATS.photo, onCropped: (file) => show(file, IMAGE_FORMATS.photo) });
+  function crop(id: ImageFormatId, fromSmall: boolean) {
+    setSmall(fromSmall);
+    setSource(fromSmall ? c.usingSmall : c.usingLarge);
+    setFormatId(id);
+    setOpen(true);
+  }
+
+  const own = useImagePicker({
+    format: IMAGE_FORMATS.photo,
+    onCropped: (file) => {
+      setSource(c.usingOwn);
+      show(file, "photo");
+    },
+  });
 
   return (
     <div className="flex w-full flex-col gap-3">
       <div className="flex flex-wrap gap-2">
-        {small ? (
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setFormat(IMAGE_FORMATS.cover);
-              setOpen(true);
-            }}
-          >
-            {t.imageCropper.smallSample}
+        {FORMAT_BUTTONS.map(({ id, label }) => (
+          <Button key={id} variant="secondary" onClick={() => crop(id, false)}>
+            {label}
           </Button>
-        ) : (
-          <>
-            {FORMAT_BUTTONS.map(({ id, label }) => (
-              <Button
-                key={id}
-                variant="secondary"
-                onClick={() => {
-                  setFormat(IMAGE_FORMATS[id]);
-                  setOpen(true);
-                }}
-              >
-                {label}
-              </Button>
-            ))}
-            <Button variant="ghost" onClick={own.pick}>
-              {t.imageCropper.own}
-            </Button>
-          </>
-        )}
+        ))}
+        <Button variant="secondary" onClick={() => crop("cover", true)}>
+          {c.smallSample}
+        </Button>
+        <Button variant="ghost" onClick={own.pick}>
+          {c.own}
+        </Button>
       </div>
+      <p className="text-sm text-secondary" aria-live="polite">
+        {source}
+      </p>
       {own.error ? <p className="text-sm font-medium text-error">{own.error}</p> : null}
 
-      <div className="text-sm text-secondary">
-        <span className="block text-xs font-medium text-subtle">{t.imageCropper.result}</span>
-        {result ? (
-          <figure className="mt-1.5 space-y-1">
-            <img
-              src={result.url}
-              alt=""
-              className={result.round ? "size-24 rounded-full border border-border object-cover" : "max-h-32 w-auto max-w-full rounded-md border border-border"}
-            />
-            <figcaption className="font-mono text-xs text-primary">{result.text}</figcaption>
-          </figure>
-        ) : (
-          <p className="mt-1">{t.imageCropper.noResult}</p>
-        )}
+      <div className="grid gap-4 sm:grid-cols-[2fr_auto_1fr]">
+        {SLOTS.map((id) => {
+          const result = results[id];
+          return (
+            <figure key={id} className="min-w-0 space-y-1.5">
+              <figcaption className="text-xs font-medium text-subtle">{c.slots[id]}</figcaption>
+              {result ? (
+                <img src={result.url} alt="" className={cn(SLOT_SHAPE[id], "border border-border object-cover", id === "logo" ? "" : "rounded-md")} />
+              ) : (
+                <div className={cn(SLOT_SHAPE[id], "grid place-items-center border border-dashed border-border bg-surface-sunken p-2 text-center text-xs text-subtle", id === "logo" ? "" : "rounded-md")}>
+                  {c.noResult}
+                </div>
+              )}
+              {result ? <p className="font-mono text-xs text-primary">{result.text}</p> : null}
+            </figure>
+          );
+        })}
       </div>
 
       <ImageCropper
         open={open}
         onOpenChange={setOpen}
         src={small ? SAMPLE_SMALL : SAMPLE_LANDSCAPE}
-        format={format}
-        onConfirm={(file) => show(file, format)}
+        format={IMAGE_FORMATS[formatId]}
+        onConfirm={(file) => show(file, formatId)}
       />
       {own.picker}
     </div>
@@ -202,9 +228,8 @@ export function CardFormDemo({ declined = false }: { declined?: boolean }) {
         onChange={(card) => setComplete(card.complete)}
       />
       <p className="text-xs text-secondary">
-        {t.cardForm.complete}: <code className="font-mono text-primary">{complete ? t.cardForm.yes : t.cardForm.no}</code>
+        {t.cardForm.checked}: <code className="font-mono text-primary">{complete ? t.cardForm.yes : t.cardForm.no}</code>
       </p>
-      {declined ? null : <p className="text-xs text-subtle">{t.cardForm.testNumbers}</p>}
     </div>
   );
 }
