@@ -133,8 +133,10 @@ browse the sections. Approving a piece works here, on the dev server.
 
 ## Make it yours
 
-This template stays neutral on purpose: fork it or copy it into your project,
-and put your brand on it there. **Working with an AI coding assistant?**
+This template stays neutral on purpose: copy it into a repository of your own
+— private, if it carries a client's brand — or into your app, and put your
+brand on it there. A clone still points at this repository as `origin`, so
+repoint it before you push. **Working with an AI coding assistant?**
 Point it at [AGENTS.md](AGENTS.md) (Claude Code reads it through
 `CLAUDE.md`): it explains the project, asks you for your brand — name, logo,
 colors, typeface, locale — and applies it following
