@@ -140,8 +140,10 @@ desenvolvimento.
 
 ## Deixe com a sua cara
 
-Este template é neutro de propósito: faça um fork ou copie para o seu projeto
-e aplique a sua marca lá. **Usa um assistente de código com IA?** Aponte para
+Este template é neutro de propósito: copie para um repositório seu — privado,
+se levar a marca de um cliente — ou para o seu app, e aplique a sua marca lá.
+Um clone continua apontando para este repositório como `origin`, então troque
+esse apontamento antes do primeiro push. **Usa um assistente de código com IA?** Aponte para
 o [AGENTS.md](AGENTS.md) (o Claude Code o lê pelo `CLAUDE.md`): ele explica
 o projeto, pede a sua marca — nome, logo, cores, fonte, formato regional — e
 a aplica seguindo o [docs/BRAND.md](docs/BRAND.md) (ambos em inglês).

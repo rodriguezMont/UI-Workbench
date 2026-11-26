@@ -36,12 +36,56 @@ brand. Follow [Adopting and rebranding](#adopting-and-rebranding).
 
 If you cannot tell, ask: *"Is this the generic template, or a copy for a
 specific product?"* A request to "customize", "apply our brand" or "use our
-colors" means job B — and if the repository is still the template's own
-origin, suggest forking first.
+colors" means job B — and before any brand work, the copy gets its own
+repository (step 1 below).
 
 ## Adopting and rebranding
 
-### 1. Ask for the brand before touching anything visual
+### 1. Point the copy at its own repository
+
+A clone remembers where it came from: its `origin` remote is the template,
+`https://github.com/rodriguezMont/UI-Workbench.git`. Branded work must never
+be pushed there — the template is public, and a client's brand, name or
+assets would be visible to anyone. Check it first:
+
+```sh
+git remote -v
+```
+
+If `origin` points at `rodriguezMont/UI-Workbench`:
+
+1. **Ask the person for the URL of the repository this version will live in.**
+   Recommend a **new repository** — **private** if it carries a client's or
+   employer's brand — or the existing app the pieces are going into. Not a
+   GitHub fork of the template: a fork of a public repository is public and
+   stays linked to it.
+2. **Keep the template as `upstream`**, so its future fixes can still be
+   pulled, and **point `origin` at the new repository**:
+
+   ```sh
+   git remote rename origin upstream
+   git remote add origin <url-of-the-new-repository>
+   ```
+
+3. **Block pushes to the template from this copy.** It is a local git
+   setting, only for this folder; it changes nothing on GitHub. For most
+   people it changes nothing at all — they cannot push to the template anyway.
+   It protects whoever is signed in to GitHub as the template's owner, for
+   whom a push to `upstream` would succeed:
+
+   ```sh
+   git remote set-url --push upstream NO_PUSH
+   ```
+
+   Pulling still works: `git pull upstream main` brings template updates in.
+   A push to `upstream` now fails on purpose.
+4. **Push to the new `origin`** only after the person confirms the URL:
+   `git push -u origin main`.
+
+If the person has no repository yet, do the brand work locally and push
+nothing until they create one.
+
+### 2. Ask for the brand before touching anything visual
 
 Do not invent a brand. Ask the person for what is missing, all at once, and
 offer the default when they have no answer:
@@ -61,7 +105,7 @@ offer the default when they have no answer:
 Show the person a short summary of what you will change and wait for an OK
 before editing.
 
-### 2. Apply it
+### 3. Apply it
 
 The step-by-step is in **[docs/BRAND.md](docs/BRAND.md)**: which file holds
 each brand decision, how to turn one brand color into the accent scale, what
@@ -81,7 +125,7 @@ change the font and the locale, and how to verify. In short:
 7. **Reset the approvals**: set `src/workbench/approvals.json` to `{}` — the
    new brand has not been reviewed yet. The person approves again.
 
-### 3. Copy into the app
+### 4. Copy into the app
 
 When the pieces go into another codebase, follow
 [docs/GUIDE.md › Using the library in an app](docs/GUIDE.md#using-the-library-in-an-app):

@@ -6,8 +6,9 @@ check it. Start from [AGENTS.md](../AGENTS.md) for which inputs to ask the
 brand owner for.
 
 The template is neutral on purpose — grays, one blue accent, the system font,
-a placeholder logo, en-US formats — so **rebrand in your own fork or copy,
-never in the template**.
+a placeholder logo, en-US formats — so **rebrand in your own copy, never in
+the template**. Give the copy its own repository first, and stop it pushing
+back to the template: [AGENTS.md › Point the copy at its own repository](../AGENTS.md#1-point-the-copy-at-its-own-repository).
 
 ## Every place a brand lives
 
