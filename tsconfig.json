@@ -20,6 +20,7 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "resolveJsonModule": true,
+    "allowJs": true,
     "skipLibCheck": true,
     "noEmit": true,
 
@@ -28,5 +29,5 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src", "scripts", "vite.config.ts", "eslint.config.js"]
+  "include": ["src", "scripts", "server.js", "vite.config.ts", "eslint.config.js"]
 }
