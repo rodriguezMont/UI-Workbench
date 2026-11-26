@@ -15,7 +15,10 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 4. **Workbench and approval flow** — done: live contrast (#26), the
    Playwright layout and touch rulers (#32), and approvals on the published
    workbench, kept in each visitor's browser (#40).
-5. **Brand guide** — how to rebrand the tokens and the logo.
+5. **Brand guide** — done: `docs/BRAND.md` (every place a brand lives, how
+   to derive the accent scale, logo, favicon, font, locale, verification) and
+   `AGENTS.md`, the brief that lets any AI coding assistant adopt and rebrand
+   a copy by asking for the brand first.
 
 ## Merged so far
 
@@ -104,9 +107,9 @@ changes the project's ledger.
    top border — restore it or keep it plain. Two small component touches wait
    too: the map drawing's rounded blocks and a pin on the plaza, and the logo's
    final usage rules, which come with the brand guide.
-3. **Block 5**: the brand guide — how to rebrand the tokens, the logo and the
-   favicon (`public/favicon.svg` copies two pairs of scale colors, since a
-   favicon cannot read CSS tokens).
+3. **Block 5**: the brand guide — done (`docs/BRAND.md`, `AGENTS.md`).
+   The logo's final usage rules can join it when there is a real logo to
+   write them for.
 4. **A real domain** for the published workbench, when there is one: attach it
    to the Hostinger app and update the link in both READMEs and here.
 

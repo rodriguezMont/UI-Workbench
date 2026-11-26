@@ -140,6 +140,12 @@ desenvolvimento.
 
 ## Deixe com a sua cara
 
+Este template é neutro de propósito: faça um fork ou copie para o seu projeto
+e aplique a sua marca lá. **Usa um assistente de código com IA?** Aponte para
+o [AGENTS.md](AGENTS.md) (o Claude Code o lê pelo `CLAUDE.md`): ele explica
+o projeto, pede a sua marca — nome, logo, cores, fonte, formato regional — e
+a aplica seguindo o [docs/BRAND.md](docs/BRAND.md) (ambos em inglês).
+
 1. **Troque as escalas** em `src/styles/tokens.css` — os cinzas neutros e a cor
    de destaque. Todos os componentes acompanham; os testes de contraste avisam
    se uma cor nova quebrar algum par.
@@ -156,8 +162,9 @@ uma lista. Copie o `.blocklist.example` para `.blocklist` e coloque os seus
 termos (ou mantenha os de exemplo). Os detalhes estão no
 [guia](docs/GUIDE.md#the-blocklist-guard) (em inglês).
 
-O passo a passo, com as dependências de cada componente, está no
-[guia](docs/GUIDE.md#using-the-library-in-an-app) (em inglês).
+A troca de marca, passo a passo, está no [docs/BRAND.md](docs/BRAND.md); como
+copiar para um app, com as dependências de cada componente, está no
+[guia](docs/GUIDE.md#using-the-library-in-an-app) (ambos em inglês).
 
 ## Feito com
 
@@ -171,13 +178,19 @@ testes acima.
 
 ## Saiba mais
 
+- **[AGENTS.md](AGENTS.md)** (em inglês) — o briefing para assistentes de
+  código com IA: o que é o projeto, o que perguntar antes de trocar a marca, as
+  regras que precisam valer.
+- **[Troca de marca](docs/BRAND.md)** (em inglês) — todo lugar onde a marca
+  mora: cores, logo, favicon, nome, fonte, formas, formato regional, e como
+  conferir.
 - **[Guia](docs/GUIDE.md)** (em inglês) — scripts, estrutura do projeto, a
   bancada e o fluxo de aprovação, design tokens, como copiar a biblioteca para
   um app, o guard da blocklist.
 - **[Deploy](docs/DEPLOY.md)** (em inglês) — como a bancada é publicada no
   Node.js gerenciado da Hostinger.
 - **[Progresso](docs/PROGRESS.md)** (em inglês) — o que foi entregue, pull
-  request por pull request, e o que vem a seguir (o guia de marca).
+  request por pull request, e o que vem a seguir.
 
 ## Licença
 
