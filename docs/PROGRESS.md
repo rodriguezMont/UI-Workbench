@@ -43,13 +43,14 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 | #21 | Polish 5: Forms, dates, files and images — states and explanations for 9 pieces; one cropper demo with a slot per format; numbered gallery samples |
 | #22 | Polish 6: Data — states and explanations for 12 pieces; `stat-group` split from `stat`; a Dashboard sector; one demo world in `data-demo.ts`, with "today" pinned and totals that agree |
 | #23 | Polish 7: States and Overlay — states and explanations for 9 pieces; live demos in `state-demos.tsx` and `overlay-demos.tsx` |
+| #24 | Tests for Escape in the overlay's sheet frame; a false sheet bug from #23 withdrawn, and the rule that caught it |
 
 #10 to #15 were built in parallel by six builder agents, one per group, each
 in its own git worktree. Each group was then integrated one at a time: the
 diff read for leftovers from the source, a rebase onto `main`, the workbench
 checked in the browser, and a draft PR. They were merged in the order listed.
 
-Health on `main`: 662 tests passing (one skipped: it only runs while some
+Health on `main`: 664 tests passing (one skipped: it only runs while some
 piece is still to build), type-check, lint and build clean, guard clean.
 
 ## Component status
@@ -87,16 +88,10 @@ workbench: the map shows 0 of 70.
    menu item on screen ("Make main" in the photo gallery), focus moves while
    the menu is still closing and ends up on `body`. The gallery works around
    it locally; the fix belongs in the hook.
-4. **Fix Escape on the sheet** (`sheet.tsx`): in a real browser, Escape does
-   not close the sheet — nor the overlay in its sheet frame — while the
-   dialog closes. The code matches the source, where Escape works; what
-   differs is the installed `@radix-ui/react-dialog` that Vaul 1.1.2 runs on
-   (1.3.1 here, 1.1.23 in the source). Found during #23; it was already on
-   `main`.
-5. **Block 4 leftovers**: the Playwright layout ruler (375 / 768 / 1280 /
+4. **Block 4 leftovers**: the Playwright layout ruler (375 / 768 / 1280 /
    1920), from the source's `measure-workbench`, `measure-touch` and the
    shared ruler library, and live contrast measurement on the Roles page.
-6. **Block 5**: the brand guide.
+5. **Block 5**: the brand guide.
 
 Optional, waiting for a decision: require the CI `Check` status in the `main`
 ruleset so a red PR cannot be merged.
@@ -131,6 +126,12 @@ ruleset so a red PR cannot be merged.
   `installDomStubs()` from `src/test/dom.ts` for popovers and lists).
 - **Verify before the PR**: `npm run check`, `npm run build`, and the
   workbench in the browser at 375 and 1280 in both color schemes.
+- **Check open and close in a foreground page.** A background tab or a hidden
+  browser pane freezes CSS animations, and the sheet only unmounts when its
+  closing animation ends — so there it looks stuck open. #23 recorded a sheet
+  "Escape bug" that was only this; a Playwright page showed Escape closing
+  every sheet and returning focus. Before reporting an open, close or focus
+  defect, reproduce it where animations run.
 - **The blocklist guard runs locally**: hooks check commits; run
   `node scripts/guard.ts --message <file>` on every PR title and body before
   publishing. The term list never leaves the local `.blocklist`.
