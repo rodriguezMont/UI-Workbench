@@ -40,6 +40,7 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 | #18 | Polish 2: the frame — section intros, explanation boxes with bold leads, stage light and glass in dark |
 | #19 | Polish 3: Primitives — every piece with its states and explanation |
 | #20 | Polish 4: Forms, fields and choices — states and explanations for 13 pieces; `select` split into single, search and multiple |
+| #21 | Polish 5: Forms, dates, files and images — states and explanations for 9 pieces; one cropper demo with a slot per format; numbered gallery samples |
 
 #10 to #15 were built in parallel by six builder agents, one per group, each
 in its own git worktree. Each group was then integrated one at a time: the
@@ -70,10 +71,8 @@ workbench: the map shows 0 of 69.
    3. Section by section, one PR each: an explanation box on every piece and
       a note on every state; the missing states (about half of the source's).
       Done: Primitives (#19), Forms fields and choices (#20, which also split
-      `select` into single, search and multiple). Still to do, in order:
-      Forms dates, files and images (date, time and date-time pickers, file
-      and photo upload, cropper, profile cover, gallery, card form); Data
-      (split `stat` into cases and group, a "Dashboard" sector, coherent demo
+      `select` into single, search and multiple), Forms dates, files and
+      images (#21). Still to do, in order: Data (split `stat` into cases and group, a "Dashboard" sector, coherent demo
       numbers and a pinned "today"); States and Overlay; Navigation and
       Content; Foundation (a "State colors" piece and a measured contrast
       table on Roles).

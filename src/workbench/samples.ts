@@ -15,7 +15,7 @@ const svg = (width: number, height: number, body: string) =>
 type Palette = { sky: [string, string]; far: string; near: string; sun: string };
 
 /** A landscape: a sky, a sun and two hills. */
-function landscape(width: number, height: number, { sky, far, near, sun }: Palette, sunX = 118, sunY = 30) {
+function landscape(width: number, height: number, { sky, far, near, sun }: Palette, sunX = 118, sunY = 30, plate?: number) {
   return svg(
     width,
     height,
@@ -23,9 +23,15 @@ function landscape(width: number, height: number, { sky, far, near, sun }: Palet
       `<rect width="160" height="100" fill="url(#s)"/>` +
       `<circle cx="${sunX}" cy="${sunY}" r="11" fill="${sun}"/>` +
       `<path d="M0 70 Q40 42 80 64 T160 56 V100 H0Z" fill="${far}"/>` +
-      `<path d="M0 84 Q50 62 100 80 T160 76 V100 H0Z" fill="${near}"/>`,
+      `<path d="M0 84 Q50 62 100 80 T160 76 V100 H0Z" fill="${near}"/>` +
+      (plate === undefined ? "" : numberPlate(plate)),
   );
 }
+
+/** A numbered plate at the bottom left, clear of the gallery's handle, menu and the 4:3 slice. */
+const numberPlate = (n: number) =>
+  `<circle cx="30" cy="84" r="8" fill="#0f172a" fill-opacity="0.72"/>` +
+  `<text x="30" y="88" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#ffffff">${n}</text>`;
 
 const DAY: Palette = { sky: ["#bfdbfe", "#eff6ff"], far: "#94a3b8", near: "#64748b", sun: "#fde68a" };
 const DUSK: Palette = { sky: ["#fecaca", "#fef3c7"], far: "#a8a29e", near: "#78716c", sun: "#fdba74" };
@@ -60,10 +66,10 @@ export const SAMPLE_PORTRAIT =
     `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 80 80"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b7a99"/><stop offset="1" stop-color="#8c6f8f"/></linearGradient></defs><rect width="80" height="80" fill="url(#g)"/><circle cx="40" cy="31" r="13" fill="#e8c9a9"/><path d="M14 80 Q14 52 40 52 Q66 52 66 80Z" fill="#2f3b4a"/></svg>`,
   );
 
-/** Four 4:3 photos for the gallery. */
+/** Four 4:3 photos for the gallery, numbered in their first order. */
 export const SAMPLE_PHOTOS = [
-  landscape(1600, 1200, DAY),
-  landscape(1600, 1200, DUSK, 36),
-  landscape(1600, 1200, MIST, 80),
-  landscape(1600, 1200, NIGHT, 128),
+  landscape(1600, 1200, DAY, 118, 30, 1),
+  landscape(1600, 1200, DUSK, 36, 30, 2),
+  landscape(1600, 1200, MIST, 80, 30, 3),
+  landscape(1600, 1200, NIGHT, 128, 30, 4),
 ] as const;

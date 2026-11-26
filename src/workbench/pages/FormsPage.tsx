@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { CreditCard, DatabaseBackup, Download, FileText, Globe, Headset, KeyRound, Landmark, LayoutGrid, List, ZoomIn, ZoomOut } from "lucide-react";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,7 +20,6 @@ import { Select } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { TimePicker } from "@/components/ui/time-picker";
-import { dateToIso } from "@/lib/date-time";
 import { formatInteger } from "@/lib/format";
 import { messages } from "@/messages";
 
@@ -30,13 +28,17 @@ import { SAMPLE_COVER, SAMPLE_LOGO, SAMPLE_PHOTOS } from "../samples";
 import { SectionPage } from "./SectionPage";
 import { CardFormDemo, FileRowsDemo, FileUploadDemo, ImageCropperDemo } from "./file-demos";
 import {
+  DateDemo,
+  DateTimeDemo,
   FailedSwitchDemo,
+  FarDateDemo,
   FieldFormDemo,
   IndeterminateDemo,
+  PeriodDemo,
   PhoneDemo,
   PreferencesDemo,
   SliderSubmittedDemo,
-  Submitted,
+  TimeDemo,
   ZipLookupDemo,
 } from "./form-demos";
 
@@ -45,48 +47,13 @@ const t = messages.workbench.demos;
 /** Cards fill the row and wrap at a readable width, instead of a fixed count of columns. */
 const CARD_GRID = "grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(13rem,1fr))]";
 
+/** One rating for the profile in every state, so the three read as one profile. */
+const COVER_RATING = { value: 4.6, count: 128 };
+
+/** The gallery's sample photos, numbered in their first order. */
+const SAMPLE_GALLERY = SAMPLE_PHOTOS.map((url, i) => ({ id: `sample-${i}`, url, alt: t.photoGallery.alts[i] }));
+
 const toOptions = (labels: readonly string[]) => labels.map((label) => ({ value: label.toLowerCase().replace(/\s+/g, "-"), label }));
-
-/** A date picker with what it would submit under it. */
-function DateDemo() {
-  const [value, setValue] = useState("");
-  return (
-    <div className="flex w-full flex-col gap-2">
-      <DatePicker label={t.datePicker.start} hint={t.datePicker.startHint} onValueChange={setValue} />
-      <Submitted value={value} empty={t.datePicker.nothing} />
-    </div>
-  );
-}
-
-/** Bounds relative to today, so the demo never goes stale. */
-function BoundedDateDemo() {
-  const [bounds] = useState(() => {
-    const today = new Date();
-    const last = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 60);
-    return { min: dateToIso(today), max: dateToIso(last) };
-  });
-  return <DatePicker label={t.datePicker.delivery} hint={t.datePicker.deliveryHint} {...bounds} />;
-}
-
-function TimeDemo() {
-  const [value, setValue] = useState("");
-  return (
-    <div className="flex w-full flex-col gap-2">
-      <TimePicker label={t.timePicker.pickup} onValueChange={setValue} />
-      <Submitted value={value} empty={t.timePicker.nothing} />
-    </div>
-  );
-}
-
-function DateTimeDemo() {
-  const [value, setValue] = useState("");
-  return (
-    <div className="flex w-full flex-col gap-2">
-      <DateTimePicker label={t.dateTimePicker.starts} hint={t.dateTimePicker.startsHint} onValueChange={setValue} />
-      <Submitted value={value} empty={t.dateTimePicker.nothing} />
-    </div>
-  );
-}
 
 export function FormsPage() {
   return (
@@ -562,117 +529,155 @@ export function FormsPage() {
       </Piece>
 
       <Piece id="date-picker">
-        <State label={t.datePicker.typeOrPick} note={t.datePicker.typeOrPickNote}>
+        <State label={t.datePicker.empty} note={t.datePicker.emptyNote}>
           <DateDemo />
         </State>
+        <State label={t.datePicker.filled} note={t.datePicker.filledNote}>
+          <DateDemo initial="2026-09-17" />
+        </State>
         <State label={t.datePicker.bounds} note={t.datePicker.boundsNote}>
-          <BoundedDateDemo />
+          <DatePicker label={t.datePicker.review} hint={t.datePicker.reviewHint} min="2026-09-10" max="2026-10-20" defaultValue="2026-09-24" />
         </State>
         <State label={t.datePicker.error} note={t.datePicker.errorNote}>
           <DatePicker label={t.datePicker.end} defaultValue="2026-09-10" error={t.datePicker.endError} />
         </State>
+        <State label={t.datePicker.far} note={t.datePicker.farNote}>
+          <FarDateDemo />
+        </State>
         <State label={t.datePicker.disabled} note={t.datePicker.disabledNote}>
           <DatePicker label={t.datePicker.renewal} hint={t.datePicker.renewalHint} defaultValue="2027-01-01" disabled />
         </State>
+        <PieceNote paragraphs={t.datePicker.explain} />
       </Piece>
 
       <Piece id="time-picker">
-        <State label={t.timePicker.steps} note={t.timePicker.stepsNote}>
+        <State label={t.timePicker.empty} note={t.timePicker.emptyNote}>
           <TimeDemo />
         </State>
+        <State label={t.timePicker.filled} note={t.timePicker.filledNote}>
+          <TimeDemo initial="14:30" />
+        </State>
         <State label={t.timePicker.range} note={t.timePicker.rangeNote}>
-          <TimePicker label={t.timePicker.appointment} hint={t.timePicker.appointmentHint} step={15} min="09:00" max="17:00" defaultValue="10:30" />
+          <TimePicker label={t.timePicker.closes} step={15} min="08:00" max="18:00" defaultValue="17:45" />
         </State>
         <State label={t.timePicker.kept} note={t.timePicker.keptNote}>
-          <TimePicker label={t.timePicker.reminder} defaultValue="10:10" />
+          <TimePicker label={t.timePicker.opens} hint={t.timePicker.keptHint} defaultValue="07:50" />
         </State>
         <State label={t.timePicker.error} note={t.timePicker.errorNote}>
-          <TimePicker label={t.timePicker.call} error={t.timePicker.callError} />
+          <TimePicker label={t.timePicker.closes} defaultValue="07:00" error={t.timePicker.closesError} />
         </State>
+        <State label={t.timePicker.disabled} note={t.timePicker.disabledNote}>
+          <TimePicker label={t.timePicker.opens} hint={t.timePicker.closedHint} disabled />
+        </State>
+        <PieceNote paragraphs={t.timePicker.explain} />
       </Piece>
 
       <Piece id="date-time-picker">
-        <State label={t.dateTimePicker.together} note={t.dateTimePicker.togetherNote} wide>
+        <State label={t.dateTimePicker.empty} note={t.dateTimePicker.emptyNote}>
           <DateTimeDemo />
         </State>
-        <State label={t.dateTimePicker.error} note={t.dateTimePicker.errorNote} wide>
-          <DateTimePicker label={t.dateTimePicker.ends} defaultValue="2026-12-03T09:00" error={t.dateTimePicker.endsError} />
+        <State label={t.dateTimePicker.filled} note={t.dateTimePicker.filledNote}>
+          <DateTimeDemo initial="2026-09-17T14:30" />
         </State>
-        <State label={t.dateTimePicker.disabled} note={t.dateTimePicker.disabledNote} wide>
+        <State label={t.dateTimePicker.disabled} note={t.dateTimePicker.disabledNote}>
           <DateTimePicker label={t.dateTimePicker.locked} hint={t.dateTimePicker.lockedHint} defaultValue="2026-12-15T08:00" disabled />
         </State>
+        <State label={t.dateTimePicker.range} note={t.dateTimePicker.rangeNote}>
+          <DateTimePicker
+            label={t.dateTimePicker.pickup}
+            hint={t.dateTimePicker.pickupHint}
+            min="2026-09-01"
+            max="2026-09-30"
+            minTime="08:00"
+            maxTime="18:00"
+            step={15}
+            defaultValue="2026-09-15T09:00"
+          />
+        </State>
+        <State label={t.dateTimePicker.period} note={t.dateTimePicker.periodNote} wide>
+          <PeriodDemo />
+        </State>
+        <PieceNote paragraphs={t.dateTimePicker.explain} />
       </Piece>
 
       <Piece id="file-upload">
         <State label={t.fileUpload.several} note={t.fileUpload.severalNote}>
-          <FileUploadDemo />
-        </State>
-        <State label={t.fileUpload.retry} note={t.fileUpload.retryNote}>
-          <FileUploadDemo failFirst />
+          <FileUploadDemo maxFiles={3} />
         </State>
         <State label={t.fileUpload.single} note={t.fileUpload.singleNote}>
           <FileUploadDemo maxFiles={1} single />
         </State>
+        <State label={t.fileUpload.retry} note={t.fileUpload.retryNote}>
+          <FileUploadDemo maxFiles={3} failFirst />
+        </State>
+        <State label={t.fileUpload.low} note={t.fileUpload.lowNote}>
+          <FileUploadDemo maxFiles={3} maxBytes={100 * 1024} />
+        </State>
         <State label={t.fileUpload.rows} note={t.fileUpload.rowsNote} wide>
           <FileRowsDemo />
         </State>
-        <PieceNote paragraphs={[t.fileUpload.note]} />
+        <PieceNote paragraphs={t.fileUpload.explain} />
       </Piece>
 
       <Piece id="photo-upload">
         <State label={t.photoUpload.plain} note={t.photoUpload.plainNote}>
-          <PhotoUpload label={t.photoUpload.label} />
-        </State>
-        <State label={t.photoUpload.hint} note={t.photoUpload.hintNote}>
           <PhotoUpload label={t.photoUpload.label} hint={t.photoUpload.hintText} />
         </State>
+        <State label={t.photoUpload.low} note={t.photoUpload.lowNote}>
+          <PhotoUpload label={t.photoUpload.label} hint={t.photoUpload.lowHint} maxBytes={100 * 1024} />
+        </State>
+        <PieceNote paragraphs={t.photoUpload.explain} />
       </Piece>
 
       <Piece id="image-cropper">
-        <State label={t.imageCropper.formats} note={t.imageCropper.formatsNote}>
+        <State label={t.imageCropper.formats} note={t.imageCropper.formatsNote} wide>
           <ImageCropperDemo />
         </State>
-        <State label={t.imageCropper.small} note={t.imageCropper.smallNote}>
-          <ImageCropperDemo small />
-        </State>
+        <PieceNote paragraphs={t.imageCropper.explain} />
       </Piece>
 
       <Piece id="profile-cover">
+        <State label={t.profileCover.empty} note={t.profileCover.emptyNote} wide>
+          <ProfileCover name={t.profileCover.name} subtitle={t.profileCover.subtitle} rating={COVER_RATING} editable headingLevel={3} />
+        </State>
+        <State label={t.profileCover.editing} note={t.profileCover.editingNote} wide>
+          <ProfileCover
+            name={t.profileCover.name}
+            subtitle={t.profileCover.subtitle}
+            rating={COVER_RATING}
+            coverUrl={SAMPLE_COVER}
+            logoUrl={SAMPLE_LOGO}
+            editable
+            headingLevel={3}
+          />
+        </State>
         <State label={t.profileCover.visitor} note={t.profileCover.visitorNote} wide>
           <ProfileCover
             name={t.profileCover.name}
             subtitle={t.profileCover.subtitle}
-            rating={{ value: 4.8, count: 126 }}
+            rating={COVER_RATING}
             coverUrl={SAMPLE_COVER}
             logoUrl={SAMPLE_LOGO}
             headingLevel={3}
           />
         </State>
-        <State label={t.profileCover.empty} note={t.profileCover.emptyNote} wide>
-          <ProfileCover name={t.profileCover.emptyName} editable headingLevel={3} />
-        </State>
-        <State label={t.profileCover.editing} note={t.profileCover.editingNote} wide>
-          <ProfileCover name={t.profileCover.name} coverUrl={SAMPLE_COVER} logoUrl={SAMPLE_LOGO} editable headingLevel={3} />
-        </State>
+        <PieceNote paragraphs={t.profileCover.explain} />
       </Piece>
 
       <Piece id="photo-gallery">
+        <State label={t.photoGallery.empty} note={t.photoGallery.emptyNote} wide>
+          <PhotoGallery label={t.photoGallery.label} max={12} editable headingLevel={3} />
+        </State>
         <State label={t.photoGallery.editing} note={t.photoGallery.editingNote} wide>
-          <PhotoGallery
-            label={t.photoGallery.label}
-            defaultPhotos={SAMPLE_PHOTOS.map((url, i) => ({ id: `sample-${i}`, url, alt: t.photoGallery.alts[i] }))}
-            max={6}
-            editable
-            headingLevel={3}
-          />
+          <PhotoGallery label={t.photoGallery.label} defaultPhotos={SAMPLE_GALLERY} max={12} editable headingLevel={3} />
+        </State>
+        <State label={t.photoGallery.full} note={t.photoGallery.fullNote} wide>
+          <PhotoGallery label={t.photoGallery.label} defaultPhotos={SAMPLE_GALLERY} max={4} editable headingLevel={3} />
         </State>
         <State label={t.photoGallery.visitor} note={t.photoGallery.visitorNote} wide>
-          <PhotoGallery
-            label={t.photoGallery.label}
-            defaultPhotos={SAMPLE_PHOTOS.map((url, i) => ({ id: `sample-${i}`, url, alt: t.photoGallery.alts[i] }))}
-            headingLevel={3}
-          />
+          <PhotoGallery label={t.photoGallery.label} defaultPhotos={SAMPLE_GALLERY} headingLevel={3} />
         </State>
+        <PieceNote paragraphs={t.photoGallery.explain} />
       </Piece>
 
       <Piece id="card-form">
@@ -682,6 +687,7 @@ export function FormsPage() {
         <State label={t.cardForm.declined} note={t.cardForm.declinedNote}>
           <CardFormDemo declined />
         </State>
+        <PieceNote paragraphs={t.cardForm.explain} />
       </Piece>
     </SectionPage>
   );
