@@ -46,6 +46,7 @@ The work runs in five blocks, one at a time, each reviewed before the next:
 | #24 | Tests for Escape in the overlay's sheet frame; a false sheet bug from #23 withdrawn, and the rule that caught it |
 | #25 | Polish 8: Navigation — states and explanations for 8 pieces; shell sketches, a sticky header, filters in context with live counts; live demos in `nav-demos.tsx` |
 | #26 | Polish 9: Foundation — a State colors piece; a contrast table on Roles measured from the painted page; logo heights measured; the WCAG math moved to `lib/contrast.ts` |
+| #27 | `usePendingFocus` keeps the target while a surviving menu closes; the photo gallery drops its local workaround |
 
 #10 to #15 were built in parallel by six builder agents, one per group, each
 in its own git worktree. Each group was then integrated one at a time: the
@@ -91,14 +92,10 @@ workbench: the map shows 0 of 71.
 2. **General review in the workbench**, piece by piece, with approvals.
    Still noted for it: the footer's thick gradient edge from the source
    became a plain top border — restore it or keep it plain.
-3. **Fix `usePendingFocus`** (`action-menu.tsx`): when an action keeps its
-   menu item on screen ("Make main" in the photo gallery), focus moves while
-   the menu is still closing and ends up on `body`. The gallery works around
-   it locally; the fix belongs in the hook.
-4. **Block 4 leftovers**: the Playwright layout ruler (375 / 768 / 1280 /
+3. **Block 4 leftovers**: the Playwright layout ruler (375 / 768 / 1280 /
    1920), from the source's `measure-workbench`, `measure-touch` and the
    shared ruler library, and live contrast measurement on the Roles page.
-5. **Block 5**: the brand guide.
+4. **Block 5**: the brand guide.
 
 Optional, waiting for a decision: require the CI `Check` status in the `main`
 ruleset so a red PR cannot be merged.
