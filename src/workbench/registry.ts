@@ -74,6 +74,7 @@ const ROWS: readonly Row[] = [
   // foundation — the layer under the components: tokens, logo, type, grid
   { id: "logo", section: "foundation" },
   { id: "roles", section: "foundation" },
+  { id: "state-colors", section: "foundation" },
   { id: "typography", section: "foundation" },
   { id: "grid", section: "foundation" },
   { id: "motion", section: "foundation" },
