@@ -4,10 +4,11 @@ The workbench is published on **Hostinger's managed Node.js** hosting, built
 from this repository's `main` branch. Every push to `main` builds and
 publishes again on its own.
 
-The published workbench is **read-only**: the approval endpoint exists only
-under `vite dev`, so the seals show what is committed in
-`src/workbench/approvals.json`. To change an approval, approve on your machine
-and merge the ledger.
+On the published workbench, **approvals stay in each visitor's browser**: the
+approval endpoint exists only under `vite dev`, so a visitor's clicks are kept
+in their own `localStorage`, starting from what is committed in
+`src/workbench/approvals.json`. To change the project's approvals, approve on
+your machine and merge the ledger.
 
 ## What runs there
 
@@ -62,8 +63,9 @@ repository owner in hPanel.
 - The temporary domain opens the map, in light and dark.
 - A section opened directly (`/forms`) and reloaded still shows the section.
 - The response headers carry `X-Robots-Tag: noindex, nofollow`.
-- The header badge reads "read-only build" and the seals have no approve
-  button.
+- The header badge reads "approvals saved in this browser"; approving a
+  piece survives a reload, and "Reset to the project's approvals" on the map
+  brings the committed state back.
 
 ## Redeploy
 

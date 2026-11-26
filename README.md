@@ -92,9 +92,10 @@ flowchart LR
    on any subtree. No `dark:` variants anywhere.
 3. **Every piece on the map.** A registry lists every section and piece; tests
    fail if a component has no entry or a built piece is missing from its page.
-4. **Approval is a click on the seal** — on the local dev server only. It
-   writes one line per piece to `src/workbench/approvals.json`, which is
-   committed with the work. The published workbench is read-only.
+4. **Approval is a click on the seal.** On the local dev server it writes one
+   line per piece to `src/workbench/approvals.json`, which is committed with
+   the work. On the published workbench each visitor reviews on their own copy,
+   saved only in their browser and reset to the project's ledger in one click.
 5. **Guardrails on every change.** Type-check, lint, the full test suite and
    the build run in CI on every pull request; the layout and touch rulers run in a real browser.
 
@@ -116,7 +117,7 @@ offers its numbers as a table.
 
 ## Try it
 
-**Live workbench:** **[glad-bisque-gnu-01.hostingersite.com](https://glad-bisque-gnu-01.hostingersite.com/)** — read-only: the seals show what is committed.
+**Live workbench:** **[glad-bisque-gnu-01.hostingersite.com](https://glad-bisque-gnu-01.hostingersite.com/)** — approve and undo freely: your review stays in your browser, and the project's approvals are untouched.
 
 Or run it locally:
 

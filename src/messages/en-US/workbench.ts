@@ -18,8 +18,8 @@ export const workbench = {
     toLight: "Back to light",
     toDark: "See it dark",
     noindex: "noindex",
-    readOnly: "read-only build",
-    localApprovals: "approvals saved locally",
+    fileApprovals: "approvals saved to the project",
+    browserApprovals: "approvals saved in this browser",
   },
 
   status: {
@@ -64,7 +64,12 @@ export const workbench = {
     toBuild: "to build",
     sealTitle: "What the seal means",
     sealText:
-      "Approving is a person's act, never the code's: a click on the piece's header, which writes one line to src/workbench/approvals.json. The file is versioned on purpose — a mass approval would show up in the pull request as one changed line per piece. Approvals are saved only while the dev server runs; the deployed workbench is read-only.",
+      "Approving is a person's act, never the code's: a click on the piece's header. On the dev server it writes one line to src/workbench/approvals.json, and the file is versioned on purpose — a mass approval would show up in the pull request as one changed line per piece.",
+    browserTitle: "Your review, in this browser",
+    browserText:
+      "On this published workbench, approving is saved only in your browser: nobody else sees it, nothing is sent anywhere, and the project's own ledger stays as it is. You start from the project's approvals; reset any time to go back to them.",
+    browserChanged: "Your review differs from the project's.",
+    resetToProject: "Reset to the project's approvals",
   },
 
   /**
