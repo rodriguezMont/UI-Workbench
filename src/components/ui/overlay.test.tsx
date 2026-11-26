@@ -64,3 +64,33 @@ describe("Overlay on wide screens (dialog frame)", () => {
     await waitFor(() => expect(document.activeElement).toBe(screen.getByRole("button", { name: "Cancel" })));
   });
 });
+
+// jsdom runs no CSS animation, and Vaul closes the sheet with one: the sheet
+// reaches `data-state="closed"` here but only unmounts, returning focus, when
+// the animation ends in a real browser. These tests check that Escape reaches
+// the close path; unmounting and focus were checked in a browser.
+describe("Overlay on phones (sheet frame)", () => {
+  it("closes on Escape", async () => {
+    stubMatchMedia(false);
+    render(<Example />);
+
+    await userEvent.click(screen.getByRole("button", { name: "Delete project" }));
+    const sheet = screen.getByRole("dialog", { name: "Delete this project?" });
+    await userEvent.keyboard("{Escape}");
+
+    await waitFor(() => expect(sheet.closest("[data-state]")?.getAttribute("data-state")).toBe("closed"));
+  });
+
+  it("as an alert, takes Escape as cancel and runs nothing", async () => {
+    stubMatchMedia(false);
+    const onDelete = vi.fn();
+    render(<Example kind="alert" onDelete={onDelete} />);
+
+    await userEvent.click(screen.getByRole("button", { name: "Delete project" }));
+    const sheet = screen.getByRole("alertdialog", { name: "Delete this project?" });
+    await userEvent.keyboard("{Escape}");
+
+    await waitFor(() => expect(sheet.closest("[data-state]")?.getAttribute("data-state")).toBe("closed"));
+    expect(onDelete).not.toHaveBeenCalled();
+  });
+});
